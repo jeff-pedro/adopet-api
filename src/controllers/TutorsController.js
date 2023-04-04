@@ -27,11 +27,11 @@ class TurtorsController {
         const { id } = req.params
         try {
             const oneTutor = await database.Tutor.findOne({ where: { id: Number(id) } })
-            
+
             if (!oneTutor) {
                 return res.status(200).json({ message: 'Tutor not found.' })
             }
-            
+
             return res.status(200).json(oneTutor)
         } catch (err) {
             return res.status(500).json({ error: err.message })
@@ -62,12 +62,27 @@ class TurtorsController {
         try {
             await database.Tutor.update(newInfo, { where: { id: Number(id) } })
             const tutorUpdated = await database.Tutor.findOne({ where: { id: Number(id) } })
-            
+
             if (!tutorUpdated) {
                 return res.status(200).json({ message: 'Tutor not found.' })
             }
-            
+
             return res.status(200).json(tutorUpdated)
+        } catch (err) {
+            return res.status(500).json({ error: err.message })
+        }
+    }
+
+    static async deleteTutor(req, res) {
+        const { id } = req.params
+        try {
+            const tutorDeleted = await database.Tutor.destroy({ where: { id: Number(id) } })
+            
+            if (!tutorDeleted) {
+                return res.status(200).json({ message: `Tutor with id:${id} was NOT deleted` })
+            }
+
+            return res.status(200).json({ message: `Tutor with id:${id} was deleted` })
         } catch (err) {
             return res.status(500).json({ error: err.message })
         }
