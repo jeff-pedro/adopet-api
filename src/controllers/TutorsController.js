@@ -12,6 +12,16 @@ class TurtorsController {
             return res.status(500).json(err.message)
         }
     }
+
+    static async createTutor(req, res) {
+        const newTutor = req.body
+        try {
+            const newTutorCreated = await database.Tutor.create(newTutor)
+            return res.status(200).json(newTutorCreated)
+        } catch (err) {
+            return res.status(500).json(err.message)
+        }
+    }
 }
 
 module.exports = TurtorsController
