@@ -14,13 +14,63 @@ module.exports = (sequelize, DataTypes) => {
         }
     }
     Tutor.init({
-        name: DataTypes.STRING,
-        email: DataTypes.STRING,
-        password: DataTypes.STRING,
-        phone: DataTypes.STRING,
-        city: DataTypes.STRING,
-        bio: DataTypes.STRING,
-        photo: DataTypes.STRING
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                notNull: true,
+                notEmpty: true
+            }
+        },
+        email: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                isEmail: true,
+                notNull: true,
+                notEmpty: true,
+            }
+        },
+        password: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                notNull: true,
+                notEmpty: true
+            }
+        },
+        phone: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                notNull: true,
+                notEmpty: true
+            }
+        },
+        city: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                notNull: true,
+                notEmpty: true
+            }
+        },
+        bio: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                notNull: true,
+                notEmpty: true
+            }
+        },
+        photo: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                notNull: true,
+                notEmpty: true
+            }
+        }
     }, {
         sequelize,
         modelName: 'Tutor',
