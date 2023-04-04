@@ -1,5 +1,5 @@
 const express = require('express')
-const users = require('./users')
+const tutors = require('./tutorRoutes')
 
 module.exports = (app) => {
     /* GET home page. */
@@ -9,6 +9,6 @@ module.exports = (app) => {
 
     app.use(
         express.json(),
-        users,
+        tutors,
     )
 }
