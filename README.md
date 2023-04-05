@@ -1,4 +1,4 @@
-![image](https://img.shields.io/github/v/release/jeff-pedro/api-adopet)
+![image](https://img.shields.io/github/v/release/jeff-pedro/api-adopet?display_name=tag&include_prereleases)
 ![image](https://img.shields.io/github/languages/top/jeff-pedro/api-adopet)
 ![image](https://img.shields.io/badge/code%20style-eslint-blueviolet)
 ![image](https://img.shields.io/badge/code%20formatter-prettier-orange)
