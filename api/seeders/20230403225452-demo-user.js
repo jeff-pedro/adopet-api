@@ -3,14 +3,17 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
     async up (queryInterface, Sequelize) {
-        await queryInterface.bulkInsert('Tutor', [{
+        await queryInterface.bulkInsert('Users', [{
             name: 'John Wick',
             email: 'jonh.wick@mail.com',
             password: 'jonh123',
             phone: '+711233334444',
             city: 'Padhorje',
-            bio: 'I am a loving tutor',
-            photo: 'https://images.com/images/image1'
+            about: 'I am a loving tutor',
+            profilePictureUrl: 'https://images.com/images/image-john',
+            role: 'standard',
+            createdAt: new Date(),
+            updatedAt: new Date()
         }, 
         {
             name: 'Dick Dastardly',
@@ -18,8 +21,11 @@ module.exports = {
             password: 'dick123',
             phone: '+188244442222',
             city: 'Los Angeles',
-            bio: 'I am a attencious tutor',
-            photo: 'https://images.com/images/image1'
+            about: 'I am a attencious tutor',
+            profilePictureUrl: 'https://images.com/images/image-dick',
+            role: 'standard',
+            createdAt: new Date(),
+            updatedAt: new Date()
         },
         {
             name: 'Newt Scamander',
@@ -27,15 +33,18 @@ module.exports = {
             password: 'newt123',
             phone: '+4466211115555',
             city: 'London',
-            bio: 'I am a caring tutor',
-            photo: 'https://images.com/images/image1'
+            about: 'I am a caring tutor',
+            profilePictureUrl: 'https://images.com/images/newt',
+            role: 'standard',
+            createdAt: new Date(),
+            updatedAt: new Date()
         }
         ], {})
     },
 
     async down (queryInterface, Sequelize) {
 
-        await queryInterface.bulkDelete('Tutor', null, {})
+        await queryInterface.bulkDelete('Users', null, {})
      
     }
 }
