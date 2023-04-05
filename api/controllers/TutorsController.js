@@ -3,7 +3,7 @@ const database = require('../models')
 class TurtorsController {
     static async getAllTutors(req, res) {
         try {
-            const allTutors = await database.Tutor.findAll()
+            const allTutors = await database.User.findAll()
             if (allTutors.length === 0) {
                 return res.status(200).json({ message: 'Tutors not found.' })
             }
@@ -16,7 +16,7 @@ class TurtorsController {
     static async createTutor(req, res) {
         const newTutor = req.body
         try {
-            const newTutorCreated = await database.Tutor.create(newTutor)
+            const newTutorCreated = await database.User.create(newTutor)
             return res.status(200).json(newTutorCreated)
         } catch (err) {
             return res.status(500).json({ error: err.message })
@@ -26,7 +26,7 @@ class TurtorsController {
     static async getOneTutor(req, res) {
         const { id } = req.params
         try {
-            const oneTutor = await database.Tutor.findOne({ where: { id: Number(id) } })
+            const oneTutor = await database.User.findOne({ where: { id: Number(id) } })
 
             if (!oneTutor) {
                 return res.status(200).json({ message: 'Tutor not found.' })
@@ -42,8 +42,8 @@ class TurtorsController {
         const { id } = req.params
         const newInfo = req.body
         try {
-            await database.Tutor.update(newInfo, { where: { id: Number(id) } })
-            const tutorUpdated = await database.Tutor.findOne({ where: { id: Number(id) } })
+            await database.User.update(newInfo, { where: { id: Number(id) } })
+            const tutorUpdated = await database.User.findOne({ where: { id: Number(id) } })
             return res.status(200).json(tutorUpdated)
         } catch (err) {
             return res.status(500).json({ error: err.message })
@@ -60,8 +60,8 @@ class TurtorsController {
         }
 
         try {
-            await database.Tutor.update(newInfo, { where: { id: Number(id) } })
-            const tutorUpdated = await database.Tutor.findOne({ where: { id: Number(id) } })
+            await database.User.update(newInfo, { where: { id: Number(id) } })
+            const tutorUpdated = await database.User.findOne({ where: { id: Number(id) } })
 
             if (!tutorUpdated) {
                 return res.status(200).json({ message: 'Tutor not found.' })
@@ -76,7 +76,7 @@ class TurtorsController {
     static async deleteTutor(req, res) {
         const { id } = req.params
         try {
-            const tutorDeleted = await database.Tutor.destroy({ where: { id: Number(id) } })
+            const tutorDeleted = await database.User.destroy({ where: { id: Number(id) } })
             
             if (!tutorDeleted) {
                 return res.status(200).json({ message: `Tutor with id:${id} was NOT deleted` })
