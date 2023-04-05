@@ -4,12 +4,10 @@
 [![Code Style](https://img.shields.io/badge/code_style-eslint-ff69b4.svg?style=flat-square)](https://eslint.org/)
 
 # Adopet API
-API RESTful para uma empresa ficticia de adoção de animais, desenvolvido para um Challenge Backend.
+> API RESTful para uma empresa fictícia de adoção de animais, desenvolvido para um Challenge Back-End.
 
 ## Sobre
  Adopet é uma empresa que conecta pessoas que querem adotar um pet com abrigos ou ONGs que tem estes animais disponíveis.
-
----
 
 ## Tecnologias usadas
 - **Back-End**: API RESTful em NodeJS
