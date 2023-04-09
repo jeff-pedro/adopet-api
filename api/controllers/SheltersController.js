@@ -72,6 +72,21 @@ class SheltersController {
       return res.status(500).json({ error: err.message })
     }
   }
+
+  static async deleteShelter(req, res) {
+    const { id } = req.params
+    try {
+      const shelterDeleted = await database.Shelter.destroy({ where: { id: Number(id) } })
+
+      if (!shelterDeleted.length) {
+        return res.status(400).json({ error: `Shelter with id:${id} not found`})
+      }
+
+      return res.status(200).json({ message: `Shelter with id:${id} was successfully deleted`})
+    } catch (err) {
+      return res.status(500).json({ error: err.message })
+    }
+  }
 }
 
 module.exports = SheltersController

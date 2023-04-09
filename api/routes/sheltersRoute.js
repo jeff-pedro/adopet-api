@@ -8,5 +8,6 @@ routes
   .get('/shelters/:id', SheltersController.getOneShelter)
   .put('/shelters/:id', SheltersController.updateManyShelterProperties)
   .patch('/shelters/:id', SheltersController.updateOneShelterProperty)
+  .delete('/shelters/:id', SheltersController.deleteShelter)
 
 module.exports = routes
