@@ -10,6 +10,21 @@ class SheltersController {
       return res.status(500).json({ error: err.message })
     }
   }
+
+  static async getAllShelters(req, res) {
+    try {
+
+      const shelters = await database.Shelter.findAll()
+
+      if (!shelters.length) {
+        return res.status(400).json({ message: 'Shelters not found' })
+      }
+
+      return res.status(200).json(shelters)
+    } catch (err) {
+      return res.status(500).json({ error: err.message })
+    }
+  }
 }
 
 module.exports = SheltersController

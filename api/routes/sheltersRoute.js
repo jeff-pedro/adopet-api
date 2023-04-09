@@ -4,6 +4,7 @@ const routes = Router()
 
 routes
   .post('/shelters', SheltersController.createShelter)
+  .get('/shelters', SheltersController.getAllShelters)
 
 
 module.exports = routes
