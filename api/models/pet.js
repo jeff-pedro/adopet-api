@@ -19,12 +19,50 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Pet.init({
-    name: DataTypes.STRING,
-    birthday: DataTypes.DATEONLY,
-    size: DataTypes.STRING,
+    name: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: true
+      }
+    },
+    birthday: {
+      type: DataTypes.DATEONLY,
+      validate: {
+        notEmpty: true,
+        isDate: true
+      }
+    },
+    size: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: true,
+        isIn: {
+          args: [['Mini', 'Small', 'Medium', 'Large', 'Giant']],
+          msg: 'accepted options: [ Mini, Small, Medium, Large, Giant ]'
+        }
+      }
+    },
     personality: DataTypes.STRING,
-    species: DataTypes.STRING,
-    status: DataTypes.STRING,
+    species: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: true,
+        isIn: {
+          args: [['Dog', 'Cat']],
+          msg: 'accept options: [ Dog, Cat ]'
+        }
+      },
+    },
+    status: {
+      type: DataTypes.STRING,
+      validate: {
+        isIn: {
+          args: [['New', 'Available', 'Adopted', 'Quarentine', 'Removed', 'Suspended']],
+          msg: 'accepted options: [ New, Available, Adopted, Quarentine, Removed, Suspended ]'
+        }
+      },
+      defaultValue: 'New'
+    },
     profilePictureUrl: DataTypes.STRING
   }, {
     sequelize,
