@@ -25,6 +25,21 @@ class SheltersController {
       return res.status(500).json({ error: err.message })
     }
   }
+
+  static async getOneShelter(req, res) {
+    const { id } = req.params
+    try {
+      const shelter = await database.Shelter.findByPk(Number(id))
+
+      if (!shelter) {
+        return res.status(400).json({ message: 'Shelter not found' })
+      }
+
+      return res.status(200).json(shelter)
+    } catch (err) {
+      return res.status(500).json({ error: err.message })
+    }
+  }
 }
 
 module.exports = SheltersController
