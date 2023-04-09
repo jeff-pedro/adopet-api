@@ -65,7 +65,7 @@ class SheltersController {
     }
 
     try {
-      await database.Shelter.update(newInfo, { where: Number(id) })
+      await database.Shelter.update(newInfo, { where: { id: Number(id) } })
       const shelterUpdated = await database.Shelter.findByPk(Number(id))
       return res.status(200).json(shelterUpdated)
     } catch (err) {
@@ -78,11 +78,11 @@ class SheltersController {
     try {
       const shelterDeleted = await database.Shelter.destroy({ where: { id: Number(id) } })
 
-      if (!shelterDeleted.length) {
-        return res.status(400).json({ error: `Shelter with id:${id} not found`})
+      if (!shelterDeleted) {
+        return res.status(400).json({ error: `Shelter with id:${id} not found` })
       }
 
-      return res.status(200).json({ message: `Shelter with id:${id} was successfully deleted`})
+      return res.status(200).json({ message: `Shelter with id:${id} was successfully deleted` })
     } catch (err) {
       return res.status(500).json({ error: err.message })
     }
