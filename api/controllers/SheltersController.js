@@ -40,6 +40,38 @@ class SheltersController {
       return res.status(500).json({ error: err.message })
     }
   }
+
+  static async updateManyShelterProperties(req, res) {
+    const { id } = req.params
+    const newInfo = req.body
+    try {
+      await database.Shelter.update(newInfo, { where: { id: Number(id) } })
+      const shelterUpdated = await database.Shelter.findByPk(Number(id))
+      return res.status(200).json(shelterUpdated)
+    } catch (err) {
+      return res.status(500).json({ error: err.message })
+    }
+  }
+
+  static async updateOneShelterProperty(req, res) {
+    const { id } = req.params
+    const newInfo = req.body
+
+    console.log(newInfo)
+
+    /* Checks if more than one property was passed in the body */
+    if (Object.keys(newInfo).length > 1) {
+      return res.status(200).json({ error: 'only one property is accepted to be updated with the PATCH method' })
+    }
+
+    try {
+      await database.Shelter.update(newInfo, { where: Number(id) })
+      const shelterUpdated = await database.Shelter.findByPk(Number(id))
+      return res.status(200).json(shelterUpdated)
+    } catch (err) {
+      return res.status(500).json({ error: err.message })
+    }
+  }
 }
 
 module.exports = SheltersController
