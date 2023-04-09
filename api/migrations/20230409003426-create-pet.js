@@ -14,6 +14,7 @@ module.exports = {
         type: Sequelize.STRING,
       },
       birthday: {
+        allowNull: false,
         type: Sequelize.DATEONLY
       },
       size: {
@@ -21,6 +22,7 @@ module.exports = {
         type: Sequelize.STRING,
       },
       personality: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       species: {
@@ -32,9 +34,11 @@ module.exports = {
         type: Sequelize.STRING,
       },
       profilePictureUrl: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       owner_id: {
+        allowNull: false,
         type: Sequelize.INTEGER
       },
       shelter_id: {
