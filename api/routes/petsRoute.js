@@ -11,5 +11,6 @@ routes
   .put('/pets/:id', PetsController.updateManyPetProperties)
   .patch('/pets/:id', PetsController.updateOnePetProperty)
   .delete('/pets/:id', PetsController.deletePet)
+  .delete('/pets/:id/adoption/cancel', AdoptionsController.deleteAdoption)
 
 module.exports = routes
