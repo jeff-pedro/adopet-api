@@ -37,13 +37,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      owner_id: {
-        allowNull: false,
-        type: Sequelize.INTEGER
-      },
       shelter_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
+        references: { model: 'Shelters', key: 'id' }
       },
       createdAt: {
         allowNull: false,

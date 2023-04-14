@@ -10,17 +10,27 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      this.belongsTo(models.Pet, {
-        foreignKey: 'pet_id'
-      })
-      this.belongsTo(models.User, {
-        foreignKey: 'tutor_id'
-      })
+      this.belongsTo(models.Pet, { foreignKey: 'animal' })
     }
   }
   Adoption.init({
+    tutor: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+        notNull: true
+      }
+    },
     date: {
-      type: DataTypes.DATE
+      type: DataTypes.DATE,
+      validate: {
+        isDate: {
+          args: true,
+          msg: 'invalid date format (yyyy-mm-dd)'
+        }
+      },
+      defaultValue: new Date()
     }
   }, {
     sequelize,

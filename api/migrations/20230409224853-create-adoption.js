@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -13,11 +13,12 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       },
-      id_pet: {
-        allowNull:false,
-        type: Sequelize.INTEGER
+      animal: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: { model: 'Pets', key: 'id' }
       },
-      id_tutor: {
+      tutor: {
         allowNull: false,
         type: Sequelize.INTEGER
       },
@@ -29,9 +30,9 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    });
+    })
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Adoptions');
+    await queryInterface.dropTable('Adoptions')
   }
-};
+}
