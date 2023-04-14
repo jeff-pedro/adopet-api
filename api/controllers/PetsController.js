@@ -2,10 +2,18 @@ const database = require('../models')
 
 class PetsController {
   static async createPet(req, res) {
-    const newPet = req.body
+    const { body } = req
 
-    // parse object to Date format (RFC2822)
-    newPet.birthday = new Date(newPet.birthday)
+    const newPet = {
+      name: body.name,
+      birthday: new Date(body.birthday), // RFC2822
+      size: body.size,
+      personality: body.personality,
+      species: body.species,
+      status: body.status,
+      profilePictureUrl: body.profilePictureUrl || null,
+      shelter_id: Number(body.shelter_id) || null
+    }
 
     try {
       const newPetCreated = await database.Pet.create(newPet)

@@ -23,26 +23,45 @@ module.exports = (sequelize, DataTypes) => {
     },
     birthday: {
       type: DataTypes.DATEONLY,
+      allowNull: false,
       validate: {
-        notEmpty: true,
-        isDate: true
+        notNull: {
+          msg: 'field birthady is required'
+        },
+        isDate: {
+          msg: 'invalid date format'
+        }
       }
     },
     size: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
-        notEmpty: true,
+        notNull: {
+          msg: 'field size is required'
+        },
         isIn: {
           args: [['Mini', 'Small', 'Medium', 'Large', 'Giant']],
           msg: 'accepted options: [ Mini, Small, Medium, Large, Giant ]'
         }
       }
     },
-    personality: DataTypes.STRING,
+    personality: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: 'field personality is required'
+        }
+      }
+    },
     species: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
-        notEmpty: true,
+        notNull: {
+          msg: 'field species is required'
+        },
         isIn: {
           args: [['Dog', 'Cat']],
           msg: 'accept options: [ Dog, Cat ]'
@@ -51,7 +70,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     status: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
+        notNull: {
+          msg: 'field status is required'
+        },
         isIn: {
           args: [['New', 'Available', 'Adopted', 'Quarentine', 'Removed', 'Suspended']],
           msg: 'accepted options: [ New, Available, Adopted, Quarentine, Removed, Suspended ]'
@@ -59,7 +82,27 @@ module.exports = (sequelize, DataTypes) => {
       },
       defaultValue: 'New'
     },
-    profilePictureUrl: DataTypes.STRING
+    profilePictureUrl: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: 'field profilePictureUrl is required'
+        },
+        isUrl: {
+          msg: 'invalid URL format'
+        }
+      }
+    },
+    shelter_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: 'field shelter_id is required'
+        }
+      }
+    }
   }, {
     sequelize,
     modelName: 'Pet',
