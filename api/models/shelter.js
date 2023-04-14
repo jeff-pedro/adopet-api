@@ -14,10 +14,25 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Shelter.init({
-    name: DataTypes.STRING,
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: 'field name is required'
+        },
+        notEmpty: {
+          msg: 'invalid empty field'
+        }
+      }
+    },
     email: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
+        notNull: {
+          msg: 'field email is required'
+        },
         isEmail: {
           msg: 'invalid email format'
         }
@@ -25,20 +40,38 @@ module.exports = (sequelize, DataTypes) => {
     },
     phone: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
-        notEmpty: true
+        notNull: {
+          msg: 'field phone is required'
+        },
+        notEmpty: {
+          msg: 'invalid empty field'
+        }
       }
     },
     city: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
-        notEmpty: true
+        notNull: {
+          msg: 'field city is required'
+        },
+        notEmpty: {
+          msg: 'invalid empty field'
+        }
       }
     },
     state: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
-        notEmpty: true
+        notNull: {
+          msg: 'field state is required'
+        },
+        notEmpty: {
+          msg: 'invalid empty field'
+        }
       }
     }
   }, {
