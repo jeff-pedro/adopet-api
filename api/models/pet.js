@@ -1,6 +1,6 @@
 'use strict'
 const {
-  Model
+  Model, Op
 } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
   class Pet extends Model {
@@ -106,6 +106,13 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Pet',
+    defaultScope: {
+      where: {
+        [Op.not]: {
+          status:'Adopted'
+        }
+      }
+    }
   })
   return Pet
 }
