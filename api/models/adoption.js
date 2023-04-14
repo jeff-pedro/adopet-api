@@ -14,6 +14,17 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Adoption.init({
+    animal: {
+      type: DataTypes.INTEGER,
+      validate: {
+        async isUnique (value) {
+          const alreadyExist = await Adoption.findOne({ where: { animal: value } })
+          if (alreadyExist) {
+            throw new Error('this pet was already adopted')
+          }
+        }
+      },
+    },
     tutor: {
       type: DataTypes.INTEGER,
       allowNull: false,

@@ -15,6 +15,7 @@ module.exports = {
       },
       animal: {
         allowNull: false,
+        unique: true,
         type: Sequelize.INTEGER,
         references: { model: 'Pets', key: 'id' }
       },
