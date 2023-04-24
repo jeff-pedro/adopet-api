@@ -16,24 +16,50 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   User.init({
-    name: DataTypes.STRING,
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: 'name field is required'
+        },
+        notEmpty: {
+          args: true,
+          msg: 'name field cannot be empty'
+        }
+      }
+    },
     email: {
       type: DataTypes.STRING,
-      unique: true,
+      unique: {
+        args: true,
+        msg: 'email already exists'
+      },
       allowNull: false,
       validate:{
-        notEmpty: true,
-        notNull: true,
-        isEmail: true
+        notNull: {
+          args: true,
+          msg: 'email field is required'
+        },
+        isEmail: {
+          args: true,
+          msg: 'invalid email format'
+        }
       }
     },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notEmpty: true,
-        notNull: true
-                
+        notNull: {
+          args: true,
+          msg: 'password field is required'
+        },
+        notEmpty: {
+          args: true,
+          msg: 'password field cannot be empty'
+        }           
       }
     },
     phone: DataTypes.STRING,
@@ -42,14 +68,23 @@ module.exports = (sequelize, DataTypes) => {
     profilePictureUrl: {
       type: DataTypes.STRING,
       validate: {
-        isUrl: true
+        isUrl: {
+          msg: 'invalid URL format'
+        }
       },
     },
     role: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate:{
-        isIn: [['administrator','standard']],
-        min: 7
+        notNull: {
+          args: true,
+          msg: 'role field is required'
+        },
+        isIn: {
+          args: [['administrator','standard']],
+          msg: 'accepted options: [ administrator, standard ]'
+        }
       }, 
       defaultValue: 'standard'
     }
