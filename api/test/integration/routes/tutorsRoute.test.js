@@ -50,7 +50,7 @@ describe('Tutors', () => {
       tutorId = res.body.id
     })
 
-    it('should thown an error if the request body is empty', async () => {
+    it('should return an error if the request body is empty', async () => {
       const res = await request(app)
         .post('/tutors')
         .set('Accept', 'application/json')
@@ -62,7 +62,7 @@ describe('Tutors', () => {
 
     })
     // sobre o curso aqui....
-    it('should thown an error if some property is empty', async () => {
+    it('should return an error if some property is empty', async () => {
 
       tutorObj.name = ''
 
@@ -111,12 +111,37 @@ describe('Tutors', () => {
     })
   })
 
+  describe('PATCH /tutors/{id}', () => {
+    it('should update only one field', async () => {
+      const res = await request(app)
+        .patch(`/tutors/${tutorId}`)
+        .send({
+          email: 'captain@theblackpearl.sea'
+        })
+
+      expect(res.status).toBe(200)
+      expect(res.body).toHaveProperty('message')
+      expect(res.body.message).toEqual('tutor updated')
+    })
+
+    it('should return an error if given more than one field', async () => {
+      const res = await request(app)
+        .patch(`/tutors/${tutorId}`)
+        .send({
+          password: 'pass123',
+          role: 'administrator'
+        })
+
+      expect(res.status).toBe(422)
+    })
+  })
+
   describe('DELETE /tutors/{id}', () => {
     it('shoud delete one tutor', async () => {
       await request(app)
         .delete(`/tutors/${tutorId}`)
         .expect(200)
     })
-
+    
   })
 })
