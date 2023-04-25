@@ -6,14 +6,28 @@ const request = require('supertest')
 
 describe('Tutors', () => {
   let tutorId
+  let tutorObj
 
   beforeAll(async () => {
     // Clean the database
     await db.User.destroy({ where: {} })
+
     // Initialize the databases    
     await db.sequelize.sync()
   })
 
+  beforeEach(() => {
+    tutorObj = {
+      name: 'Jack Sparrow',
+      email: 'jack.sparrow@pirates.sea',
+      password: 'jack123',
+      phone: '+011233334444',
+      city: 'Tortuga',
+      about: 'I am the best tutor',
+      profilePictureUrl: 'https://images.com/images/image-jack',
+      role: 'standard'
+    }
+  })
 
   describe('GET /tutors', () => {
     it('should list all tutors', async () => {
@@ -27,32 +41,72 @@ describe('Tutors', () => {
   })
 
   describe('POST /tutors', () => {
-    it('shoud create a new tutor', async () => {
+    it('should create a new tutor', async () => {
+      // erro validation: não retorna uma msg quando o valor na propriedade já existe duplicado ('unique constraint')
       const res = await request(app)
         .post('/tutors')
-        .send({
-          name: 'Jack Sparrow',
-          email: 'jack.sparrow@pirates.sea', // erro validation sem descrição do unique
-          password: 'jack123',
-          phone: '+011233334444',
-          city: 'Tortuga',
-          about: 'I am the best tutor',
-          profilePictureUrl: 'https://images.com/images/image-jack',
-          role: 'standard'
-        })
+        .send(tutorObj)
         .expect(200)
       tutorId = res.body.id
     })
 
-    //it('should thown an error if the request body is empty')
-    //it('should thown an error if some proporty is empty')
+    it('should thown an error if the request body is empty', async () => {
+      const res = await request(app)
+        .post('/tutors')
+        .set('Accept', 'application/json')
+        .send({})
+
+      expect(res.status).toBe(400)
+      expect(res.body).toHaveProperty('error')
+      expect(res.body.error).toEqual('empty request body')
+
+    })
+    // sobre o curso aqui....
+    it('should thown an error if some property is empty', async () => {
+
+      tutorObj.name = ''
+
+      const res = await request(app)
+        .post('/tutors')
+        .set('Accept', 'application/json')
+        .send(tutorObj)
+
+      expect(res.status).toBe(400)
+      expect(res.body).toHaveProperty('error')
+      expect(res.body.error).toMatch('field cannot be empty')
+    })
+
+    it('should have all properties populated with the right type', async () => {
+      // criar um novo objeto
+      tutorObj.email = 'j@j.com'
+
+      const res = await request(app)
+        .post('/tutors')
+        .set('Accept', 'application/json')
+        .send(tutorObj)
+
+      expect(res.body).toEqual(
+        expect.objectContaining({
+          id: expect.any(Number),
+          name: expect.any(String),
+          email: expect.any(String),
+          password: expect.any(String),
+          phone: expect.any(String),
+          city: expect.any(String),
+          about: expect.any(String),
+          profilePictureUrl: expect.any(String),
+          role: expect.any(String)
+        })
+      )
+    })
   })
 
   describe('GET /tutors/{id}', () => {
     it('shoud return one tutor', async () => {
       const res = await request(app)
         .get(`/tutors/${tutorId}`)
-        .expect(200)
+
+      expect(res.status).toBe(200)
       expect(res.body.email).toEqual('jack.sparrow@pirates.sea')
     })
   })

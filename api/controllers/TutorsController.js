@@ -13,9 +13,21 @@ class TurtorsController {
   static async createTutor(req, res) {
     const newTutor = req.body
     try {
+      if (Object.keys(newTutor).length === 0) {
+        throw new Error('empty request body')
+      }
+      
       const newTutorCreated = await database.User.create(newTutor)
       return res.status(200).json(newTutorCreated)
     } catch (err) {
+      if (err.message === 'empty request body') {
+        return res.status(400).json({ error: err.message })
+      }
+      
+      if (err.errors[0].type === 'Validation error') {
+        return res.status(400).json({ error: err.errors[0].message })
+      }
+
       return res.status(500).json({ error: err.message })
     }
   }
@@ -74,7 +86,7 @@ class TurtorsController {
     const { id } = req.params
     try {
       const tutorDeleted = await database.User.destroy({ where: { id: Number(id) } })
-            
+
       if (!tutorDeleted) {
         return res.status(200).json({ message: `Tutor with id:${id} was NOT deleted` })
       }
