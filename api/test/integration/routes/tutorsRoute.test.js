@@ -1,22 +1,28 @@
 process.env.NODE_ENV = 'test'
 
 const app = require('../../../app')
+const db = require('../../../models')
 const request = require('supertest')
 
 describe('Tutors', () => {
-
   let tutorId
+
+  beforeAll(async () => {
+    // Clean the database
+    await db.User.destroy({ where: {} })
+    // Initialize the databases    
+    await db.sequelize.sync()
+  })
+
 
   describe('GET /tutors', () => {
     it('should list all tutors', async () => {
       const res = await request(app)
         .get('/tutors')
         .set('Accept', 'application/json')
-        .expect(200)
-        .expect('content-type', /json/)
-
-      expect(res.body[0].name).toEqual('John Wick')
-      expect(res.body[0].email).toEqual('jonh.wick@mail.com')
+      expect(res.headers['content-type']).toMatch(/json/)
+      expect(res.status).toEqual(200)
+      expect(res.body).toHaveLength(0)
     })
   })
 

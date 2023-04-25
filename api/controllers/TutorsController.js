@@ -4,9 +4,6 @@ class TurtorsController {
   static async getAllTutors(req, res) {
     try {
       const allTutors = await database.User.findAll()
-      if (allTutors.length === 0) {
-        return res.status(200).json({ message: 'Tutors not found.' })
-      }
       return res.status(200).json(allTutors)
     } catch (err) {
       return res.status(500).json({ error: err.message })
