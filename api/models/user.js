@@ -2,6 +2,7 @@
 const {
   Model
 } = require('sequelize')
+const { Sequelize } = require('.')
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -32,19 +33,26 @@ module.exports = (sequelize, DataTypes) => {
     },
     email: {
       type: DataTypes.STRING,
-      unique: {
-        args: true,
-        msg: 'email already exists'
-      },
       allowNull: false,
-      validate:{
+      unique: true,
+      validate: {
         notNull: {
           args: true,
           msg: 'email field is required'
         },
+        notEmpty: {
+          msg: 'email field cannot be empty'
+        },
         isEmail: {
-          args: true,
           msg: 'invalid email format'
+        },
+        isUnique: async (value,) => {
+          const user = await User.findOne({
+            where: { email: value }
+          })
+          if (user !== null) {
+            throw new Error('email already in use')
+          }
         }
       }
     },
@@ -57,9 +65,8 @@ module.exports = (sequelize, DataTypes) => {
           msg: 'password field is required'
         },
         notEmpty: {
-          args: true,
           msg: 'password field cannot be empty'
-        }           
+        }
       }
     },
     phone: DataTypes.STRING,
@@ -69,6 +76,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       validate: {
         isUrl: {
+          args: true,
           msg: 'invalid URL format'
         }
       },
@@ -76,16 +84,16 @@ module.exports = (sequelize, DataTypes) => {
     role: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate:{
+      validate: {
         notNull: {
           args: true,
           msg: 'role field is required'
         },
         isIn: {
-          args: [['administrator','standard']],
+          args: [['administrator', 'standard']],
           msg: 'accepted options: [ administrator, standard ]'
         }
-      }, 
+      },
       defaultValue: 'standard'
     }
   }, {
