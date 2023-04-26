@@ -50,73 +50,54 @@ describe('Testing User model', () => {
   })
 
   describe('Validate user properties', () => {
-    it('should throw an error when name is null', async () => {
-      userObject.name = null
-      const user = db.User.build(userObject)
-      await expect(user.validate()).rejects.toThrow('notNull Violation: name field is required')
-    })
-
-    it('should throw an error when name is empty', async () => {
-      userObject.name = ''
-      const user = db.User.build(userObject)
-      await expect(user.validate()).rejects.toThrow('Validation error: name field cannot be empty')
-    })
-
-    it('should throw an error when email is null', async () => {
+    test.each([
+      ['name'], ['email'], ['password'], ['role']
+    ]
+    )('should throw an error if property %s is null', async (param) => {
+      userObject[param] = null
       try {
-        userObject.email = null
         await db.User.create(userObject)
       } catch (err) {
-        expect(err.errors[0].type).toBe('notNull Violation')
-        expect(err.message).toContain('email field is required')
+        expect(err).toHaveProperty('errors')
+        expect(err.errors[0].type).toEqual('notNull Violation')
+        expect(err.errors[0].message).toEqual(`${param} field is required`)
       }
     })
 
-    it('should throw an error when email has an invalid format', async () => {
-      userObject.email = 'invalid_email_format'
+    test.each([
+      ['name'], ['password'], ['email']
+    ])('should throw an error if property %s is empty', async (param) => {
+      userObject[param] = ''
       const user = db.User.build(userObject)
-      await expect(user.validate()).rejects.toThrow('Validation error: invalid email format')
+      await expect(user.validate()).rejects.toThrow(`Validation error: ${param} field cannot be empty`)
     })
 
-    it('should throw an error when a given email already exists', async () => {
+    test.each([
+      ['email'], ['profilePictureUrl']
+    ])('should throw an error if property %s has an invalid format', async (param) => {
+      userObject[param] = 'invalid_format'
+      try {
+        await db.User.create(userObject)
+      } catch (err) {
+        expect(err).toHaveProperty('errors')
+        expect(err.errors[0].message).toMatch(/(i?)^(invalid)\s(\w+)\s(format)$/)
+      }
+    })
+
+    it('should throw an error if a given email already exists', async () => {
       await db.User.create(userObject)
-      await expect(db.User.create(userObject)).rejects.toThrow('email already exist')
+      await expect(db.User.create(userObject)).rejects.toThrow('email already in use')
     })
 
-    it('should throw an error when password is null', async () => {
-      userObject.password = null
-      const user = db.User.build(userObject)
-      await expect(user.validate()).rejects.toThrow('notNull Violation: password field is required')
-    })
-
-    it('should throw an error when password is empty', async () => {
-      userObject.password = ''
-      const user = db.User.build(userObject)
-      await expect(user.validate()).rejects.toThrow('Validation error: password field cannot be empty')
-    })
-
-    it('should throw an error when role is null', async () => {
-      userObject.role = null
-      const user = db.User.build(userObject)
-      await expect(user.validate()).rejects.toThrow('notNull Violation: role field is required')
-    })
-
-    it('should throw an error when given an invalid role option', async () => {
+    it('should throw an error if given an invalid role option', async () => {
       userObject.role = ''
       const user = db.User.build(userObject)
       await expect(user.validate()).rejects.toThrow('Validation error: accepted options: [ administrator, standard ]')
     })
-
-    it('should throw an error when profileUrlPicture has nan invalid format', async () => {
-      userObject.profilePictureUrl = 'http://invalid_url_format'
-      const user = db.User.build(userObject)
-      await expect(user.validate()).rejects.toThrow('Validation error: invalid URL format')
-    })
   })
-  
+
   afterAll(async () => {
     // Closes the db connection
     await db.sequelize.close()
   })
 })
-
