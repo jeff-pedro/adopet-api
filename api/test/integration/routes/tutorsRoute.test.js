@@ -111,6 +111,32 @@ describe('Tutors', () => {
     })
   })
 
+  describe('PUT /tutors/{id}', () => {
+    it('should update some fields', async () => {
+      const res = await request(app)
+        .put(`/tutors/${tutorId}`)
+        .send({
+          name: 'Captain Jack Sparrow',
+          email: 'captain@theblackpearl.sea',
+        })
+
+      expect(res.status).toBe(200)
+      expect(res.body).toHaveProperty('message')
+      expect(res.body.message).toEqual('tutor updated')
+    })
+
+    test.each([
+      ['empty', {}],
+      ['undefined', { somefield: 'some value' }]
+    ])('should not update if provided an %s field', async (_,param) => {
+      const res = await request(app)
+        .put(`/tutors/${tutorId}`)
+        .send(param)
+
+      expect(res.status).toBe(204)
+    })
+  })
+
   describe('PATCH /tutors/{id}', () => {
     it('should update only one field', async () => {
       const res = await request(app)
@@ -142,6 +168,6 @@ describe('Tutors', () => {
         .delete(`/tutors/${tutorId}`)
         .expect(200)
     })
-    
+
   })
 })
