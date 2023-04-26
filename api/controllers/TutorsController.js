@@ -51,10 +51,16 @@ class TurtorsController {
   static async updateManyTutorData(req, res) {
     const { id } = req.params
     const newInfo = req.body
+
     try {
-      await database.User.update(newInfo, { where: { id: Number(id) } })
-      const tutorUpdated = await database.User.findOne({ where: { id: Number(id) } })
-      return res.status(200).json(tutorUpdated)
+      const updated = await database.User.update(newInfo, { where: { id: Number(id) } })
+
+      if (updated[0]) {
+        const tutorUpdated = await database.User.findOne({ where: { id: Number(id) } })
+        return res.status(200).json({ message: 'tutor updated', content: tutorUpdated })
+      } else {
+        return res.status(204).json()
+      }
     } catch (err) {
       return res.status(500).json({ error: err.message })
     }
