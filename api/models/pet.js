@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notNull: { msg: 'name field is required' },
-        notEmpty: { msg: 'name field cannot be empty' }
+        notEmpty: { msg: 'name field cannot be empty' },
       }
     },
     birthday: {
@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notNull: { msg: 'birthday field is required' },
         notEmpty: { msg: 'birthday field cannot be empty' },
-        isDate: { msg: 'invalid date format' }
+        isDate: { args: false, msg: 'invalid date format' }
       }
     },
     size: {
