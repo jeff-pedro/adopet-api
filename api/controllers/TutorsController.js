@@ -36,14 +36,17 @@ class TurtorsController {
   static async getOneTutor(req, res) {
     const { id } = req.params
     try {
-      const oneTutor = await database.User.findOne({ where: { id: Number(id) } })
+      const tutor = await database.User.findOne({ where: { id: Number(id) } })
 
-      if (!oneTutor) {
-        return res.status(200).json({ message: 'Tutor not found.' })
+      if (tutor === null) {
+        throw new Error('Tutor not found')
       }
 
-      return res.status(200).json(oneTutor)
+      return res.status(200).json(tutor)
     } catch (err) {
+      if (err.message === 'Tutor not found') {
+        return res.status(404).json({ error: err.message })
+      }
       return res.status(500).json({ error: err.message })
     }
   }
@@ -58,9 +61,9 @@ class TurtorsController {
       if (updated[0]) {
         const tutorUpdated = await database.User.findOne({ where: { id: Number(id) } })
         return res.status(200).json({ message: 'tutor updated', content: tutorUpdated })
-      } else {
-        return res.status(204).json()
       }
+      
+      return res.status(204).json()
     } catch (err) {
       return res.status(500).json({ error: err.message })
     }
