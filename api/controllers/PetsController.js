@@ -16,22 +16,32 @@ class PetsController {
     }
 
     try {
+      if (Object.keys(body).length === 0) {
+        throw new Error('empty request body')
+      }
+
       const newPetCreated = await database.Pet.create(newPet)
       return res.status(200).json(newPetCreated)
     } catch (err) {
+      if (err.message.includes('Validation error')) {
+        return res.status(422).json({ error: err.errors[0].message })
+      }
+
+      if (err.message.includes('notNull Violation')) {
+        return res.status(422).json({ error: err.errors[0].message })
+      }
+
+      if (err.message === 'empty request body') {
+        return res.status(422).json({ error: err.message })
+      }
+
       return res.status(500).json({ error: err.message })
     }
   }
 
   static async getAllPets(req, res) {
     try {
-
       const pets = await database.Pet.findAll()
-
-      if (!pets.length) {
-        return res.status(400).json({ message: 'Pets not found' })
-      }
-
       return res.status(200).json(pets)
     } catch (err) {
       return res.status(500).json({ error: err.message })
@@ -43,12 +53,15 @@ class PetsController {
     try {
       const pet = await database.Pet.findByPk(Number(id))
 
-      if (!pet) {
-        return res.status(400).json({ message: 'Pet not found' })
+      if (pet === null) {
+        throw new Error('Pet not found')
       }
 
       return res.status(200).json(pet)
     } catch (err) {
+      if (err.message === 'Pet not found') {
+        return res.status(404).json({ error: err.message })
+      }
       return res.status(500).json({ error: err.message })
     }
   }
@@ -56,15 +69,21 @@ class PetsController {
   static async updateManyPetProperties(req, res) {
     const { id } = req.params
     const newInfo = req.body
-    try {
-      await database.Pet.update(newInfo, { where: { id: Number(id) } })
-      const petUpdated = await database.Pet.findByPk(Number(id))
 
-      if (!petUpdated) {
-        return res.status(400).json({ error: `Pet with id:${id} not found` })
+    try {
+      const updated = await database.Pet.update(newInfo, { where: { id: Number(id) } })
+
+      if (!updated[0]) {
+        return res.status(204).json()
       }
 
-      return res.status(200).json(petUpdated)
+      const petUpdated = await database.Pet.findOne({ where: { id: Number(id) } })
+
+      if (petUpdated === null) {
+        return res.status(404).json({ error: `Pet with id:${id} not found` })
+      }
+
+      return res.status(200).json({ message: 'pet updated', content: petUpdated })
     } catch (err) {
       return res.status(500).json({ error: err.message })
     }
@@ -74,18 +93,19 @@ class PetsController {
     const { id } = req.params
     const newInfo = req.body
 
-    console.log(newInfo)
-
-    /* Checks if more than one property was passed in the body */
-    if (Object.keys(newInfo).length > 1) {
-      return res.status(200).json({ error: 'only one property is accepted to be updated with the PATCH method' })
-    }
-
     try {
+      /* Checks if more than one property was passed in the body */
+      if (Object.keys(newInfo).length > 1) {
+        throw new Error('one property can be updated at a time')
+      }
+
       await database.Pet.update(newInfo, { where: { id: Number(id) } })
       const petUpdated = await database.Pet.findByPk(Number(id))
-      return res.status(200).json(petUpdated)
+      return res.status(200).json({ message: 'pet updated', content: petUpdated })
     } catch (err) {
+      if (err.message === 'one property can be updated at a time') {
+        return res.status(422).json({ error: err.message })
+      }
       return res.status(500).json({ error: err.message })
     }
   }
