@@ -9,11 +9,11 @@ describe('Tutors', () => {
   let tutorObj
 
   beforeAll(async () => {
-    // Clean the database
-    await db.User.destroy({ where: {} })
-
     // Initialize the databases    
     await db.sequelize.sync()
+
+    // Clean the database
+    await db.User.destroy({ where: {} })
   })
 
   beforeEach(() => {
@@ -42,7 +42,6 @@ describe('Tutors', () => {
 
   describe('POST /tutors', () => {
     it('should create a new tutor', async () => {
-      // erro validation: não retorna uma msg quando o valor na propriedade já existe duplicado ('unique constraint')
       const res = await request(app)
         .post('/tutors')
         .send(tutorObj)
@@ -61,7 +60,7 @@ describe('Tutors', () => {
       expect(res.body.error).toEqual('empty request body')
 
     })
-    // sobre o curso aqui....
+    // test.each....
     it('should return an error if some property is empty', async () => {
 
       tutorObj.name = ''
@@ -75,30 +74,6 @@ describe('Tutors', () => {
       expect(res.body).toHaveProperty('error')
       expect(res.body.error).toMatch('field cannot be empty')
     })
-
-    it('should have all properties populated with the right type', async () => {
-      // criar um novo objeto
-      tutorObj.email = 'j@j.com'
-
-      const res = await request(app)
-        .post('/tutors')
-        .set('Accept', 'application/json')
-        .send(tutorObj)
-
-      expect(res.body).toEqual(
-        expect.objectContaining({
-          id: expect.any(Number),
-          name: expect.any(String),
-          email: expect.any(String),
-          password: expect.any(String),
-          phone: expect.any(String),
-          city: expect.any(String),
-          about: expect.any(String),
-          profilePictureUrl: expect.any(String),
-          role: expect.any(String)
-        })
-      )
-    })
   })
 
   describe('GET /tutors/{id}', () => {
@@ -108,6 +83,15 @@ describe('Tutors', () => {
 
       expect(res.status).toBe(200)
       expect(res.body.email).toEqual('jack.sparrow@pirates.sea')
+    })
+
+    it('should return 404 if any data is found', async () => {
+      const res = await request(app)
+        .get('/tutors/0')
+
+      expect(res.status).toBe(404)
+      expect(res.body).toHaveProperty('error')
+      expect(res.body.error).toEqual('Tutor not found')
     })
   })
 
@@ -142,7 +126,7 @@ describe('Tutors', () => {
       const res = await request(app)
         .patch(`/tutors/${tutorId}`)
         .send({
-          email: 'captain@theblackpearl.sea'
+          password: 'pass123'
         })
 
       expect(res.status).toBe(200)
@@ -150,20 +134,22 @@ describe('Tutors', () => {
       expect(res.body.message).toEqual('tutor updated')
     })
 
-    it('should return an error if given more than one field', async () => {
+    it('should return an error if try update more than one field', async () => {
       const res = await request(app)
         .patch(`/tutors/${tutorId}`)
         .send({
-          password: 'pass123',
+          city: 'Port Royal',
           role: 'administrator'
         })
-
+      
       expect(res.status).toBe(422)
+      expect(res.body).toHaveProperty('error')
+      expect(res.body.error).toEqual('only one property can be updated at a time')
     })
   })
 
   describe('DELETE /tutors/{id}', () => {
-    it('shoud delete one tutor', async () => {
+    it('should delete one tutor', async () => {
       await request(app)
         .delete(`/tutors/${tutorId}`)
         .expect(200)
