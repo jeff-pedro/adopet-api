@@ -16,30 +16,33 @@ module.exports = (sequelize, DataTypes) => {
   Adoption.init({
     animal: {
       type: DataTypes.INTEGER,
+      allowNull: false,
       validate: {
-        async isUnique (value) {
-          const alreadyExist = await Adoption.findOne({ where: { animal: value } })
-          if (alreadyExist) {
+        notNull: { msg: 'animal field is required' },
+        notEmpty: { msg: 'animal field cannot be empty' },
+        async isUnique(value) {
+          const animalAdopted = await Adoption.findOne({ where: { animal: value } })
+          if (animalAdopted) {
             throw new Error('this pet was already adopted')
           }
-        }
+        },
       },
     },
     tutor: {
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
-        notEmpty: true,
-        notNull: true
+        notNull: { msg: 'tutor field is required' },
+        notEmpty: { msg: 'tutor field cannot be empty' }
       }
     },
     date: {
       type: DataTypes.DATE,
+      allowNull: false,
       validate: {
-        isDate: {
-          args: true,
-          msg: 'invalid date format (yyyy-mm-dd)'
-        }
+        notNull: { msg: 'date field is required' },
+        notEmpty: { msg: 'date field cannot be empty' },
+        isDate: { msg: 'invalid date format (yyyy-mm-dd)' }
       },
       defaultValue: new Date()
     }
