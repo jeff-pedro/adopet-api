@@ -4,10 +4,19 @@ const db = require('../../../models')
 describe('Testing Pet model', () => {
 
   let petObject
+  let shelter
 
   beforeAll(async () => {
     // Initialize the databases
     await db.sequelize.sync()
+
+    shelter = await db.Shelter.create({
+      name: 'Caribbean Crazy Animals',
+      email: 'contact@crazyanimals.sea',
+      phone: '+08898985421',
+      city: 'Port Royal',
+      state: 'Caribbean'
+    })
   })
 
   beforeEach(async () => {
@@ -17,13 +26,13 @@ describe('Testing Pet model', () => {
     // Object containing pet proprieties to be tested
     petObject = {
       name: 'Cotton',
-      birthday: '2023-01-01',
+      birthday: new Date('2023-01-01'),
       size: 'Mini',
       personality: 'He chatty and cute.',
       species: 'Dog',
       status: 'New',
       profilePictureUrl: 'http://images.com/cotton',
-      shelter_id: 1
+      shelter_id: shelter.id
     }
   })
 
