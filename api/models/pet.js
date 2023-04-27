@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     birthday: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
       allowNull: false,
       validate: {
         notNull: { msg: 'birthday field is required' },
