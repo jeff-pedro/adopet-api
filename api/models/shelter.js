@@ -18,60 +18,41 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notNull: {
-          msg: 'field name is required'
-        },
-        notEmpty: {
-          msg: 'invalid empty field'
-        }
+        notNull: { msg: 'name field is required' },
+        notEmpty: { msg: 'name field cannot be empty' }
       }
     },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notNull: {
-          msg: 'field email is required'
-        },
-        isEmail: {
-          msg: 'invalid email format'
-        }
+        notNull: { msg: 'email field is required' },
+        notEmpty: { msg: 'email field cannot be empty' },
+        isEmail: { msg: 'invalid email format' }
       },
     },
     phone: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notNull: {
-          msg: 'field phone is required'
-        },
-        notEmpty: {
-          msg: 'invalid empty field'
-        }
+        notNull: { msg: 'phone field is required' },
+        notEmpty: { msg: 'phone field cannot be empty' }
       }
     },
     city: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notNull: {
-          msg: 'field city is required'
-        },
-        notEmpty: {
-          msg: 'invalid empty field'
-        }
+        notNull: { msg: 'city field is required' },
+        notEmpty: { msg: 'city field cannot be empty' }
       }
     },
     state: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notNull: {
-          msg: 'field state is required'
-        },
-        notEmpty: {
-          msg: 'invalid empty field'
-        }
+        notNull: { msg: 'state field is required' },
+        notEmpty: { msg: 'state field cannot be empty' }
       }
     }
   }, {
