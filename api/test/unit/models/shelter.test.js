@@ -11,9 +11,6 @@ describe('Testing Shelter model', () => {
   })
 
   beforeEach(async () => {
-    // Clean the database
-    await db.Shelter.destroy({ where: {} })
-
     // Object containing Shelter proprieties to be tested
     shelterObject = {
       name: 'Caribbean Crazy Animals',
