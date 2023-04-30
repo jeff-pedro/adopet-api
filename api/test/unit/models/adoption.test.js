@@ -12,7 +12,7 @@ describe('Testing Adoption model', () => {
     // Initialize the databases
     await db.sequelize.sync()
 
-    // Create related entities
+    // Create entities to be used in Adoption
     user = await db.User.create({
       name: 'Jack Sparrow',
       email: 'jack@mail.com',
@@ -41,7 +41,7 @@ describe('Testing Adoption model', () => {
       profilePictureUrl: 'http://images.com/cotton',
       shelter_id: shelter.id
     })
-  })
+  }, 20000)
 
   beforeEach(async () => {
     // Object containing Adoption proprieties to be tested
@@ -51,6 +51,17 @@ describe('Testing Adoption model', () => {
       date: new Date('2023-04-01')
     }
   })
+
+  afterAll(async () => {
+    // Drop all databases
+    await db.Adoption.drop()
+    await db.Pet.drop()
+    await db.Shelter.drop()
+    await db.User.drop()
+
+    // Closes the db connection
+    await db.sequelize.close()
+  }, 20000)
 
   describe('Create Adoption', () => {
     it('should create a new instance of adoption', () => {
@@ -116,15 +127,5 @@ describe('Testing Adoption model', () => {
         expect(err.errors[0].message).toEqual('this pet was already adopted')
       }
     })
-  })
-
-  afterAll(async () => {
-    // Clean the databases
-    await db.Adoption.destroy({ where: {} })
-    await db.Pet.destroy({ where: {} })
-    await db.User.destroy({ where: {} })
-
-    // Closes the db connection
-    await db.sequelize.close()
   })
 })

@@ -7,9 +7,11 @@ describe('Testing Pet model', () => {
   let shelter
 
   beforeAll(async () => {
-    // Initialize the databases
-    await db.sequelize.sync()
+    // Initialize the database
+    await db.Shelter.sync()
+    await db.Pet.sync()
 
+    // Create one Shelter to use in Pet (shelter_id) 
     shelter = await db.Shelter.create({
       name: 'Caribbean Crazy Animals',
       email: 'contact@crazyanimals.sea',
@@ -17,12 +19,9 @@ describe('Testing Pet model', () => {
       city: 'Port Royal',
       state: 'Caribbean'
     })
-  })
+  }, 20000)
 
   beforeEach(async () => {
-    // Clean the database
-    await db.Pet.destroy({ where: {} })
-
     // Object containing pet proprieties to be tested
     petObject = {
       name: 'Cotton',
@@ -35,6 +34,14 @@ describe('Testing Pet model', () => {
       shelter_id: shelter.id
     }
   })
+
+  afterAll(async () => {
+    // Drop the Pet table
+    await db.Pet.drop()
+
+    // Close the db connection
+    await db.sequelize.close()
+  }, 20000)
 
   describe('Create Pet', () => {
     it('should create a new instance of pet', () => {
@@ -120,10 +127,5 @@ describe('Testing Pet model', () => {
         expect(err.errors[0].message).toContain('accepted options')
       }
     })
-  })
-
-  afterAll(async () => {
-    // Closes the db connection
-    await db.sequelize.close()
   })
 })

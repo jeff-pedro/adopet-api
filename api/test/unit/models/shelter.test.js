@@ -6,9 +6,9 @@ describe('Testing Shelter model', () => {
   let shelterObject
 
   beforeAll(async () => {
-    // Initialize the databases
-    await db.sequelize.sync()
-  })
+    // Initialize the database
+    await db.Shelter.sync()
+  }, 20000)
 
   beforeEach(async () => {
     // Object containing Shelter proprieties to be tested
@@ -20,6 +20,14 @@ describe('Testing Shelter model', () => {
       state: 'Caribbean'
     }
   })
+
+  afterAll(async () => {
+    // Drop the Shelter table
+    await db.Shelter.drop()
+
+    // Closes the db connection
+    await db.sequelize.close()
+  }, 10000)
 
   describe('Create Shelter', () => {
     it('should create a new instance of shelter', () => {
@@ -90,10 +98,5 @@ describe('Testing Shelter model', () => {
         expect(err.errors[0].message).toEqual('invalid email format')
       }
     })
-  })
-
-  afterAll(async () => {
-    // Closes the db connection
-    await db.sequelize.close()
   })
 })
