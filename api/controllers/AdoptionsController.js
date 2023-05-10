@@ -8,7 +8,7 @@ class AdoptionsController {
     const adoptionData = {
       animal: Number(petId),
       tutor: Number(body.tutor),
-      date: body.date || new Date()
+      date: body.date ?? new Date()
     }
 
     try {
