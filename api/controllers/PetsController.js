@@ -74,17 +74,17 @@ class PetsController {
       const updated = await database.Pet.update(newInfo, { where: { id: Number(id) } })
 
       if (!updated[0]) {
-        return res.status(204).json()
+        throw new Error(`pet with id:${id} wasn't updated`)
       }
 
-      const petUpdated = await database.Pet.findOne({ where: { id: Number(id) } })
+      const onePet = await database.Pet.findOne({ where: { id: Number(id) } })
 
-      if (petUpdated === null) {
-        return res.status(404).json({ error: `Pet with id:${id} not found` })
-      }
-
-      return res.status(200).json({ message: 'pet updated', content: petUpdated })
+      return res.status(200).json({ message: 'pet updated', content: onePet })
     } catch (err) {
+      if (err.message === `pet with id:${id} wasn't updated`) {
+        return res.status(422).json({ error: err.message })
+      }
+      
       return res.status(500).json({ error: err.message })
     }
   }
@@ -99,13 +99,23 @@ class PetsController {
         throw new Error('one property can be updated at a time')
       }
 
-      await database.Pet.update(newInfo, { where: { id: Number(id) } })
+      const updated = await database.Pet.update(newInfo, { where: { id: Number(id) } })
+
+      if(!updated[0]) {
+        throw new Error(`pet with id:${id} wasn't updated`)
+      }
+
       const petUpdated = await database.Pet.findByPk(Number(id))
       return res.status(200).json({ message: 'pet updated', content: petUpdated })
     } catch (err) {
       if (err.message === 'one property can be updated at a time') {
         return res.status(422).json({ error: err.message })
       }
+
+      if (err.message === `pet with id:${id} wasn't updated`) {
+        return res.status(422).json({ error: err.message })
+      }
+
       return res.status(500).json({ error: err.message })
     }
   }
