@@ -8,12 +8,14 @@ describe('Pets', () => {
   let petId
   let petObj
   let shelter
+  let pet
 
   beforeAll(async () => {
     // Initialize the databases    
     await db.sequelize.sync()
 
     // Clean the database
+    await db.User.destroy({ where: {} })
     await db.Pet.destroy({ where: {} })
 
     // Create one shelter
@@ -24,7 +26,6 @@ describe('Pets', () => {
       city: 'Port Royal',
       state: 'Caribbean'
     })
-
   })
 
   beforeEach(() => {
@@ -238,10 +239,41 @@ describe('Pets', () => {
   })
 
   describe('POST /pets/{id}/adoption', () => {
+    it('should make an adoption', async () => {
 
+      const tutor = await db.User.create({
+        name: 'Hector Barbosa',
+        email: 'barbosa@pirates.sea',
+        password: 'hector123',
+        phone: '+011233334444',
+        city: 'Lisbon',
+        about: 'All pets loves me',
+        profilePictureUrl: 'https://images.com/images/image-barbosa',
+        role: 'administrator'
+      })
+
+      pet = await db.Pet.create(petObj)
+
+      const res = await request(app)
+        .post(`/pets/${pet.id}/adoption`)
+        .send({
+          animal: Number(pet.id),
+          tutor: Number(tutor.id),
+          date: '2023-01-01'
+        })
+
+
+      expect(res.status).toBe(200)
+      expect(res.body.adoption).toHaveProperty('id')
+    })
   })
 
   describe('DELETE /pets/:id/adoption/cancel', () => {
-    
+    it('should cancel one adoption', async () => {
+      await request(app)
+        .delete(`/pets/${pet.id}/adoption/cancel`)
+        .expect(200)
+    })
   })
+
 })
