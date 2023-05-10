@@ -157,14 +157,26 @@ describe('Pets', () => {
     })
 
     test.each([
-      ['empty', {}],
-      ['undefined', { somefield: 'some value' }]
-    ])('should not update if provided an %s field', async (_, param) => {
+      ['empty body', {}],
+      ['undefined field', { somefield: 'some value' }]
+    ])('should not update if provided an %s', async (_, param) => {
       const res = await request(app)
         .put(`/pets/${petId}`)
         .send(param)
 
-      expect(res.status).toBe(204)
+      expect(res.status).toBe(422)
+      expect(res.body.error).toEqual(`pet with id:${petId} wasn't updated`)
+    })
+
+    it('should return an error if id do not exists', async () => {
+      const res = await request(app)
+        .patch('/pets/0')
+        .send({
+          species: 'Cat'
+        })
+
+      expect(res.status).toBe(422)
+      expect(res.body.error).toEqual('pet with id:0 wasn\'t updated')
     })
   })
 
@@ -191,13 +203,45 @@ describe('Pets', () => {
 
       expect(res.status).toBe(422)
     })
+
+    it('should return an error if id do not exists', async () => {
+      const res = await request(app)
+        .patch('/pets/0')
+        .send({
+          species: 'Cat'
+        })
+
+      expect(res.status).toBe(422)
+      expect(res.body.error).toEqual('pet with id:0 wasn\'t updated')
+    })
+
+    test.each([
+      ['empty body', {}],
+      ['undefined field', { somefield: 'some value' }]
+    ])('should return an error if provided an %s', async (_, param) => {
+      const res = await request(app)
+        .put(`/pets/${petId}`)
+        .send(param)
+
+      expect(res.status).toBe(422)
+      expect(res.body).toHaveProperty('error')
+      expect(res.body.error).toEqual(`pet with id:${petId} wasn't updated`)
+    })
   })
 
   describe('DELETE /pets/{id}', () => {
-    it('shoud delete one pet', async () => {
+    it('should delete one pet', async () => {
       await request(app)
         .delete(`/pets/${petId}`)
         .expect(200)
     })
+  })
+
+  describe('POST /pets/{id}/adoption', () => {
+
+  })
+
+  describe('DELETE /pets/:id/adoption/cancel', () => {
+    
   })
 })
