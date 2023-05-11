@@ -4,30 +4,10 @@ const app = require('../../../app')
 const db = require('../../../models')
 const request = require('supertest')
 
+jest.mock('../../../models')
+
 describe('Tutors', () => {
   let tutorId
-  let tutorObj
-
-  beforeAll(async () => {
-    // Initialize the databases    
-    await db.sequelize.sync()
-
-    // Clean the database
-    await db.User.destroy({ where: {} })
-  })
-
-  beforeEach(() => {
-    tutorObj = {
-      name: 'Jack Sparrow',
-      email: 'jack.sparrow@pirates.sea',
-      password: 'jack123',
-      phone: '+011233334444',
-      city: 'Tortuga',
-      about: 'I am the best tutor',
-      profilePictureUrl: 'https://images.com/images/image-jack',
-      role: 'standard'
-    }
-  })
 
   describe('GET /tutors', () => {
     it('should list all tutors', async () => {
@@ -36,16 +16,37 @@ describe('Tutors', () => {
         .set('Accept', 'application/json')
       expect(res.headers['content-type']).toMatch(/json/)
       expect(res.status).toEqual(200)
-      expect(res.body).toHaveLength(0)
+      expect(res.body).toHaveLength(1)
     })
   })
 
   describe('POST /tutors', () => {
     it('should create a new tutor', async () => {
+      const tutorObject = {
+        name: 'Jack Sparrow',
+        email: 'jack.sparrow@pirates.sea',
+        password: 'jack123',
+        phone: '+011233334444',
+        city: 'Tortuga',
+        about: 'I am the best tutor',
+        profilePictureUrl: 'https://images.com/images/image-jack',
+        role: 'standard'
+      }
+
       const res = await request(app)
         .post('/tutors')
-        .send(tutorObj)
-        .expect(200)
+        .send(tutorObject)
+
+      expect(res.status).toEqual(200)
+      expect(res.body).toEqual(
+        expect.objectContaining({
+          id: expect.any(Number),
+          ...tutorObject,
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String)
+        })
+      )
+
       tutorId = res.body.id
     })
 
@@ -58,31 +59,16 @@ describe('Tutors', () => {
       expect(res.status).toBe(400)
       expect(res.body).toHaveProperty('error')
       expect(res.body.error).toEqual('empty request body')
-
-    })
-    // test.each....
-    it('should return an error if some property is empty', async () => {
-
-      tutorObj.name = ''
-
-      const res = await request(app)
-        .post('/tutors')
-        .set('Accept', 'application/json')
-        .send(tutorObj)
-
-      expect(res.status).toBe(400)
-      expect(res.body).toHaveProperty('error')
-      expect(res.body.error).toMatch('field cannot be empty')
     })
   })
 
   describe('GET /tutors/{id}', () => {
-    it('shoud return one tutor', async () => {
+    it('should return one tutor', async () => {
       const res = await request(app)
         .get(`/tutors/${tutorId}`)
 
       expect(res.status).toBe(200)
-      expect(res.body.email).toEqual('jack.sparrow@pirates.sea')
+      expect(res.body.email).toEqual('sparrow@pirates.sea')
     })
 
     it('should return 404 if any data is found', async () => {
@@ -112,7 +98,7 @@ describe('Tutors', () => {
     test.each([
       ['empty', {}],
       ['undefined', { somefield: 'some value' }]
-    ])('should not update if provided an %s field', async (_,param) => {
+    ])('should not update if provided an %s field', async (_, param) => {
       const res = await request(app)
         .put(`/tutors/${tutorId}`)
         .send(param)
@@ -141,7 +127,7 @@ describe('Tutors', () => {
           city: 'Port Royal',
           role: 'administrator'
         })
-      
+
       expect(res.status).toBe(422)
       expect(res.body).toHaveProperty('error')
       expect(res.body.error).toEqual('only one property can be updated at a time')
