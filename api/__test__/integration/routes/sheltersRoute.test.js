@@ -4,156 +4,86 @@ const app = require('../../../app')
 const db = require('../../../models')
 const request = require('supertest')
 
-describe('Pets', () => {
-  let petId
-  let petObj
-  let shelter
+jest.mock('../../../models')
 
-  beforeAll(async () => {
-    // Initialize the databases    
-    await db.sequelize.sync()
+describe('Shelter', () => {
+  let shelterId
+  let shelterObj
 
-    // Clean the database
-    await db.Pet.destroy({ where: {} })
-
-    // Create one shelter
-    shelter = await db.Shelter.create({
+  beforeEach(() => {
+    shelterObj = {
       name: 'Caribbean Crazy Animals',
       email: 'contact@crazyanimals.sea',
       phone: '+08898985421',
       city: 'Port Royal',
       state: 'Caribbean'
-    })
-
-  })
-
-  beforeEach(() => {
-    petObj = {
-      name: 'Cotton',
-      birthday: new Date('2023-01-01'),
-      size: 'Mini',
-      personality: 'He chatty and cute.',
-      species: 'Dog',
-      status: 'New',
-      profilePictureUrl: 'http://images.com/cotton',
-      shelter_id: shelter.id
     }
   })
 
-  describe('GET /pets', () => {
-    it('should list all pets', async () => {
+  describe('GET /shelters', () => {
+    it('should list all shelters', async () => {
       const res = await request(app)
-        .get('/pets')
+        .get('/shelters')
         .set('Accept', 'application/json')
       expect(res.headers['content-type']).toMatch(/json/)
       expect(res.status).toEqual(200)
-      expect(res.body).toHaveLength(0)
+      expect(res.body).toHaveLength(1)
     })
   })
 
-  describe('POST /pets', () => {
+  describe('POST /shelters', () => {
     it('should create a new pet', async () => {
       const res = await request(app)
-        .post('/pets')
-        .send(petObj)
+        .post('/shelters')
+        .send(shelterObj)
         .expect(200)
-      petId = res.body.id
+
+      shelterId = res.body.id
     })
 
     it('should return an error if the request body is empty', async () => {
       const res = await request(app)
-        .post('/pets')
+        .post('/shelters')
         .set('Accept', 'application/json')
         .send({})
-
+    
       expect(res.status).toBe(422)
       expect(res.body).toHaveProperty('error')
       expect(res.body.error).toEqual('empty request body')
     })
-
-    test.each([
-      ['name'],
-      ['size'],
-      ['personality'],
-      ['species'],
-      ['status'],
-    ]
-    )('should return an error if %s field is empty', async (param) => {
-
-      petObj[param] = ''
-
-      const res = await request(app)
-        .post('/pets')
-        .set('Accept', 'application/json')
-        .send(petObj)
-
-      expect(res.status).toBe(422)
-      expect(res.body).toHaveProperty('error')
-      expect(res.body.error).toEqual(`${param} field cannot be empty`)
-    })
-
-    test.each([
-      ['birthday'],
-      ['profilePictureUrl']
-    ])('should return an error if %s is has an invalid format', async (param) => {
-
-      petObj[param] = 'invalid_format'
-
-      const res = await request(app)
-        .post('/pets/')
-        .send(petObj)
-
-      expect(res.status).toBe(422)
-    })
-
-    test.each([
-      ['shelter_id'],
-    ])('should return an error if %s is null', async (param) => {
-
-      petObj[param] = null
-
-      const res = await request(app)
-        .post('/pets/')
-        .send(petObj)
-
-      expect(res.status).toBe(422)
-      expect(res.body).toHaveProperty('error')
-      expect(res.body.error).toEqual(`${param} field is required`)
-
-    })
   })
 
-  describe('GET /pets/{id}', () => {
-    it('should return one pet', async () => {
+  describe('GET /shelters/{id}', () => {
+    it('should return one shelter', async () => {
       const res = await request(app)
-        .get(`/pets/${petId}`)
+        .get(`/shelters/${shelterId}`)
 
       expect(res.status).toBe(200)
-      expect(res.body.name).toEqual('Cotton')
+      expect(res.body.name).toEqual('Caribbean Crazy Animals')
     })
 
     it('should return status 404 if any data is found', async () => {
-      const pet = await request(app)
-        .get('/pets/0')
+      const res = await request(app)
+        .get('/shelters/0')
 
-      expect(pet.status).toBe(404)
-      expect(pet.body).toHaveProperty('error')
-      expect(pet.body.error).toEqual('Pet not found')
+      expect(res.status).toBe(404)
+      expect(res.body).toHaveProperty('error')
+      expect(res.body.error).toEqual('Shelter not found')
     })
   })
 
-  describe('PUT /pets/{id}', () => {
+  describe('PUT /shelters/{id}', () => {
     it('should update some fields', async () => {
       const res = await request(app)
-        .put(`/pets/${petId}`)
+        .put(`/shelters/${shelterId}`)
         .send({
-          name: 'Jack',
-          status: 'Available',
+          email: 'contact@cca.sea',
+          city: 'Isla de Muerta',
         })
 
       expect(res.status).toBe(200)
       expect(res.body).toHaveProperty('message')
-      expect(res.body.message).toEqual('pet updated')
+      expect(res.body.message).toEqual('shelter updated')
     })
 
     test.each([
@@ -161,43 +91,46 @@ describe('Pets', () => {
       ['undefined', { somefield: 'some value' }]
     ])('should not update if provided an %s field', async (_, param) => {
       const res = await request(app)
-        .put(`/pets/${petId}`)
+        .put(`/shelters/${shelterId}`)
         .send(param)
 
       expect(res.status).toBe(204)
     })
   })
 
-  describe('PATCH /pets/{id}', () => {
+  describe('PATCH /shelters/{id}', () => {
     it('should update only one field', async () => {
       const res = await request(app)
-        .patch(`/pets/${petId}`)
+        .patch(`/shelters/${shelterId}`)
         .send({
-          status: 'Quarentine'
+          phone: '+0111222333',
         })
 
       expect(res.status).toBe(200)
       expect(res.body).toHaveProperty('message')
-      expect(res.body.message).toEqual('pet updated')
+      expect(res.body.message).toEqual('shelter updated')
     })
 
     it('should return an error if try update more than one field', async () => {
       const res = await request(app)
-        .patch(`/pets/${petId}`)
+        .patch(`/shelters/${shelterId}`)
         .send({
-          species: 'Cat',
-          personality: 'She is very cute'
+          name: 'Caribbean Pet Shelter',
+          email: 'contact@cps.sea'
         })
 
       expect(res.status).toBe(422)
+      expect(res.body).toHaveProperty('error')
+      expect(res.body.error).toEqual('only one property can be updated at a time')
     })
   })
 
-  describe('DELETE /pets/{id}', () => {
-    it('shoud delete one pet', async () => {
+  describe('DELETE /shelters/{id}', () => {
+    it('should delete one shelter', async () => {
       await request(app)
-        .delete(`/pets/${petId}`)
+        .delete(`/shelters/${shelterId}`)
         .expect(200)
     })
   })
+
 })
