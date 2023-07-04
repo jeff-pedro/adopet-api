@@ -1,7 +1,6 @@
 process.env.NODE_ENV = 'test'
 
 const app = require('../../../app')
-const db = require('../../../models')
 const request = require('supertest')
 
 jest.mock('../../../models')
