@@ -51,7 +51,7 @@ class TurtorsController {
     }
   }
 
-  static async updateManyTutorData(req, res) {
+  static async updateManyTutorProperties(req, res) {
     const { id } = req.params
     const newInfo = req.body
 
@@ -69,7 +69,7 @@ class TurtorsController {
     }
   }
 
-  static async updateOneTutorData(req, res) {
+  static async updateOneTutorProperty(req, res) {
     const { id } = req.params
     const newInfo = req.body
 
