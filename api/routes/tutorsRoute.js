@@ -6,8 +6,8 @@ router
   .get('/tutors', TurtorsController.getAllTutors)
   .get('/tutors/:id', TurtorsController.getOneTutor)
   .post('/tutors', TurtorsController.createTutor)
-  .put('/tutors/:id', TurtorsController.updateManyTutorData)
-  .patch('/tutors/:id', TurtorsController.updateOneTutorData)
+  .put('/tutors/:id', TurtorsController.updateManyTutorProperties)
+  .patch('/tutors/:id', TurtorsController.updateOneTutorProperty)
   .delete('/tutors/:id', TurtorsController.deleteTutor)
 
 module.exports = router
