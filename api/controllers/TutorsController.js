@@ -1,10 +1,11 @@
 const database = require('../models')
 
 class TurtorsController {
-  static async getAllTutors(req, res) {
+  static async getAllTutors(req, res, next) {
     try {
-      const allTutors = await database.User.findAll()
-      return res.status(200).json(allTutors)
+      const tutorsResult = database.User
+      req.result = tutorsResult
+      next()
     } catch (err) {
       return res.status(500).json({ error: err.message })
     }

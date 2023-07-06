@@ -18,10 +18,11 @@ class SheltersController {
     }
   }
 
-  static async getAllShelters(req, res) {
+  static async getAllShelters(req, res, next) {
     try {
-      const shelters = await database.Shelter.findAll()
-      return res.status(200).json(shelters)
+      const shelterResult = database.Shelter
+      req.result = shelterResult
+      next()
     } catch (err) {
       return res.status(500).json({ error: err.message })
     }
