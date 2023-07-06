@@ -40,8 +40,17 @@ class PetsController {
   }
 
   static async getAllPets(req, res) {
+    let { limit = 2, page = 1 } = req.query
+
+    if (limit > 0 && page > 0) {
+      limit = parseInt(limit)
+      page = parseInt(page)
+    }
+
+    const offset = (page - 1) * limit
+
     try {
-      const pets = await database.Pet.findAll()
+      const pets = await database.Pet.findAll({ offset, limit })
       return res.status(200).json(pets)
     } catch (err) {
       return res.status(500).json({ error: err.message })
