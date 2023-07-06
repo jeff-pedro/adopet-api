@@ -10,7 +10,6 @@ module.exports = (app) => {
   })
 
   app.use(
-    express.json(),
     tutors,
     shelters,
     pets
