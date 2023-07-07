@@ -1,5 +1,7 @@
 const database = require('../models')
 
+const bcrypt = require('bcrypt')
+
 class TurtorsController {
   static async getAllTutors(req, res, next) {
     try {
@@ -13,11 +15,19 @@ class TurtorsController {
 
   static async createTutor(req, res) {
     const newTutor = req.body
-
     try {
       if (Object.keys(newTutor).length === 0) {
         throw new Error('empty request body')
       }
+
+      // gera um sal aleatório
+      const salt = await bcrypt.genSalt()
+
+      // gera uma senha hasheada utilizando o sal gerado
+      const hashedPassword = await bcrypt.hash(newTutor.password, salt)
+
+      // atualiza a senha do usuário
+      newTutor.password = hashedPassword
 
       const newTutorCreated = await database.User.create(newTutor)
       return res.status(200).json(newTutorCreated)
@@ -63,7 +73,7 @@ class TurtorsController {
         const tutorUpdated = await database.User.findOne({ where: { id: Number(id) } })
         return res.status(200).json({ message: 'tutor updated', content: tutorUpdated })
       }
-      
+
       return res.status(204).json()
     } catch (err) {
       return res.status(500).json({ error: err.message })

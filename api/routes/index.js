@@ -1,6 +1,7 @@
-const tutors = require('./tutorsRoute')
-const shelters = require('./sheltersRoute')
-const pets = require('./petsRoute')
+const tutors = require('./tutorsRoute.js')
+const shelters = require('./sheltersRoute.js')
+const pets = require('./petsRoute.js')
+const auth = require('./authRoute.js')
 
 module.exports = (app) => {
   /* GET home page. */
@@ -11,6 +12,7 @@ module.exports = (app) => {
   app.use(
     tutors,
     shelters,
-    pets
+    pets,
+    auth
   )
 }
