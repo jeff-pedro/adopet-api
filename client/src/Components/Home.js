@@ -13,14 +13,15 @@ import CardPet from './CardPet.js';
 
 const Home = () => {
 
-  // Fetch data from API
+  // call api
   const [pets, setPets] = useState([]);
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await api.get('/pets');
-        setPets(response.data)
+        const response = await fetch('api/pets');
+        const body = await response.json();
+        setPets(body);
       } catch (err) {
         console.log('error', err);
       }

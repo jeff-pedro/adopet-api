@@ -7,7 +7,6 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const navigate = useNavigate();
 
-    // Num primeiro momento, usaremos dados fixos para o login/logout
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
