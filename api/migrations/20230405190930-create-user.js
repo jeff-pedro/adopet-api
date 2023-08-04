@@ -22,6 +22,9 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING,
       },
+      salt: {
+        type: Sequelize.STRING
+      },
       phone: {
         type: Sequelize.STRING
       },
