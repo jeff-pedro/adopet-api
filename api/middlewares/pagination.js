@@ -1,5 +1,5 @@
 async function pagination(req, res, next) {
-  let { limit = 2, page = 1 } = req.query
+  let { limit = 10, page = 1 } = req.query
 
   console.log(limit, page)
 
