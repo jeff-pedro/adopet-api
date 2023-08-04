@@ -5,9 +5,10 @@ import Button from './Button';
 import { useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useForm } from "react-hook-form";
+import { useEffect, useState } from 'react';
 
 // assets
-import loggedUser from '../assets/logged-user.png';
+// import loggedUser from '../assets/logged-user.png';
 
 const Message = () => {
   const location = useLocation();
@@ -20,6 +21,26 @@ const Message = () => {
   const onSubmit = (data) => {
     console.log(data);
   };
+
+  // call api
+  const [user, setUser] = useState([]);
+
+  useEffect(() => {
+    const recoveredUser = localStorage.getItem('user');
+    let loggedUser;
+
+    if (recoveredUser) {
+      loggedUser = JSON.parse(recoveredUser);
+    }
+
+    fetch(`api/tutors/${loggedUser.id}`)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          setUser(result);
+        })
+      .catch(err => console.log('error', err));
+  }, []);
 
   return (
     <motion.section className='message' initial={{ width: 0 }} animate={{ width: "auto", transition: { duration: 0.5 } }} exit={{ x: window.innerWidth, transition: { duration: 0.5 } }}>
@@ -53,22 +74,22 @@ const Message = () => {
             <form onSubmit={handleSubmit(onSubmit)}>
               <legend>Perfil</legend>
               <label htmlFor='user-pic'>Foto</label>
-              <input type="image" id='userPic' src={loggedUser} alt="Usuário logado" />
+              <input type="image" id='userPic' src={user.profilePictureUrl} alt="Usuário logado" />
               <a href="#">Clique na foto para editar</a>
 
               <label htmlFor="name">Nome</label>
-              <input id='name' type="text" {...register("name", { required: 'É necessário informar seu nome', maxLength: { value: 40, message: 'O número máximo de caracteres é 40' } })} placeholder='Insira seu nome completo' value='Joana Magalhães' />
+              <input id='name' type="text" {...register("name", { required: 'É necessário informar seu nome', maxLength: { value: 40, message: 'O número máximo de caracteres é 40' } })} placeholder='Insira seu nome completo' defaultValue={user.name}/>
               {errors.name && <p className="error">{errors.name.message}</p>}
 
               <label htmlFor="phone">Telefone</label>
-              <input type="tel" id='phone' {...register('phone', { required: 'Informe um número de telefone', pattern: /\(?[1-9]{2}\)?\s?9?[0-9]{8}/ })} placeholder='Insira seu telefone e/ou whatsapp' value='98 123456789' />
+              <input type="tel" id='phone' {...register('phone', { required: 'Informe um número de telefone', pattern: /\(?[1-9]{2}\)?\s?9?[0-9]{8}/ })} placeholder='Insira seu telefone e/ou whatsapp' defaultValue={user.phone} />
               {errors.phone && <p className="error">{errors.phone.message || 'Por favor, verifique o número digitado'}</p>}
 
               <label htmlFor="city">Cidade</label>
-              <input type="text" id='city' {...register('city', { required: 'Informe a cidade em que você mora' })} placeholder='Informe a cidade em que você mora' value='São Luís' />
+              <input type="text" id='city' {...register('city', { required: 'Informe a cidade em que você mora' })} placeholder='Informe a cidade em que você mora' defaultValue={user.city} />
 
               <label htmlFor="about">Sobre</label>
-              <textarea spellCheck='false' name="about" id="about" cols="30" rows="8" placeholder='Escreva sua mensagem.' value='At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati.'></textarea>
+              <textarea spellCheck='false' name="about" id="about" {...register('about')} cols="30" rows="8" placeholder='Escreva sua mensagem.' defaultValue={user.about}></textarea>
 
               <Button type='submit' children='Salvar' />
             </form>
