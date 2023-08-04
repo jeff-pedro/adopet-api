@@ -18,11 +18,22 @@ const Message = () => {
     reValidateMode: 'onChange'
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    try {
+      const response = await fetch(`/api/tutors/${user.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+      const result = await response.json();
+      // console.log('Success:', result);
+    } catch (err) {
+      console.log('Error:', err);
+    }
   };
 
-  // call api
   const [user, setUser] = useState([]);
 
   useEffect(() => {
@@ -33,14 +44,19 @@ const Message = () => {
       loggedUser = JSON.parse(recoveredUser);
     }
 
-    fetch(`api/tutors/${loggedUser.id}`)
-      .then(res => res.json())
-      .then(
-        (result) => {
-          setUser(result);
-        })
-      .catch(err => console.log('error', err));
-  }, []);
+    async function fetchData() {
+      try {
+        const response = await fetch(`api/tutors/${loggedUser.id}`);
+        const result = await response.json();
+        setUser(result);
+        // console.log('Success:', result)
+      } catch (err) {
+        console.log('Error:', err)
+      }
+    }
+
+    fetchData();
+  }, [])
 
   return (
     <motion.section className='message' initial={{ width: 0 }} animate={{ width: "auto", transition: { duration: 0.5 } }} exit={{ x: window.innerWidth, transition: { duration: 0.5 } }}>
@@ -78,7 +94,7 @@ const Message = () => {
               <a href="#">Clique na foto para editar</a>
 
               <label htmlFor="name">Nome</label>
-              <input id='name' type="text" {...register("name", { required: 'É necessário informar seu nome', maxLength: { value: 40, message: 'O número máximo de caracteres é 40' } })} placeholder='Insira seu nome completo' defaultValue={user.name}/>
+              <input id='name' type="text" {...register("name", { required: 'É necessário informar seu nome', maxLength: { value: 40, message: 'O número máximo de caracteres é 40' } })} placeholder='Insira seu nome completo' defaultValue={user.name} />
               {errors.name && <p className="error">{errors.name.message}</p>}
 
               <label htmlFor="phone">Telefone</label>
