@@ -11,7 +11,7 @@ module.exports = {
       personality: 'Brava!',
       species: 'Cat',
       status: 'Available',
-      profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQktXg5_v8-L9AslphhrFvphE12SWkGl-_Jig&usqp=CAU',
+      profilePictureUrl: '../../public/Felicia.png',
       createdAt: new Date(),
       updatedAt: new Date()
     }, {
@@ -22,51 +22,51 @@ module.exports = {
       personality: 'Agitada e carinhosa',
       species: 'Dog',
       status: 'Available',
-      profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQktXg5_v8-L9AslphhrFvphE12SWkGl-_Jig&usqp=CAU',
+      profilePictureUrl: '../../public/Pretinha.png',
       createdAt: new Date(),
       updatedAt: new Date()
     }, {
       shelter_id: 1,
-      name: 'Dark',
+      name: 'Felicia',
       birthday: '2023-01-01',
       size: 'Small',
       personality: 'Calma e carinhosa',
-      species: 'Dog',
+      species: 'Cat',
       status: 'Available',
-      profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQktXg5_v8-L9AslphhrFvphE12SWkGl-_Jig&usqp=CAU',
+      profilePictureUrl: '../../public/Felicia.png',
       createdAt: new Date(),
       updatedAt: new Date()
     }, {
       shelter_id: 1,
       name: 'Chewbacca',
       birthday: '2023-01-01',
-      size: 'Mini',
+      size: 'Medium',
       personality: 'Agitado e brincalhão',
       species: 'Dog',
       status: 'Available',
-      profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQktXg5_v8-L9AslphhrFvphE12SWkGl-_Jig&usqp=CAU',
+      profilePictureUrl: '../../public/Chewbacca.png',
       createdAt: new Date(),
       updatedAt: new Date()
     }, {
       shelter_id: 1,
-      name: 'Tereza',
+      name: 'Fiona',
       birthday: '2023-01-01',
-      size: 'Big',
+      size: 'Mini',
       personality: 'Arisca',
       species: 'Dog',
       status: 'Available',
-      profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQktXg5_v8-L9AslphhrFvphE12SWkGl-_Jig&usqp=CAU',
+      profilePictureUrl: '../../public/Fiona.png',
       createdAt: new Date(),
       updatedAt: new Date()
     }, {
       shelter_id: 1,
-      name: 'Rabugento',
+      name: 'Yoda',
       birthday: '2023-01-01',
       size: 'Medium',
       personality: 'Rabugento e preguiçoso',
-      species: 'Dog',
+      species: 'Cat',
       status: 'Available',
-      profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQktXg5_v8-L9AslphhrFvphE12SWkGl-_Jig&usqp=CAU',
+      profilePictureUrl: '../../public/Yoda.png',
       createdAt: new Date(),
       updatedAt: new Date()
     }, {
@@ -77,18 +77,18 @@ module.exports = {
       personality: 'Bravo e malvado',
       species: 'Dog',
       status: 'Available',
-      profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQktXg5_v8-L9AslphhrFvphE12SWkGl-_Jig&usqp=CAU',
+      profilePictureUrl: '../../public/Dementador.png',
       createdAt: new Date(),
       updatedAt: new Date()
     }, {
       shelter_id: 1,
       name: 'Penelope',
       birthday: '2023-01-01',
-      size: 'Mini',
+      size: 'Small',
       personality: 'Arisca e tímida',
-      species: 'Cat',
+      species: 'Dog',
       status: 'Available',
-      profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQktXg5_v8-L9AslphhrFvphE12SWkGl-_Jig&usqp=CAU',
+      profilePictureUrl: '../../public/Penelope.png',
       createdAt: new Date(),
       updatedAt: new Date()
     }, {
@@ -97,9 +97,9 @@ module.exports = {
       birthday: '2023-01-01',
       size: 'Small',
       personality: 'Perigoso e dançarino',
-      species: 'Dog',
+      species: 'Cat',
       status: 'Available',
-      profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQktXg5_v8-L9AslphhrFvphE12SWkGl-_Jig&usqp=CAU',
+      profilePictureUrl: '../../public/Lampeao.png',
       createdAt: new Date(),
       updatedAt: new Date()
     }, {
@@ -110,18 +110,18 @@ module.exports = {
       personality: 'Amorosa e esfomeada',
       species: 'Cat',
       status: 'Available',
-      profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQktXg5_v8-L9AslphhrFvphE12SWkGl-_Jig&usqp=CAU',
+      profilePictureUrl: '../../public/Kitty.png',
       createdAt: new Date(),
       updatedAt: new Date()
     }, {
       shelter_id: 1,
-      name: 'Dengo',
+      name: 'Zelda',
       birthday: '2023-01-01',
       size: 'Mini',
       personality: 'Desconfiado, agitado e carinhoso',
       species: 'Dog',
       status: 'Available',
-      profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQktXg5_v8-L9AslphhrFvphE12SWkGl-_Jig&usqp=CAU',
+      profilePictureUrl: '../../public/Zelda.png',
       createdAt: new Date(),
       updatedAt: new Date()
     }], {})
