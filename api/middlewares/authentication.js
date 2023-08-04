@@ -1,22 +1,52 @@
 const bcrypt = require('bcrypt')
+const passport = require('passport')
+const LocalStrategy = require('passport-local').Strategy
+const db = require('../models')
 
-const database = require('../models') 
+passport.use(
+  new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password'
+  }, async (email, password, done) => {
+    try {
+      const user = await db.User.findOne({ where: { email } })
 
-async function authenticate(req, res, next) {
-  const { email, password } = req.body
+      // check user
+      if (!user) {
+        return done('Incorrect email or password.', null)
+      }
 
-  const user = await database.User.findOne({ where: { email } })
+      // vefiry password
+      const passwordVerified = await bcrypt.compare(password, user.password)
 
-  const hashedPassword = user.password
+      if (!passwordVerified) {
+        return done('Incorrect email or password.', null)
+      }
 
-  const matched = await bcrypt.compare(password, hashedPassword)
+      done(null, user)
+    } catch (err) {
+      done(err, null)
+    }
+  })
+)
 
-  if (matched) {
-    req.user = user
-    return res.status(200).send({ message: 'User logged' })
-  } else {
-    return res.status(403).json({ message: 'Login or password are incorrect.'})
-  }
+passport.serializeUser((user, done) => {
+  process.nextTick(() => {
+    done(null, { id: user.id })
+  })
+})
+
+passport.deserializeUser((user, done) => {
+  process.nextTick(() => {
+    done(null, user)
+  })
+})
+
+function authenticate(req, res, next) {
+  passport.authenticate('local', (err, user, info, status) => {
+    if (err) { return res.status(403).json({ message: err }) }
+    return res.status(200).json({ id: user.id, email: user.email })
+  })(req, res, next)
 }
 
 module.exports = authenticate
