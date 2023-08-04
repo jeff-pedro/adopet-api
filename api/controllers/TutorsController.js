@@ -9,7 +9,8 @@ class TurtorsController {
       req.result = tutorsResult
       next()
     } catch (err) {
-      return res.status(500).json({ error: err.message })
+      return next(err)
+      // return res.status(500).json({ error: err.message })
     }
   }
 
@@ -26,11 +27,13 @@ class TurtorsController {
       // gera uma senha hasheada utilizando o sal gerado
       const hashedPassword = await bcrypt.hash(newTutor.password, salt)
 
-      // atualiza a senha do usuário
+      // atualiza senha e armazena o sal do usuário
       newTutor.password = hashedPassword
+      newTutor.salt = salt.toString('hex')
 
       const newTutorCreated = await database.User.create(newTutor)
       return res.status(200).json(newTutorCreated)
+
     } catch (err) {
       if (err.message.includes('Validation error')) {
         return res.status(400).json({ error: err.errors[0].message })
