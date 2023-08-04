@@ -19,18 +19,23 @@ const Message = () => {
   });
 
   const onSubmit = async (data) => {
-    try {
-      const response = await fetch(`/api/tutors/${user.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      });
-      const result = await response.json();
-      // console.log('Success:', result);
-    } catch (err) {
-      console.log('Error:', err);
+    if (location.pathname === '/mensagem') {
+      console.log(data);
+    } else {
+     
+      try {
+        const response = await fetch(`/api/tutors/${user.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+        const result = await response.json();
+        console.log('Success:', result);
+      } catch (err) {
+        console.log('Error:', err);
+      }
     }
   };
 
