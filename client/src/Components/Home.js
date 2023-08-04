@@ -5,9 +5,6 @@ import { useEffect, useState } from 'react';
 // assets
 // import { pets } from '../data/data.js';
 
-// api
-import api from '../Api.js'
-
 // components
 import CardPet from './CardPet.js';
 
@@ -19,7 +16,7 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('api/pets');
+        const response = await fetch('/api/pets');
         const body = await response.json();
         setPets(body);
       } catch (err) {
