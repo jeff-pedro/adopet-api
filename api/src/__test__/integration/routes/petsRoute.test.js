@@ -30,6 +30,17 @@ describe('Pets', () => {
       expect(res.status).toEqual(200)
       expect(res.body).toHaveLength(1)
     })
+
+    it.only('should show 10 results per page', async () => {
+      
+      const res = await request(app)
+        .get('/pets/?page=1')
+      
+      expect(res.status).toEqual(200)
+      expect(res.body).toHaveLength(10)
+
+      console.log(res.body)
+    })
   })
 
   describe('POST /pets', () => {
@@ -38,7 +49,7 @@ describe('Pets', () => {
         .post('/pets')
         .send(petObject)
         .expect(200)
-      
+
       petId = res.body.id
     })
 
@@ -58,7 +69,7 @@ describe('Pets', () => {
     it('should return one pet', async () => {
       const res = await request(app)
         .get(`/pets/${petId}`)
-        
+
       expect(res.status).toBe(200)
       expect(res.body.name).toEqual('Cotton')
     })

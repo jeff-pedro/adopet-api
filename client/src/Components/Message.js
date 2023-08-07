@@ -5,12 +5,18 @@ import Button from './Button';
 import { useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useForm } from "react-hook-form";
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 // assets
 // import loggedUser from '../assets/logged-user.png';
 
+// contexts
+import { AuthContext } from '../contexts/auth';
+
 const Message = () => {
+
+  // const { authenticated } = useContext(AuthContext);
+
   const location = useLocation();
   // destructuring useForm
   const { register, handleSubmit, formState: { errors } } = useForm({

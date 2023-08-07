@@ -15,10 +15,10 @@ passport.use(
       if (!user) {
         return done('Incorrect email or password.', null)
       }
-
+      
       // vefiry password
       const passwordVerified = await bcrypt.compare(password, user.password)
-
+      
       if (!passwordVerified) {
         return done('Incorrect email or password.', null)
       }

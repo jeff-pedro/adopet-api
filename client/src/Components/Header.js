@@ -5,7 +5,7 @@ import { Menu } from '@headlessui/react';
 
 // assets
 import userPic from '../assets/user.svg';
-import loggedUser from '../assets/logged-user.png';
+// import loggedUser from '../assets/logged-user.png';
 import Button from './Button';
 
 // contexts
@@ -14,20 +14,43 @@ import { AuthContext } from '../contexts/auth';
 const Header = () => {
   const location = useLocation();
   const [user, setUser] = useState('');
-  const { authenticated, logout } = useContext(AuthContext);
+  const [user2, setUser2] = useState(null);
+  const { authenticated, user: loggedUser, logout } = useContext(AuthContext);
 
   const handleLogout = useCallback(() => {
     logout();
   }, [logout]);
 
+
+  useEffect(() => {
+    console.log(loggedUser);
+
+    // call api
+    async function fetchData() {
+      try {
+        const response = await fetch(`/api/tutors/${loggedUser.id}`);
+        const result = await response.json();
+        setUser2(result);
+        console.log('Success:', result);
+      } catch (err) {
+        console.log('Error:', err);
+      }
+    }
+
+    // fetchData();
+    // console.log(a);
+
+  }, []);
+
   useEffect(() => {
     if (location.pathname === '/' || location.pathname === '/login' || location.pathname === '/cadastro') {
       setUser('');
     } else if (authenticated) {
+
       setUser(
         <Menu>
           <Menu.Button className="menu__button">
-            <img className='header__user' src={loggedUser} alt="Usuário" />
+            <img className='header__user' src='' alt="Usuário" />
           </Menu.Button>
           <Menu.Items className='menu__content'>
             <a className='button' href="/perfil">Ver Perfil</a>
