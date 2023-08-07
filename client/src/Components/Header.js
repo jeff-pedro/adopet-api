@@ -14,43 +14,39 @@ import { AuthContext } from '../contexts/auth';
 const Header = () => {
   const location = useLocation();
   const [user, setUser] = useState('');
-  const [user2, setUser2] = useState(null);
+  const [userData, setUserData] = useState(null);
   const { authenticated, user: loggedUser, logout } = useContext(AuthContext);
 
   const handleLogout = useCallback(() => {
     logout();
   }, [logout]);
 
-
-  useEffect(() => {
-    console.log(loggedUser);
-
-    // call api
-    async function fetchData() {
-      try {
-        const response = await fetch(`/api/tutors/${loggedUser.id}`);
-        const result = await response.json();
-        setUser2(result);
-        console.log('Success:', result);
-      } catch (err) {
-        console.log('Error:', err);
-      }
-    }
-
-    // fetchData();
-    // console.log(a);
-
-  }, []);
+  console.log('logado data', loggedUser);
+  console.log('is logged?', authenticated);
 
   useEffect(() => {
     if (location.pathname === '/' || location.pathname === '/login' || location.pathname === '/cadastro') {
       setUser('');
     } else if (authenticated) {
 
+      // call api
+      async function fetchData() {
+        try {
+          const response = await fetch(`/api/tutors/${loggedUser.id}`);
+          const result = await response.json();
+          setUserData(result);
+          console.log('Success:', result);
+        } catch (err) {
+          console.log('Error:', err);
+        }
+      }
+
+      fetchData();
+
       setUser(
         <Menu>
           <Menu.Button className="menu__button">
-            <img className='header__user' src='' alt="Usuário" />
+            <img className='header__user' src={userData.profilePictureUrl} alt="Usuário" />
           </Menu.Button>
           <Menu.Items className='menu__content'>
             <a className='button' href="/perfil">Ver Perfil</a>
@@ -70,7 +66,7 @@ const Header = () => {
         </Menu>
       );
     }
-  }, [location, handleLogout, authenticated]);
+  }, [location, handleLogout, authenticated, loggedUser]);
 
   return (
     <header className='header'>
