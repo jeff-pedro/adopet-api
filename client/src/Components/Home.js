@@ -27,26 +27,34 @@ const Home = () => {
     fetchData();
   }, []);
 
-  return (
-    <motion.section className='home' initial={{ width: 0 }} animate={{ width: "auto", transition: { duration: 0.5 } }} exit={{ x: window.innerWidth, transition: { duration: 0.5 } }}>
-      <p>Olá! <br /> Veja os amigos disponíveis para adoção!</p>
-      <div className='cards'>
-        {
-          pets.map((pet, i) => (
-            <CardPet
-              age={pet.birthday}
-              size={pet.size}
-              behavior={pet.personality}
-              city={pet.city}
-              name={pet.name}
-              img={pet.profilePictureUrl}
-              key={i}
-            />
-          ))
-        }
-      </div>
-    </motion.section >
-  );
+  if(!pets.length) {
+    return (
+      <motion.section className='home' initial={{ width: 0 }} animate={{ width: "auto", transition: { duration: 0.5 } }} exit={{ x: window.innerWidth, transition: { duration: 0.5 } }}>
+        <p>Nenhum amiguinho disponível! 😢</p>
+      </motion.section >
+    );
+  } else {
+    return (
+      <motion.section className='home' initial={{ width: 0 }} animate={{ width: "auto", transition: { duration: 0.5 } }} exit={{ x: window.innerWidth, transition: { duration: 0.5 } }}>
+        <p>Olá! <br /> Veja os amigos disponíveis para adoção!</p>
+        <div className='cards'>
+          {
+            pets.map((pet, i) => (
+              <CardPet
+                age={pet.birthday}
+                size={pet.size}
+                behavior={pet.personality}
+                city={pet.city}
+                name={pet.name}
+                img={pet.profilePictureUrl}
+                key={i}
+              />
+            ))
+          }
+        </div>
+      </motion.section >
+    );
+  }
 };
 
 export default Home;
