@@ -52,6 +52,8 @@ const RegisterForm = () => {
 				setMensagemApi({ email: result.error });
 				return;
 			}
+
+			alert("Usuário cadastrado com sucesso!")
 			
 		} catch (err) {
 			console.log(err);

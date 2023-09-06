@@ -35,6 +35,11 @@ export const AuthProvider = ({ children }) => {
 
         const body = await response.json();
 
+        if (response.status === 403) {
+            alert("Email ou senha incorretos!")
+        }
+
+
         // creating a session api
         const loggedUser = {
             id: body.id,

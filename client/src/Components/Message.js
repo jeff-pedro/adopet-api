@@ -28,17 +28,17 @@ const Message = () => {
     if (location.pathname === '/mensagem') {
       console.log(data);
     } else {
-     
+
       try {
-        const response = await fetch(`/api/tutors/${user.id}`, {
+        await fetch(`/api/tutors/${user.id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify(data)
         });
-        const result = await response.json();
-        console.log('Success:', result);
+
+        alert('Perfil alterado com sucesso!')
       } catch (err) {
         console.log('Error:', err);
       }

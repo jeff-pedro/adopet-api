@@ -25,9 +25,6 @@ const Header = () => {
     if (location.pathname === '/' || location.pathname === '/login' || location.pathname === '/cadastro') {
       setUser('');
     } else if (authenticated) {
-
-console.log(authenticated);
-
       // call api
       async function fetchUser() {
         try {
@@ -36,7 +33,7 @@ console.log(authenticated);
 
           setLoggedUser(result?.profilePictureUrl);
         } catch (err) {
-          console.log('Error:', err);
+          console.log(err);
         }
       }
 
