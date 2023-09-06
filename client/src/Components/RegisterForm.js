@@ -9,10 +9,13 @@ import { useNavigate } from "react-router-dom";
 
 const RegisterForm = () => {
 	const navigate = useNavigate();
+
 	const [visiblePassword, setVisiblePassword] = useState({
 		password: false,
 		passwordRetry: false,
 	});
+
+	const [mensagemApi, setMensagemApi] = useState({});
 
 	const handlePasswordType = (passwordInput) => {
 		setVisiblePassword({
@@ -32,8 +35,28 @@ const RegisterForm = () => {
 		reValidateMode: "onChange",
 	});
 
-	const onSubmit = (data) => {
-		console.log(data);
+	const onSubmit = async (data) => {
+		// call api
+		try {
+			const response = await fetch('/api/tutors', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(data)
+			});
+
+			const result = await response.json();
+
+			if (response.status === 400) {
+				setMensagemApi({ email: result.error });
+				return;
+			}
+			
+		} catch (err) {
+			console.log(err);
+		}
+
 		navigate("/login");
 	};
 
@@ -81,6 +104,7 @@ const RegisterForm = () => {
 						{errors.email.message || "Por favor, verifique o email digitado"}
 					</p>
 				)}
+				{mensagemApi.email && <p className="error">Este e-mail já está em uso</p>}
 
 				<label htmlFor="pass-create">Senha</label>
 				<span>
