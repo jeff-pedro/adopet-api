@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const login = async (email, password) => {
-        console.log('login auth', { email, password });
+        // console.log('login auth', { email, password });
 
         // call api
         const response = await fetch('/api/login', {

@@ -11,7 +11,7 @@ import { AuthContext } from "../contexts/auth.js";
 
 const LoginForm = () => {
 	// destructuring AuthContext
-	const { login } = useContext(AuthContext);
+	const { login } = useContext(AuthContext)
 
 	// destructuring useForm
 	const {
@@ -24,7 +24,7 @@ const LoginForm = () => {
 	});
 
 	const onSubmit = (data) => {
-		console.log('submit', data);
+		// console.log('submit', data);
 		login(data.email, data.password);
 		// navigate("/home");
 	};

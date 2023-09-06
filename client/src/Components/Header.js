@@ -14,39 +14,38 @@ import { AuthContext } from '../contexts/auth';
 const Header = () => {
   const location = useLocation();
   const [user, setUser] = useState('');
-  const [userData, setUserData] = useState(null);
-  const { authenticated, user: loggedUser, logout } = useContext(AuthContext);
+  const [loggedUser, setLoggedUser] = useState(null);
+  const { authenticated, user: userSession, logout } = useContext(AuthContext);
 
   const handleLogout = useCallback(() => {
     logout();
   }, [logout]);
-
-  console.log('logado data', loggedUser);
-  console.log('is logged?', authenticated);
 
   useEffect(() => {
     if (location.pathname === '/' || location.pathname === '/login' || location.pathname === '/cadastro') {
       setUser('');
     } else if (authenticated) {
 
+console.log(authenticated);
+
       // call api
-      async function fetchData() {
+      async function fetchUser() {
         try {
-          const response = await fetch(`/api/tutors/${loggedUser.id}`);
+          const response = await fetch(`/api/tutors/${userSession.id}`);
           const result = await response.json();
-          setUserData(result);
-          console.log('Success:', result);
+
+          setLoggedUser(result?.profilePictureUrl);
         } catch (err) {
           console.log('Error:', err);
         }
       }
 
-      fetchData();
+      fetchUser();
 
       setUser(
         <Menu>
           <Menu.Button className="menu__button">
-            <img className='header__user' src={userData.profilePictureUrl} alt="Usuário" />
+            <img className='header__user' src={loggedUser} alt="Usuário" />
           </Menu.Button>
           <Menu.Items className='menu__content'>
             <a className='button' href="/perfil">Ver Perfil</a>
@@ -66,7 +65,7 @@ const Header = () => {
         </Menu>
       );
     }
-  }, [location, handleLogout, authenticated, loggedUser]);
+  }, [location, handleLogout, authenticated, loggedUser, userSession]);
 
   return (
     <header className='header'>
