@@ -1,7 +1,10 @@
 const express = require('express')
+// session
 const session = require('express-session')
 const { createClient } = require('redis')
 const RedisStore = require('connect-redis').default
+const passport = require('passport')
+
 const cors = require('cors')
 
 const router = require('./routes')
@@ -9,7 +12,7 @@ const router = require('./routes')
 const app = express()
 
 app.use(express.json())
-app.use(cors()) //inseri isso para  não ter conflito nas requisuições
+app.use(cors()) //inseri isso para não ter conflito nas requisições
 
 // Configure redis client
 let redisClient = createClient()
@@ -34,22 +37,21 @@ app.use(session({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: false,
-  // cookie: {
-  //   httpOnly: true,
-  //   maxAge: 3600
-  // }
+  cookie: {
+    secure: true,
+    httpOnly: true,
+    maxAge: 3600
+  }
 }))
+
+// Authenticate session
+app.use('/api/login/', passport.session())
 
 router(app)
 
-app.use((req, res, next) => {
-  console.log(req.session)
-  next()
-})
-
 // Error handler middleware
 app.use((err, req, res, next) => {
-  if(err) {
+  if (err) {
     res.json({ error: err })
   }
 })
