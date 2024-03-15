@@ -15,10 +15,10 @@ passport.use(
       if (!user) {
         return done('Incorrect email or password.', null)
       }
-      
+
       // vefiry password
       const passwordVerified = await bcrypt.compare(password, user.password)
-      
+
       if (!passwordVerified) {
         return done('Incorrect email or password.', null)
       }
@@ -43,7 +43,7 @@ passport.deserializeUser((user, done) => {
 })
 
 function authenticate(req, res, next) {
-  passport.authenticate('local', (err, user, info, status) => {
+  passport.authenticate('local', (err, user) => {
     if (err) { return res.status(403).json({ message: err }) }
     return res.status(200).json({ id: user.id, email: user.email })
   })(req, res, next)
