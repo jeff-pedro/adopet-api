@@ -1,15 +1,18 @@
-const database = require('../models')
+const { ShelterService } = require('../services')
+
+const shelterService = new ShelterService()
 
 class SheltersController {
   static async createShelter(req, res) {
-    const newShelter = req.body
+    const data = req.body
     try {
-      if (Object.keys(newShelter).length === 0) {
+      if (Object.keys(data).length === 0) {
         throw new Error('empty request body')
       }
 
-      const newShelterCreated = await database.Shelter.create(newShelter)
-      return res.status(200).json(newShelterCreated)
+      const newShelter = await shelterService.create(data)
+
+      return res.status(200).json(newShelter)
     } catch (err) {
       if (err.message === 'empty request body') {
         return res.status(422).json({ error: err.message })
@@ -20,7 +23,7 @@ class SheltersController {
 
   static async getAllShelters(req, res, next) {
     try {
-      const shelterResult = database.Shelter
+      const shelterResult = shelterService.getAll()
       req.result = shelterResult
       next()
     } catch (err) {
@@ -31,15 +34,11 @@ class SheltersController {
   static async getOneShelter(req, res) {
     const { id } = req.params
     try {
-      const shelter = await database.Shelter.findByPk(Number(id))
-
-      if (shelter === null) {
-        throw new Error('Shelter not found')
-      }
+      const shelter = await shelterService.getOne(id)
 
       return res.status(200).json(shelter)
     } catch (err) {
-      if (err.message === 'Shelter not found') {
+      if (err.message.includes('Shelter not found')) {
         return res.status(404).json({ error: err.message })
       }
       return res.status(500).json({ error: err.message })
@@ -49,11 +48,11 @@ class SheltersController {
   static async updateManyShelterProperties(req, res) {
     const { id } = req.params
     const newInfo = req.body
-    try {
-      const updated = await database.Shelter.update(newInfo, { where: { id: Number(id) } })
 
-      if (updated[0]) {
-        const shelterUpdated = await database.Shelter.findByPk(Number(id))
+    try {
+      const shelterUpdated = await shelterService.update(id, newInfo)
+
+      if (shelterUpdated) {
         return res.status(200).json({ message: 'shelter updated', content: shelterUpdated })
       }
 
@@ -73,12 +72,10 @@ class SheltersController {
         throw new Error('only one property can be updated at a time')
       }
 
-      const updated = await database.Shelter.update(newInfo, { where: { id: Number(id) } })
+      const shelterUpdated = await shelterService.update(id, newInfo)
 
-      if (updated[0]) {
-        const shelterUpdated = await database.Shelter.findByPk(Number(id))
+      if (shelterUpdated) {
         return res.status(200).json({ message: 'shelter updated', content: shelterUpdated })
-
       }
 
     } catch (err) {
@@ -91,8 +88,9 @@ class SheltersController {
 
   static async deleteShelter(req, res) {
     const { id } = req.params
+
     try {
-      await database.Shelter.destroy({ where: { id: Number(id) } })
+      await shelterService.delete(id)
       return res.status(200).json({ message: `Shelter with id:${id} was successfully deleted` })
     } catch (err) {
       return res.status(500).json({ error: err.message })
