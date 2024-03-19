@@ -1,42 +1,34 @@
 const database = require('../models')
+const { TutorService } = require('../services')
 
-const bcrypt = require('bcrypt')
+const tutorService = new TutorService()
 
 class TurtorsController {
   static async getAllTutors(req, res, next) {
     try {
-      const tutorsResult = database.User
+      const tutorsResult = tutorService.getAll()
       req.result = tutorsResult
       next()
     } catch (err) {
       return next(err)
-      // return res.status(500).json({ error: err.message })
     }
   }
 
   static async createTutor(req, res) {
-    const newTutor = req.body
+    const data = req.body
+
     try {
-      if (Object.keys(newTutor).length === 0) {
+      if (Object.keys(data).length === 0) {
         throw new Error('empty request body')
       }
 
-      // gera um sal aleatório
-      const salt = await bcrypt.genSalt()
+      const newTutor = await tutorService.create(data)
 
-      // gera uma senha hasheada utilizando o sal gerado
-      const hashedPassword = await bcrypt.hash(newTutor.password, salt)
-
-      // atualiza senha e armazena o sal do usuário
-      newTutor.password = hashedPassword
-      newTutor.salt = salt.toString('hex')
-
-      const newTutorCreated = await database.User.create(newTutor)
-      return res.status(200).json(newTutorCreated)
+      return res.status(200).json(`User ${newTutor.name} was sucessfully created`)
 
     } catch (err) {
       if (err.message.includes('Validation error')) {
-        return res.status(400).json({ error: err.errors[0].message })
+        return res.status(400).json({ error: err.message })
       }
 
       if (err.message === 'empty request body') {
@@ -49,16 +41,13 @@ class TurtorsController {
 
   static async getOneTutor(req, res) {
     const { id } = req.params
-    try {
-      const tutor = await database.User.findOne({ where: { id: Number(id) } })
 
-      if (tutor === null) {
-        throw new Error('Tutor not found')
-      }
+    try {
+      const tutor = await tutorService.getById(id)
 
       return res.status(200).json(tutor)
     } catch (err) {
-      if (err.message === 'Tutor not found') {
+      if (err.message.includes('Tutor not found')) {
         return res.status(404).json({ error: err.message })
       }
       return res.status(500).json({ error: err.message })
@@ -70,10 +59,9 @@ class TurtorsController {
     const newInfo = req.body
 
     try {
-      const updated = await database.User.update(newInfo, { where: { id: Number(id) } })
+      const tutorUpdated = await tutorService.update(id, newInfo)
 
-      if (updated[0]) {
-        const tutorUpdated = await database.User.findOne({ where: { id: Number(id) } })
+      if (tutorUpdated) {
         return res.status(200).json({ message: 'tutor updated', content: tutorUpdated })
       }
 
@@ -93,14 +81,13 @@ class TurtorsController {
         throw new Error('only one property can be updated at a time')
       }
 
-      await database.User.update(newInfo, { where: { id: Number(id) } })
-      const tutorUpdated = await database.User.findOne({ where: { id: Number(id) } })
+      const tutorUpdated = await tutorService.update(id, newInfo)
 
-      if (!tutorUpdated) {
-        return res.status(200).json({ message: 'Tutor not found.' })
+      if (tutorUpdated) {
+        return res.status(200).json({ message: 'tutor updated', content: tutorUpdated })
       }
 
-      return res.status(200).json({ message: 'tutor updated', content: tutorUpdated })
+      return res.status(204).json()
     } catch (err) {
       if (err.message.includes('Validation error')) {
         return res.status(400).json({ error: err.errors[0].message })
@@ -117,7 +104,7 @@ class TurtorsController {
   static async deleteTutor(req, res) {
     const { id } = req.params
     try {
-      const tutorDeleted = await database.User.destroy({ where: { id: Number(id) } })
+      const tutorDeleted = await tutorService.delete(id)
 
       if (!tutorDeleted) {
         return res.status(200).json({ message: `Tutor with id:${id} was NOT deleted` })
@@ -125,7 +112,7 @@ class TurtorsController {
 
       return res.status(200).json({ message: `Tutor with id:${id} was deleted` })
     } catch (err) {
-      return res.status(500).json({ error: err.message })
+      return res.status(400).json({ error: err.message })
     }
   }
 }
