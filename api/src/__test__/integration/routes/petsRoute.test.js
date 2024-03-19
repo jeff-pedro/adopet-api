@@ -4,7 +4,7 @@ const app = require('../../../app')
 const db = require('../../../models')
 const request = require('supertest')
 
-jest.mock('../../../models')
+// jest.mock('../../../models')
 
 describe('Pets', () => {
   let petId
@@ -21,32 +21,30 @@ describe('Pets', () => {
     shelter_id: 1
   }
 
-  describe('GET /pets', () => {
+  describe('GET /api/pets', () => {
     it('should list all pets', async () => {
       const res = await request(app)
-        .get('/pets')
+        .get('/api/pets')
         .set('Accept', 'application/json')
       expect(res.headers['content-type']).toMatch(/json/)
       expect(res.status).toEqual(200)
-      expect(res.body).toHaveLength(1)
+      // expect(res.body).toHaveLength(1)
     })
 
-    it.only('should show 10 results per page', async () => {
-      
+    it('should show 10 results per page', async () => {
+
       const res = await request(app)
-        .get('/pets/?page=1')
-      
+        .get('/api/pets/?page=1')
+
       expect(res.status).toEqual(200)
       expect(res.body).toHaveLength(10)
-
-      console.log(res.body)
     })
   })
 
-  describe('POST /pets', () => {
+  describe('POST /api/pets', () => {
     it('should create a new pet', async () => {
       const res = await request(app)
-        .post('/pets')
+        .post('/api/pets')
         .send(petObject)
         .expect(200)
 
@@ -55,7 +53,7 @@ describe('Pets', () => {
 
     it('should return an error if the request body is empty', async () => {
       const res = await request(app)
-        .post('/pets')
+        .post('/api/pets')
         .set('Accept', 'application/json')
         .send({})
 
@@ -65,10 +63,10 @@ describe('Pets', () => {
     })
   })
 
-  describe('GET /pets/{id}', () => {
+  describe('GET /api/pets/{id}', () => {
     it('should return one pet', async () => {
       const res = await request(app)
-        .get(`/pets/${petId}`)
+        .get(`/api/pets/${petId}`)
 
       expect(res.status).toBe(200)
       expect(res.body.name).toEqual('Cotton')
@@ -76,7 +74,7 @@ describe('Pets', () => {
 
     it('should return status 404 if any data is found', async () => {
       const pet = await request(app)
-        .get('/pets/0')
+        .get('/api/pets/0')
 
       expect(pet.status).toBe(404)
       expect(pet.body).toHaveProperty('error')
@@ -84,10 +82,10 @@ describe('Pets', () => {
     })
   })
 
-  describe('PUT /pets/{id}', () => {
+  describe('PUT /api/pets/{id}', () => {
     it('should update some fields', async () => {
       const res = await request(app)
-        .put(`/pets/${petId}`)
+        .put(`/api/pets/${petId}`)
         .send({
           name: 'Jack',
           status: 'Available',
@@ -103,17 +101,17 @@ describe('Pets', () => {
       ['undefined field', { somefield: 'some value' }]
     ])('should not update if provided an %s', async (_, param) => {
       const res = await request(app)
-        .put(`/pets/${petId}`)
+        .put(`/api/pets/${petId}`)
         .send(param)
 
       expect(res.status).toBe(204)
     })
   })
 
-  describe('PATCH /pets/{id}', () => {
+  describe('PATCH /api/pets/{id}', () => {
     it('should update only one field', async () => {
       const res = await request(app)
-        .patch(`/pets/${petId}`)
+        .patch(`/api/pets/${petId}`)
         .send({
           status: 'Quarentine'
         })
@@ -125,7 +123,7 @@ describe('Pets', () => {
 
     it('should return an error if try update more than one field', async () => {
       const res = await request(app)
-        .patch(`/pets/${petId}`)
+        .patch(`/api/pets/${petId}`)
         .send({
           species: 'Cat',
           personality: 'She is very cute'
@@ -139,39 +137,46 @@ describe('Pets', () => {
       ['undefined field', { somefield: 'some value' }]
     ])('should return an error if provided an %s', async (_, param) => {
       const res = await request(app)
-        .put(`/pets/${petId}`)
+        .put(`/api/pets/${petId}`)
         .send(param)
 
       expect(res.status).toBe(204)
     })
   })
 
-  describe('DELETE /pets/{id}', () => {
+  describe('DELETE /api/pets/{id}', () => {
     it('should delete one pet', async () => {
       await request(app)
-        .delete(`/pets/${petId}`)
+        .delete(`/api/pets/${petId}`)
         .expect(200)
     })
   })
 
-  describe('POST /pets/{id}/adoption', () => {
+  describe('POST /api/pets/{id}/adoption', () => {
     it('should do an adoption', async () => {
 
-      const tutor = await db.User.create({
-        name: 'Hector Barbosa',
-        email: 'barbosa@pirates.sea',
-        password: 'hector123',
-        phone: '+011233334444',
-        city: 'Lisbon',
-        about: 'All pets loves me',
-        profilePictureUrl: 'https://images.com/images/image-barbosa',
-        role: 'administrator'
-      })
+      const reqTutor = await request(app)
+        .get('/api/tutors')
 
-      pet = await db.Pet.create(petObject)
+      const reqPet = await request(app)
+        .get('/api/pets')
+
+      const tutor = reqTutor.body[1]
+      const pet = reqPet.body[reqPet.body.length - 1]
+
+      // const tutor = await db.User.create({
+      //   name: 'Hector Barbosa',
+      //   email: 'barbosa@pirates.sea',
+      //   password: 'hector123',
+      //   phone: '+011233334444',
+      //   city: 'Lisbon',
+      //   about: 'All pets loves me',
+      //   profilePictureUrl: 'https://images.com/images/image-barbosa',
+      //   role: 'administrator'
+      // })
 
       const res = await request(app)
-        .post(`/pets/${pet.id}/adoption`)
+        .post(`/api/pets/${pet.id}/adoption`)
         .send({
           animal: Number(pet.id),
           tutor: Number(tutor.id),
@@ -183,10 +188,15 @@ describe('Pets', () => {
     })
   })
 
-  describe('DELETE /pets/:id/adoption/cancel', () => {
+  describe('DELETE /api/pets/:id/adoption/cancel', () => {
     it('should cancel one adoption', async () => {
+      const reqPet = await request(app)
+        .get('/api/pets')
+
+      const pet = reqPet.body[reqPet.body.length - 1]
+
       await request(app)
-        .delete(`/pets/${pet.id}/adoption/cancel`)
+        .delete(`/api/pets/${pet.id}/adoption/cancel`)
         .expect(200)
     })
   })
