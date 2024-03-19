@@ -1,14 +1,12 @@
 process.env.NODE_ENV = 'test'
 
 const app = require('../../../app')
-const db = require('../../../models')
 const request = require('supertest')
 
 // jest.mock('../../../models')
 
 describe('Pets', () => {
   let petId
-  let pet
 
   const petObject = {
     name: 'Cotton',
@@ -38,6 +36,8 @@ describe('Pets', () => {
 
       expect(res.status).toEqual(200)
       expect(res.body).toHaveLength(10)
+
+      console.log(res.body.length)
     })
   })
 
@@ -78,7 +78,7 @@ describe('Pets', () => {
 
       expect(pet.status).toBe(404)
       expect(pet.body).toHaveProperty('error')
-      expect(pet.body.error).toEqual('Pet not found')
+      expect(pet.body.error).toEqual('Error: Pet not found')
     })
   })
 
@@ -163,17 +163,6 @@ describe('Pets', () => {
 
       const tutor = reqTutor.body[1]
       const pet = reqPet.body[reqPet.body.length - 1]
-
-      // const tutor = await db.User.create({
-      //   name: 'Hector Barbosa',
-      //   email: 'barbosa@pirates.sea',
-      //   password: 'hector123',
-      //   phone: '+011233334444',
-      //   city: 'Lisbon',
-      //   about: 'All pets loves me',
-      //   profilePictureUrl: 'https://images.com/images/image-barbosa',
-      //   role: 'administrator'
-      // })
 
       const res = await request(app)
         .post(`/api/pets/${pet.id}/adoption`)
