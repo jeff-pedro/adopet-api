@@ -1,10 +1,13 @@
-const database = require('../models')
+const { AdoptionService } = require('../services')
+
+const adoptionService = new AdoptionService()
 
 class AdoptionsController {
   static async createAdoption(req, res) {
     const { body } = req
     const petId = req.params.id
 
+    // validation
     const adoptionData = {
       animal: Number(petId),
       tutor: Number(body.tutor),
@@ -12,13 +15,11 @@ class AdoptionsController {
     }
 
     try {
-      const adoption = await database.Adoption.create(adoptionData)
-      await database.Pet.update({ status: 'Adopted' }, { where: { id: Number(petId) } })
-      return res.status(200).json({
-        adoption: adoption
-      })
+      const adoption = await adoptionService.create(adoptionData, petId)
+
+      return res.status(200).json({ adoption })
     } catch (err) {
-      return res.status(500).json({ error: err.message })
+      return res.status(400).json({ error: err.message })
     }
   }
 
@@ -29,10 +30,10 @@ class AdoptionsController {
         TODO: implement authentication and rules for this 
     */
     try {
-      await database.Adoption.destroy({ where: { animal: Number(petId) } })
+      await adoptionService.delete(petId)
       return res.status(200).json({ message: `Adoption with id:${petId} was deleted` })
     } catch (err) {
-      return res.status(500).json({ error: err.message })
+      return res.status(400).json({ error: err.message })
     }
   }
 }
