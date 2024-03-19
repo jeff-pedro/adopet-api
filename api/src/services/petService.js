@@ -42,12 +42,10 @@ class PetService {
       if (updated[0]) {
         const pet = await database.Pet.findOne({ where: { id: Number(id) } })
 
-        if (!pet) {
-          throw new Error(`pet with id:${id} wasn't updated`)
-        }
-
         return pet
       }
+
+      return updated[0]
     } catch (err) {
       throw new Error(err)
     }
