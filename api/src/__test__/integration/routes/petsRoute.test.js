@@ -36,8 +36,6 @@ describe('Pets', () => {
 
       expect(res.status).toEqual(200)
       expect(res.body).toHaveLength(10)
-
-      console.log(res.body.length)
     })
   })
 

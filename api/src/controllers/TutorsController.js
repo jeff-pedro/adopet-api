@@ -1,4 +1,3 @@
-const database = require('../models')
 const { TutorService } = require('../services')
 
 const tutorService = new TutorService()
