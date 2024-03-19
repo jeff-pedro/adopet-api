@@ -1,8 +1,6 @@
 async function pagination(req, res, next) {
   let { limit = 10, page = 1 } = req.query
 
-  console.log(limit, page)
-
   limit = parseInt(limit)
   page = parseInt(page)
 
