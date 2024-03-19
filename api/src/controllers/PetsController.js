@@ -1,9 +1,12 @@
-const database = require('../models')
+const { PetService } = require('../services')
+
+const petService = new PetService()
 
 class PetsController {
   static async createPet(req, res) {
     const { body } = req
 
+    // validation
     const newPet = {
       name: body.name,
       birthday: new Date(body.birthday), // RFC2822
@@ -20,7 +23,8 @@ class PetsController {
         throw new Error('empty request body')
       }
 
-      const newPetCreated = await database.Pet.create(newPet)
+      const newPetCreated = await petService.create(newPet)
+
       return res.status(200).json(newPetCreated)
     } catch (err) {
       if (err.message.includes('Validation error')) {
@@ -41,28 +45,25 @@ class PetsController {
 
   static async getAllPets(req, res, next) {
     try {
-      const petsResult = database.Pet
+      const petsResult = petService.getAll()
       req.result = petsResult
       next()
     } catch (err) {
-      return res.status(500).json({ error: err.message })
+      return res.status(400).json({ error: err.message })
     }
   }
 
   static async getOnePet(req, res) {
     const { id } = req.params
     try {
-      const pet = await database.Pet.findByPk(Number(id))
-
-      if (pet === null) {
-        throw new Error('Pet not found')
-      }
+      const pet = await petService.getOne(id)
 
       return res.status(200).json(pet)
     } catch (err) {
-      if (err.message === 'Pet not found') {
+      if (err.message.includes('Pet not found')) {
         return res.status(404).json({ error: err.message })
       }
+
       return res.status(500).json({ error: err.message })
     }
   }
@@ -72,21 +73,15 @@ class PetsController {
     const newInfo = req.body
 
     try {
-      const updated = await database.Pet.update(newInfo, { where: { id: Number(id) } })
+      const petUpdated = await petService.update(id, newInfo)
 
-      if (updated[0]) {
-        const petUpdated = await database.Pet.findOne({ where: { id: Number(id) } })
-
-        if (!petUpdated) {
-          return res.status(422).send(`pet with id:${id} wasn't updated`)
-        }
-
+      if (petUpdated) {
         return res.status(200).json({ message: 'pet updated', content: petUpdated })
       }
 
       return res.status(204).json()
     } catch (err) {
-      return res.status(500).json({ error: err.message })
+      return res.status(400).json({ error: err.message })
     }
   }
 
@@ -100,10 +95,9 @@ class PetsController {
         throw new Error('one property can be updated at a time')
       }
 
-      const updated = await database.Pet.update(newInfo, { where: { id: Number(id) } })
+      const petUpdated = await petService.update(id, newInfo)
 
-      if (updated[0]) {
-        const petUpdated = await database.Pet.findByPk(Number(id))
+      if (petUpdated) {
         return res.status(200).json({ message: 'pet updated', content: petUpdated })
       }
 
@@ -120,14 +114,13 @@ class PetsController {
   static async deletePet(req, res) {
     const { id } = req.params
     try {
-      const petDeleted = await database.Pet.destroy({ where: { id: Number(id) } })
-
-      if (!petDeleted) {
-        return res.status(400).json({ error: `Pet with id:${id} not found` })
-      }
+      await petService.delete(id)
 
       return res.status(200).json({ message: `Pet with id:${id} was successfully deleted` })
     } catch (err) {
+      if (err.message.includes(`Pet with id:${id} not found`)) {
+        return res.status(400).json({ error: err.message })
+      }
       return res.status(500).json({ error: err.message })
     }
   }
