@@ -25,11 +25,25 @@ describe('Login', () => {
   })
 
   afterAll(async () => {
+    // login
+    const res = await request(app)
+      .get('/api/login')
+      .set('Accept', 'application/json')
+      .send({
+        email: userObject.email,
+        password: userObject.password
+      })
+
+    const { accessToken } = res.body
+
+    // get user
     const user = await request(app)
       .get('/api/tutors')
+      .set('Authorization', `Bearer ${accessToken}`)
 
     const { id } = user.body[user.body.length - 1]
 
+    // remove user
     await request(app)
       .delete(`/api/tutor${id}`)
   })
