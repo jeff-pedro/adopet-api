@@ -10,9 +10,9 @@ module.exports = (app) => {
   })
 
   app.use('/api',
+    auth,
     tutors,
     shelters,
     pets,
-    auth
   )
 }

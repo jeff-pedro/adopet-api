@@ -1,9 +1,13 @@
 const { Router } = require('express')
 const TurtorsController = require('../controllers/TutorsController')
-const router = Router()
 const pagination = require('../middlewares/pagination.js')
+const authorization = require('../middlewares/authorization.js')
 
-router
+const routes = Router()
+
+routes.use(authorization)
+
+routes
   .get('/tutors', TurtorsController.getAllTutors, pagination)
   .get('/tutors/:id', TurtorsController.getOneTutor)
   .post('/tutors', TurtorsController.createTutor)
@@ -11,4 +15,4 @@ router
   .patch('/tutors/:id', TurtorsController.updateOneTutorProperty)
   .delete('/tutors/:id', TurtorsController.deleteTutor)
 
-module.exports = router
+module.exports = routes

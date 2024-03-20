@@ -28,7 +28,7 @@ class LoginService {
         id: user.id,
         email: user.email
       }, secret, {
-        expiresIn: 60 * 60 * 10
+        expiresIn: 60 * 60 // 1h
       })
 
       return token

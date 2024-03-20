@@ -1,8 +1,12 @@
 const { Router } = require('express')
 const PetsController = require('../controllers/PetsController.js')
 const AdoptionsController = require('../controllers/AdoptionsController.js')
-const routes = Router()
 const pagination = require('../middlewares/pagination.js')
+const authorization = require('../middlewares/authorization.js')
+
+const routes = Router()
+
+routes.use(authorization)
 
 routes
   .post('/pets', PetsController.createPet)
