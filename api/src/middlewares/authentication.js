@@ -9,6 +9,7 @@ passport.use(
     passwordField: 'password'
   }, async (email, password, done) => {
     try {
+
       const user = await db.User.findOne({ where: { email } })
 
       // check user
@@ -44,8 +45,18 @@ passport.deserializeUser((user, done) => {
 
 function authenticate(req, res, next) {
   passport.authenticate('local', (err, user) => {
-    if (err) { return res.status(403).json({ message: err }) }
-    return res.status(200).json({ id: user.id, email: user.email })
+    if (err) {
+      return res.status(403).json({ message: err })
+    }
+
+    let sess = req.session
+    sess.email = req.body.email
+
+    return res.status(200).json({
+      id: user.id,
+      email: user.email,
+      sessionId: req.sessionId
+    })
   })(req, res, next)
 }
 
