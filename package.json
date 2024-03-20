@@ -3,7 +3,7 @@
   "version": "v2.0.0-alpha",
   "private": true,
   "scripts": {
-    "start": "node ./src/bin/www",
+    "start": "node ./api/bin/www",
     "dev": "nodemon --delay 500ms ./api/bin/www",
     "test": "jest --detectOpenHandles",
     "test:watch": "jest --watch",
