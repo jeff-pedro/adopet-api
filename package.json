@@ -1,6 +1,6 @@
 {
   "name": "api-adopet",
-  "version": "v2.0.0-alpha",
+  "version": "v2.1.0-alpha",
   "private": true,
   "scripts": {
     "start": "node ./api/bin/www",
