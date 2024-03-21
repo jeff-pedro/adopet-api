@@ -1,7 +1,11 @@
 const { Router } = require('express')
 const SheltersController = require('../controllers/SheltersController.js')
-const routes = Router()
 const pagination = require('../middlewares/pagination.js')
+const authorization = require('../middlewares/authorization.js')
+
+const routes = Router()
+
+routes.use(authorization)
 
 routes
   .post('/shelters', SheltersController.createShelter)
