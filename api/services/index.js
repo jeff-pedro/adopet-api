@@ -1,7 +1,7 @@
-const PetService = require('./petService')
-const TutorService = require('./tutorService')
-const ShelterService = require('./shelterService')
-const AdoptionService = require('./adoptionService')
+const PetService = require('./PetService')
+const TutorService = require('./TutorService')
+const ShelterService = require('./ShelterService')
+const AdoptionService = require('./AdoptionService')
 const AuthService = require('./AuthService')
 
 module.exports = {
