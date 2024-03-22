@@ -11,8 +11,8 @@ module.exports = (app) => {
 
   app.use('/api',
     auth,
+    pets,
     tutors,
     shelters,
-    pets,
   )
 }
