@@ -27,7 +27,7 @@ describe('Login', () => {
   afterAll(async () => {
     // login
     const res = await request(app)
-      .get('/api/login')
+      .post('/api/login')
       .set('Accept', 'application/json')
       .send({
         email: userObject.email,
@@ -51,7 +51,7 @@ describe('Login', () => {
   describe('GET /api/login', () => {
     it('should successfully login a user', async () => {
       const res = await request(app)
-        .get('/api/login')
+        .post('/api/login')
         .set('Accept', 'application/json')
         .send({
           email: userObject.email,
@@ -64,7 +64,7 @@ describe('Login', () => {
 
     it('should show an error message when email or password is incorrect', async () => {
       const res = await request(app)
-        .get('/api/login')
+        .post('/api/login')
         .set('Accept', 'application/json')
         .send({
           email: userObject.email,
@@ -78,7 +78,7 @@ describe('Login', () => {
 
     it('should show an error message when user was not exist', async () => {
       const res = await request(app)
-        .get('/api/login')
+        .post('/api/login')
         .set('Accept', 'application/json')
         .send({
           email: 'wrong@mail.com',
