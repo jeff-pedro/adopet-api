@@ -31,7 +31,13 @@ class LoginService {
         expiresIn: 60 * 60 // 1h
       })
 
-      return token
+      return {
+        user: {
+          id: user.id,
+          email: user.email
+        },
+        token
+      }
     } catch (err) {
       console.log(err)
       throw new Error(err.message)
