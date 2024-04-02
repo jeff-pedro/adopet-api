@@ -1,5 +1,6 @@
-const database = require('../models')
+const { v4: uuidv4 } = require('uuid')
 const bcrypt = require('bcrypt')
+const database = require('../models')
 
 class TutorService {
 
@@ -15,7 +16,10 @@ class TutorService {
       dto.password = hashedPassword
       dto.salt = salt.toString('hex')
 
-      const tutor = await database.User.create(dto)
+      const tutor = await database.User.create({
+        id: uuidv4(),
+        ...dto
+      })
 
       return tutor
     } catch (err) {
@@ -36,7 +40,7 @@ class TutorService {
   async getById(id) {
 
     try {
-      const tutor = await database.User.findOne({ where: { id: Number(id) } })
+      const tutor = await database.User.findOne({ where: { id } })
 
       if (tutor === null) {
         throw new Error('Tutor not found')
@@ -50,10 +54,10 @@ class TutorService {
 
   async update(id, dto) {
     try {
-      const updated = await database.User.update(dto, { where: { id: Number(id) } })
+      const updated = await database.User.update(dto, { where: { id } })
 
       if (updated[0]) {
-        const tutor = await database.User.findOne({ where: { id: Number(id) } })
+        const tutor = await database.User.findOne({ where: { id } })
 
         return tutor
       }
@@ -66,7 +70,7 @@ class TutorService {
 
   async delete(id) {
     try {
-      const tutorDeleted = await database.User.destroy({ where: { id: Number(id) } })
+      const tutorDeleted = await database.User.destroy({ where: { id } })
 
       return tutorDeleted
     } catch (err) {

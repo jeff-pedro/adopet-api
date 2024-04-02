@@ -39,6 +39,8 @@ describe('Tutors', () => {
 
     const { id } = user.body[user.body.length - 1]
 
+    console.log(id)
+
     tutorId = id
   })
 
@@ -46,7 +48,7 @@ describe('Tutors', () => {
     // clean database
     database.User.destroy({
       where: {},
-      truncate: true
+      // truncate: true
     })
   })
 
@@ -80,6 +82,8 @@ describe('Tutors', () => {
         .send(tutorObject)
         .set('Accept', 'application/json')
         .set('Authorization', `Bearer ${accessToken}`)
+
+      console.log(res.status)
 
       expect(res.status).toEqual(200)
       // expect(res.body).toEqual(
