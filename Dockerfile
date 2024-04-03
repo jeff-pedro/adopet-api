@@ -2,31 +2,26 @@
 
 ARG NODE_VERSION=21.7.1
 
-FROM node:${NODE_VERSION}-alpine
-
-# Use development node environment by default.
-ENV NODE_ENV development
-
-# Set the working directory.
+FROM node:${NODE_VERSION}-alpine as base
 WORKDIR /usr/src/api
+EXPOSE 3000
 
-# Download dependencies as a separate step to take advantage of Docker's caching.
-# Leverage a cache mount to /root/.npm to speed up subsequent builds.
-# Leverage a bind mounts to package.json and package-lock.json to avoid having to copy them into
-# into this layer.
+
+FROM base as dev
 RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=bind,source=package-lock.json,target=package-lock.json \
     --mount=type=cache,target=/root/.npm \
-    npm ci
-
-# Run the application as a non-root user.
+    npm ci --include=dev
 USER node
-
-# Copy the rest of the source files into the image.
 COPY . .
+CMD [ "npm", "run", "dev" ]
 
-# Expose the port that the application listens on.
-EXPOSE 9000
 
-# Run the application.
-CMD ["npm", "run", "dev"]
+FROM base as prod
+RUN --mount=type=bind,source=package.json,target=package.json \
+    --mount=type=bind,source=package-lock.json,target=package-lock.json \
+    --mount=type=cache,target=/root/.npm \
+    npm ci --omit=dev
+USER node
+COPY . .
+CMD ["node", "./api/bin/www"]
