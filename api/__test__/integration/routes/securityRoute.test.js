@@ -8,6 +8,8 @@ const { v4: uuid } = require('uuid')
 
 
 describe('Security', () => {
+  let profileId
+  
   beforeAll(async () => {
     await database.Profile.create({
       id: uuid(),
@@ -54,6 +56,37 @@ describe('Security', () => {
         ],
       })
     )
+
+    profileId = res.body.id
+  })
+
+  it('returns all profiles with their permissions', async () => {
+    const res = await request(app)
+      .get('/api/security/profile/permissions')
+      
+    expect(res.status).toEqual(200)
+    expect(res.body).toHaveLength(1)
+    expect(res.body[0]).toHaveProperty('profilePermissions')
+    expect(res.body[0].profilePermissions).toEqual([
+      expect.objectContaining({
+        name: 'read',
+        description: expect.any(String)
+      })
+    ])
+  })
+
+  it('returns one profile with your permissions', async () => {
+    const res = await request(app)
+      .get(`/api/security/profile/permissions/id/${profileId}`)
+      
+    expect(res.status).toEqual(200)
+    expect(res.body).toHaveProperty('profilePermissions')
+    expect(res.body.profilePermissions).toEqual([
+      expect.objectContaining({
+        name: 'read',
+        description: expect.any(String)
+      })
+    ])
   })
 
 })
