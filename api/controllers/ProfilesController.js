@@ -2,7 +2,7 @@ const { ProfileService } = require('../services')
 
 const profileService = new ProfileService()
 
-class ProfileController {
+class ProfilesController {
 
   static async createProfile(req, res) {
     const { name, description } = req.body
@@ -60,4 +60,4 @@ class ProfileController {
   }
 }
 
-module.exports = ProfileController
+module.exports = ProfilesController
