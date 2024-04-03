@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
 
       User.belongsToMany(models.Profile, {
         through: models.profile_user,
-        as: 'user_to_profile',
+        as: 'userProfile',
         foreignKey: 'user_id'
       })
     }

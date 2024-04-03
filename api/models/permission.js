@@ -1,7 +1,7 @@
-'use strict';
+'use strict'
 const {
   Model
-} = require('sequelize');
+} = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
   class Permission extends Model {
     /**
@@ -12,7 +12,8 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Permission.belongsToMany(models.Profile, {
         through: models.profile_permission,
-        as: 'permission_to_profile'
+        as: 'permissionProfiles',
+        foreignKey: 'permission_id'
       })
     }
   }
@@ -22,6 +23,6 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Permission',
-  });
-  return Permission;
-};
+  })
+  return Permission
+}
