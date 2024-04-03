@@ -15,9 +15,30 @@ class SecurityController {
 
       res.status(201).json(profilePermissions)
     } catch (err) {
-      res.status(400).json({ error: err.message })
+      res.status(422).json({ error: err.message })
     }
   }
+
+  static async getAllProfilePermissions(req, res) {
+    try {
+      const profilePermissions = await securityService.getProfilePermissions()
+      res.status(200).json(profilePermissions)
+    } catch (err) {
+      res.status(422).json({ error: err.message })
+    }
+  }
+
+  static async getOneProfilePermissions(req, res) {
+    const { id } = req.params
+
+    try {
+      const profilePermissions = await securityService.getProfilePermissionsById(id)
+      res.status(200).json(profilePermissions)
+    } catch (err) {
+      res.status(422).json({ error: err.message })
+    }
+  }
+  
 }
 
 module.exports = SecurityController

@@ -55,6 +55,47 @@ class SecurityService {
 
     return freshProfile
   }
+
+  async getProfilePermissions() {
+    try {
+      const profilesPermissions = await database.Profile.findAll({
+        attributes: ['name'],
+        include: [{
+          model: database.Permission,
+          as: 'profilePermissions',
+          attributes: ['name', 'description'],
+          through: {
+            attributes: []
+          }
+        }]
+      })
+
+      return profilesPermissions
+    } catch (err) {
+      throw new Error(err)
+    }
+  }
+
+  async getProfilePermissionsById(id) {
+    try {
+      const profilePermissions = await database.Profile.findOne({
+        attributes: ['name'],
+        include: [{
+          model: database.Permission,
+          as: 'profilePermissions',
+          attributes: ['name', 'description'],
+          through: {
+            attributes: []
+          }
+        }],
+        where: { id }
+      })
+
+      return profilePermissions
+    } catch (err) {
+      throw new Error(err)
+    }
+  }
 }
 
 module.exports = SecurityService
