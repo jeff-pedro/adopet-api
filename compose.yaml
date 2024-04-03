@@ -2,27 +2,33 @@ services:
   api:
     build:
       context: .
+      target: dev
     container_name: adopet-api
     ports:
       - 9000:9000
-    volumes:
-      - .:/usr/src/api
     environment:
       NODE_ENV: development
+      MYSQL_HOST: db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: null
+      MYSQL_DB: adopet_dev
     depends_on:
       db:
         condition: service_healthy
+    volumes:
+      - ./:/usr/src/api/
   
   db:
     image: mysql:8
     container_name: adopet-db
     restart: always
-    command: --default-authentication-plugin=mysql_native_password
     user: root
+    secrets:
+      - db-root-password
     volumes:
       - mysql-data:/var/lib/mysql
     environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: true
+      MYSQL_ROOT_PASSWORD: /run/secrets/db-root-password
     expose:
       - 3306
     healthcheck:
@@ -33,3 +39,7 @@ services:
 
 volumes:
   mysql-data:
+
+secrets:
+  db-root-password:
+    file: db/password.txt
