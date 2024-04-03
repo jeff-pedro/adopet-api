@@ -5,6 +5,7 @@ const AdoptionService = require('./AdoptionService')
 const AuthService = require('./AuthService')
 const ProfileService = require('./ProfileService')
 const PermissionService = require('./PermissionService')
+const SecurityService = require('./SecurityService')
 
 module.exports = {
   PetService,
@@ -14,4 +15,5 @@ module.exports = {
   AuthService,
   ProfileService,
   PermissionService,
+  SecurityService,
 }

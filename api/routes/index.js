@@ -4,6 +4,7 @@ const pets = require('./petsRoute.js')
 const auth = require('./authRoute.js')
 const profiles = require('./profilesRoute.js')
 const permissions = require('./permissionsRoute.js')
+const security = require('./securityRoute.js')
 
 module.exports = (app) => {
   /* GET home page. */
@@ -14,6 +15,7 @@ module.exports = (app) => {
   app.use('/api',
     profiles,
     permissions,
+    security,
     auth,
     pets,
     tutors,
