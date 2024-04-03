@@ -3,6 +3,7 @@ const shelters = require('./sheltersRoute.js')
 const pets = require('./petsRoute.js')
 const auth = require('./authRoute.js')
 const profiles = require('./profilesRoute.js')
+const permissions = require('./permissionsRoute.js')
 
 module.exports = (app) => {
   /* GET home page. */
@@ -12,6 +13,7 @@ module.exports = (app) => {
 
   app.use('/api',
     profiles,
+    permissions,
     auth,
     pets,
     tutors,
