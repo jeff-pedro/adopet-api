@@ -1,21 +1,25 @@
 process.env.NODE_ENV = 'test'
 
 const request = require('supertest')
-const app = require('../../../app')
-
-const database = require('../../../models')
 const { v4: uuid } = require('uuid')
+
+const app = require('../../../app')
+const database = require('../../../models')
+const login = require('../../helper/userLogin')
+
+const { TutorService } = require('../../../services')
+const tutorService = new TutorService()
 
 describe('Security', () => {
   let profile
   let user
+  const auth = {}
 
   beforeAll(async () => {
-    user = await database.User.create({
-      id: uuid(),
-      name: 'Will Turner',
-      email: 'tuner@pirates.sea',
-      password: 'tuner123',
+    user = await tutorService.create({
+      name: 'Jack Sparrow',
+      email: 'sparrow@pirates.sea',
+      password: 'jack123',
     })
 
     profile = await database.Profile.create({
@@ -29,6 +33,8 @@ describe('Security', () => {
       name: 'read',
       description: 'permission to read contents',
     })
+
+    await login(auth, request, app)
   })
 
   afterAll(async () => {
@@ -37,16 +43,19 @@ describe('Security', () => {
     await database.User.destroy({ where: {} })
   })
 
+
   describe('Profile permissions', () => {
     describe('POST /security/profile/permissions/id', () => {
+
       it('should add permissions to one profile', async () => {
         const res = await request(app)
           .post('/api/security/profile/permissions')
+          .set('Authorization', `Bearer ${auth.token}`)
           .send({
             profile: 'tutor',
             permissions: ['read'],
           })
-  
+
         expect(res.status).toEqual(201)
         expect(res.body.profilePermissions[0].name).toEqual('read')
         expect(res.body).toEqual(
@@ -66,13 +75,15 @@ describe('Security', () => {
         )
       })
     })
-  
+
+    
     describe('GET /security/profile/permissions', () => {
+    
       it('returns all profiles with their permissions', async () => {
-        const res = await request(app).get(
-          '/api/security/profile/permissions'
-        )
-  
+        const res = await request(app)
+          .get('/api/security/profile/permissions')
+          .set('Authorization', `Bearer ${auth.token}`)
+
         expect(res.status).toEqual(200)
         expect(res.body).toHaveLength(1)
         expect(res.body[0]).toHaveProperty('profilePermissions')
@@ -84,13 +95,15 @@ describe('Security', () => {
         ])
       })
     })
-  
+
+
     describe('GET /security/profile/permissions/id', () => {
+    
       it('returns one profile with your permissions', async () => {
-        const res = await request(app).get(
-          `/api/security/profile/permissions/id/${profile.id}`
-        )
-  
+        const res = await request(app)
+          .get(`/api/security/profile/permissions/id/${profile.id}`)
+          .set('Authorization', `Bearer ${auth.token}`)
+
         expect(res.status).toEqual(200)
         expect(res.body).toHaveProperty('profilePermissions')
         expect(res.body.profilePermissions).toEqual([
@@ -100,19 +113,22 @@ describe('Security', () => {
           }),
         ])
       })
-    })  
+    })
   })
+
 
   describe('ACL', () => {
     describe('POST /security/acl', () => {
+      
       it('should register one profile to an user', async () => {
         const res = await request(app)
           .post('/api/security/acl')
+          .set('Authorization', `Bearer ${auth.token}`)
+          .set('Accept', 'application/json')
           .send({
             userId: user.id,
             profileId: profile.id,
           })
-          .set('Accept', 'application/json')
 
         expect(res.status).toEqual(201)
         expect(res.body).toHaveProperty('userProfile')
