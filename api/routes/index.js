@@ -13,12 +13,12 @@ module.exports = (app) => {
   })
 
   app.use('/api',
-    profiles,
-    permissions,
-    security,
     auth,
     pets,
     tutors,
     shelters,
+    profiles,
+    permissions,
+    security,
   )
 }
