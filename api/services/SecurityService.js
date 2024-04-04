@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize')
 const database = require('../models')
+const { v4: uuid } = require('uuid')
 
 class SecurityService {
   async addPermissionsToProfile({ profile: profileName, permissions: permissionsList }) {
@@ -92,6 +93,58 @@ class SecurityService {
       })
 
       return profilePermissions
+    } catch (err) {
+      throw new Error(err)
+    }
+  }
+
+  async registerAcl(dto) {
+    const { userId, profileId } = dto
+    
+    const user = await database.User.findOne({
+      include: [
+        {
+          model: database.Profile,
+          as: 'userProfile',
+          attributes: ['id', 'name', 'description']
+        }
+      ],
+      where: {
+        id: userId
+      }
+    })
+
+    if (!user) {
+      throw new Error('No user found.')
+    }
+
+    const profile = await database.Profile.findOne({
+      where: {
+        id: profileId
+      }
+    })
+
+    if (!profile) {
+      throw new Error('No profile found.')
+    }
+
+    try {
+      await user.addUserProfile(profile.id)
+
+      const freshUser = await database.User.findOne({
+        include: [
+          {
+            model: database.Profile,
+            as: 'userProfile',
+            attributes: ['name', 'description'],
+            through: { attributes: [] }
+          }
+        ],
+        where:
+          { id: userId }
+      })
+      
+      return freshUser
     } catch (err) {
       throw new Error(err)
     }

@@ -38,7 +38,17 @@ class SecurityController {
       res.status(422).json({ error: err.message })
     }
   }
-  
+
+  static async registerAcl(req, res) {
+    const { userId, profileId } = req.body
+
+    try {
+      const acl = await securityService.registerAcl({ userId, profileId })
+      res.status(201).json(acl)
+    } catch (err) {
+      res.status(422).json({ error: err.message })
+    }
+  }
 }
 
 module.exports = SecurityController
