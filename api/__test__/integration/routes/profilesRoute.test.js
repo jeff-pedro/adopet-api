@@ -1,24 +1,33 @@
 process.env.NODE_ENV = 'test'
 
-const app = require('../../../app')
 const request = require('supertest')
+const app = require('../../../app')
+
+const login = require('../../helper/userLogin')
 const database = require('../../../models')
 
 describe('Profiles', () => {
   let profileId
+  const auth = {}
 
+  beforeAll(async () => {
+    await login(auth, request, app)
+  })
+  
   afterAll(async () => {
     await database.Profile.destroy({
       where: {},
     })
   })
   
+
   describe('POST /profiles', () => {
     
     it('should create one profile', async () => {
       const res = await request(app)
         .post('/api/profiles')
         .set('Accept', 'application/json')
+        .set('Authorization', `Bearer ${auth.token}`)
         .send({
           name: 'tutor',
           description: 'user who is thinking about adopting pets'
@@ -31,11 +40,13 @@ describe('Profiles', () => {
     })
   })
 
+
   describe('GET /profiles', () => {
     
     it('should return an array of profiles', async () => {
       const res = await request(app)
         .get('/api/profiles')
+        .set('Authorization', `Bearer ${auth.token}`)
         
       expect(res.status).toEqual(200)
       expect(res.body).toHaveLength(1)
@@ -53,10 +64,13 @@ describe('Profiles', () => {
     })
   }) 
 
+
   describe('GET /profiles/{id}', () => {
+
     it('should return one profile', async () => {
       const res = await request(app)
         .get(`/api/profiles/${profileId}`)
+        .set('Authorization', `Bearer ${auth.token}`)
         
       expect(res.status).toEqual(200)
       expect(res.body).toEqual(
@@ -69,12 +83,15 @@ describe('Profiles', () => {
     })
   })
 
+
   describe('PUT /profiles/{id}', () => {
+
     it('should update one profile', async () => {
       const res = await request(app)
         .put(`/api/profiles/${profileId}`)
         .send({ name: 'shelter' })
         .set('Accept', 'application/json')
+        .set('Authorization', `Bearer ${auth.token}`)
         
       expect(res.status).toEqual(200)
       expect(res.headers['content-type']).toMatch(/json/)
@@ -82,10 +99,13 @@ describe('Profiles', () => {
     })
   })
 
+
   describe('DELETE /profiles/{id}', () => {
+
     it('should delete one profile', async () => {
       const res = await request(app)
         .delete(`/api/profiles/${profileId}`)
+        .set('Authorization', `Bearer ${auth.token}`)
         
       expect(res.status).toEqual(200)
     })

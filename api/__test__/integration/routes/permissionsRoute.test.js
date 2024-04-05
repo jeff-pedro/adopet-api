@@ -2,10 +2,17 @@ process.env.NODE_ENV = 'test'
 
 const app = require('../../../app')
 const request = require('supertest')
+
+const login = require('../../helper/userLogin')
 const database = require('../../../models')
 
 describe('Permissions', () => {
   let permissionId
+  const auth = {}
+
+  beforeAll(async () => {
+    await login(auth, request, app)
+  })
 
   afterAll(async () => {
     await database.Permission.destroy({
@@ -19,6 +26,7 @@ describe('Permissions', () => {
       const res = await request(app)
         .post('/api/permissions')
         .set('Accept', 'application/json')
+        .set('Authorization', `Bearer ${auth.token}`)
         .send({
           name: 'read',
           description: 'read the content'
@@ -36,6 +44,7 @@ describe('Permissions', () => {
     it('should return an array of permissions', async () => {
       const res = await request(app)
         .get('/api/permissions')
+        .set('Authorization', `Bearer ${auth.token}`)
         
       expect(res.status).toEqual(200)
       expect(res.body).toHaveLength(1)
@@ -57,6 +66,7 @@ describe('Permissions', () => {
     it('should return one permission', async () => {
       const res = await request(app)
         .get(`/api/permissions/${permissionId}`)
+        .set('Authorization', `Bearer ${auth.token}`)
         
       expect(res.status).toEqual(200)
       expect(res.body).toEqual(
@@ -75,6 +85,7 @@ describe('Permissions', () => {
         .put(`/api/permissions/${permissionId}`)
         .send({ name: 'shelter' })
         .set('Accept', 'application/json')
+        .set('Authorization', `Bearer ${auth.token}`)
         
       expect(res.status).toEqual(200)
       expect(res.headers['content-type']).toMatch(/json/)
@@ -86,6 +97,7 @@ describe('Permissions', () => {
     it('should delete one permission', async () => {
       const res = await request(app)
         .delete(`/api/permissions/${permissionId}`)
+        .set('Authorization', `Bearer ${auth.token}`)
         
       expect(res.status).toEqual(200)
     })

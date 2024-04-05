@@ -3,31 +3,57 @@ process.env.NODE_ENV = 'test'
 const app = require('../../../app')
 const request = require('supertest')
 
+const login = require('../../helper/userLogin')
+const database = require('../../../models')
+
+const { 
+  TutorService, 
+  ProfileService, 
+  SecurityService } = require('../../../services')
+
+const tutorService = new TutorService()
+const profileService = new ProfileService()
+const securityService = new SecurityService()
+
 // jest.mock('../../../models')
 
 describe('Pets', () => {
-  // FIX IT: add as environment variable
-  const accessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsImVtYWlsIjoibHVmZnlAbWFpbC5jb20iLCJpYXQiOjE3MTA5NzU5MjgsImV4cCI6MTc0MjUxMTkyOH0.f-2HggfgWfuD1J9d3SeuCbRH7FrPEKV2Hpi9YDFEV-Q'
-
   let petId
+  let pet
+  let shelter
+  let user
+  let auth = {}
+  let acl
 
-  const petObject = {
-    name: 'Cotton',
-    birthday: new Date('2023-01-01'),
-    size: 'Mini',
-    personality: 'He chatty and cute.',
-    species: 'Dog',
-    status: 'New',
-    profilePictureUrl: 'http://images.com/cotton',
-    shelter_id: 1
-  }
+  beforeAll(async () => {
+    shelter = await createShelter()
+    user = await createUser()
+    pet = await createPet(shelter)
+    
+    acl = await setProfile(user)
+    
+    await login(auth, request, app)
+  })
+
+  afterAll(async () => {
+    try {
+      await database.User.destroy({ where: {} })
+      await database.Pet.destroy({ where: {} })
+      await database.Profile.destroy({ where: {} })
+      // await database.Shelter.destroy({ where: {} })
+    } catch (error) {
+      console.log(error)
+    }
+  })
+
 
   describe('GET /api/pets', () => {
+
     it('should list all pets', async () => {
       const res = await request(app)
         .get('/api/pets')
         .set('Accept', 'application/json')
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Authorization', `Bearer ${auth.token}`)
 
       expect(res.headers['content-type']).toMatch(/json/)
       expect(res.status).toEqual(200)
@@ -35,22 +61,32 @@ describe('Pets', () => {
     })
 
     it('should show 10 results per page', async () => {
-
       const res = await request(app)
         .get('/api/pets/?page=1')
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Authorization', `Bearer ${auth.token}`)
 
       expect(res.status).toEqual(200)
       // expect(res.body).toHaveLength(10)
     })
   })
 
+
   describe('POST /api/pets', () => {
+   
     it('should create a new pet', async () => {
       const res = await request(app)
         .post('/api/pets')
-        .set('Authorization', `Bearer ${accessToken}`)
-        .send(petObject)
+        .set('Authorization', `Bearer ${auth.token}`)
+        .send({
+          name: 'Cotton',
+          birthday: new Date('2023-01-01'),
+          size: 'Mini',
+          personality: 'He chatty and cute.',
+          species: 'Dog',
+          status: 'New',
+          profilePictureUrl: 'http://images.com/cotton',
+          shelter_id: shelter.id
+        })
         .expect(200)
 
       petId = res.body.id
@@ -60,7 +96,7 @@ describe('Pets', () => {
       const res = await request(app)
         .post('/api/pets')
         .set('Accept', 'application/json')
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Authorization', `Bearer ${auth.token}`)
         .send({})
 
       expect(res.status).toBe(422)
@@ -69,32 +105,36 @@ describe('Pets', () => {
     })
   })
 
+
   describe('GET /api/pets/{id}', () => {
+  
     it('should return one pet', async () => {
       const res = await request(app)
         .get(`/api/pets/${petId}`)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Authorization', `Bearer ${auth.token}`)
 
       expect(res.status).toBe(200)
       expect(res.body.name).toEqual('Cotton')
     })
 
     it('should return status 404 if any data is found', async () => {
-      const pet = await request(app)
+      const res = await request(app)
         .get('/api/pets/0')
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Authorization', `Bearer ${auth.token}`)
 
-      expect(pet.status).toBe(404)
-      expect(pet.body).toHaveProperty('error')
-      expect(pet.body.error).toEqual('Error: Pet not found')
+      expect(res.status).toBe(404)
+      expect(res.body).toHaveProperty('error')
+      expect(res.body.error).toEqual('Error: Pet not found')
     })
   })
 
+
   describe('PUT /api/pets/{id}', () => {
+   
     it('should update some fields', async () => {
       const res = await request(app)
         .put(`/api/pets/${petId}`)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Authorization', `Bearer ${auth.token}`)
         .send({
           name: 'Jack',
           status: 'Available',
@@ -111,18 +151,20 @@ describe('Pets', () => {
     ])('should not update if provided an %s', async (_, param) => {
       const res = await request(app)
         .put(`/api/pets/${petId}`)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Authorization', `Bearer ${auth.token}`)
         .send(param)
 
       expect(res.status).toBe(204)
     })
   })
 
+
   describe('PATCH /api/pets/{id}', () => {
+   
     it('should update only one field', async () => {
       const res = await request(app)
         .patch(`/api/pets/${petId}`)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Authorization', `Bearer ${auth.token}`)
         .send({
           status: 'Quarentine'
         })
@@ -135,7 +177,7 @@ describe('Pets', () => {
     it('should return an error if try update more than one field', async () => {
       const res = await request(app)
         .patch(`/api/pets/${petId}`)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Authorization', `Bearer ${auth.token}`)
         .send({
           species: 'Cat',
           personality: 'She is very cute'
@@ -150,43 +192,33 @@ describe('Pets', () => {
     ])('should return an error if provided an %s', async (_, param) => {
       const res = await request(app)
         .put(`/api/pets/${petId}`)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Authorization', `Bearer ${auth.token}`)
         .send(param)
 
       expect(res.status).toBe(204)
     })
   })
 
+
   describe('DELETE /api/pets/{id}', () => {
+   
     it('should delete one pet', async () => {
       await request(app)
         .delete(`/api/pets/${petId}`)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Authorization', `Bearer ${auth.token}`)
         .expect(200)
     })
   })
 
+  
   describe('POST /api/pets/{id}/adoption', () => {
+  
     it('should do an adoption', async () => {
-
-      const reqTutor = await request(app)
-        .get('/api/tutors')
-        .set('Authorization', `Bearer ${accessToken}`)
-
-      const reqPet = await request(app)
-        .get('/api/pets')
-        .set('Authorization', `Bearer ${accessToken}`)
-
-      const tutor = reqTutor.body[1]
-      const pet = reqPet.body[reqPet.body.length - 1]
-
       const res = await request(app)
         .post(`/api/pets/${pet.id}/adoption`)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Authorization', `Bearer ${auth.token}`)
         .send({
-          animal: Number(pet.id),
-          tutor: Number(tutor.id),
-          date: '2023-01-01'
+          tutor: user.id
         })
 
       expect(res.status).toBe(200)
@@ -194,19 +226,83 @@ describe('Pets', () => {
     })
   })
 
+  /* Implement profile */
   describe('DELETE /api/pets/:id/adoption/cancel', () => {
+   
     it('should cancel one adoption', async () => {
-      const reqPet = await request(app)
-        .get('/api/pets')
-        .set('Authorization', `Bearer ${accessToken}`)
-
-      const pet = reqPet.body[reqPet.body.length - 1]
-
       await request(app)
         .delete(`/api/pets/${pet.id}/adoption/cancel`)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Authorization', `Bearer ${auth.token}`)
         .expect(200)
     })
   })
-
 })
+
+
+async function createPet(shelter) {
+  return await database.Pet.create({
+    shelter_id: shelter.id,
+    name: 'Nala',
+    birthday: '2023-01-01',
+    size: 'Small',
+    personality: 'Brava!',
+    species: 'Cat',
+    status: 'Available',
+    profilePictureUrl: 'http://image.com/Nala.png'
+  })
+}
+
+async function createShelter() {
+  return await database.Shelter.create({
+    name: 'Caribbean Crazy Animals',
+    email: 'contact@crazyanimals.sea',
+    phone: '+08898985421',
+    city: 'Port Royal',
+    state: 'Caribbean'
+  })
+}
+
+async function createUser() {
+  const userObject = {
+    name: 'Will Turner',
+    email: 'tuner@pirates.sea',
+    password: 'tuner123',
+    phone: '+011233334444',
+    city: 'England',
+    about: 'I am cute and love all animals of world',
+    profilePictureUrl: 'https://images.com/images/image-turner',
+    role: 'standard'
+  }
+
+  let user
+
+  try {
+    user = await database.User.findOne({
+      where: {
+        email: userObject.email
+      }
+    })
+    
+    if (!user) {
+      user = await tutorService.create(userObject)
+    }
+
+    return user
+  } catch (err) {
+    throw new Error(err.message)
+  }
+}
+
+async function setProfile(user) {
+  const profile = await profileService.create({
+    name: 'shelter',
+    description: 'a shelter profile'
+  })
+
+  const acl = await securityService.registerAcl({ 
+    userId: user.id, 
+    profileId: profile.id
+  })
+
+  return acl
+}

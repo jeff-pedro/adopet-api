@@ -3,11 +3,17 @@ process.env.NODE_ENV = 'test'
 const app = require('../../../app')
 const request = require('supertest')
 
+const database = require('../../../models')
+
+const { TutorService } = require('../../../services')
+const tutorService = new TutorService()
+
+
 describe('Login', () => {
-  let userObject
+  let user
 
   beforeAll(async () => {
-    userObject = {
+    user = {
       name: 'Will Turner',
       email: 'tuner@pirates.sea',
       password: 'tuner123',
@@ -17,44 +23,23 @@ describe('Login', () => {
       profilePictureUrl: 'https://images.com/images/image-turner',
       role: 'standard'
     }
-
-    await request(app)
-      .post('/api/tutors')
-      .set('Accept', 'application/json')
-      .send(userObject)  
+    
+    await createUser(user)
   })
 
   afterAll(async () => {
-    // login
-    const res = await request(app)
-      .post('/api/login')
-      .set('Accept', 'application/json')
-      .send({
-        email: userObject.email,
-        password: userObject.password
-      })
-
-    const { accessToken } = res.body
-
-    // get user
-    const user = await request(app)
-      .get('/api/tutors')
-      .set('Authorization', `Bearer ${accessToken}`)
-
-    const { id } = user.body[user.body.length - 1]
-
-    // remove user
-    await request(app)
-      .delete(`/api/tutor${id}`)
+    await database.User.destroy({ where: {} })
   })
 
+
   describe('GET /api/login', () => {
+  
     it('should successfully login a user', async () => {
       const res = await request(app)
         .post('/api/login')
         .set('Accept', 'application/json')
         .send({
-          email: userObject.email,
+          email: user.email,
           password: 'tuner123'
         })
 
@@ -67,7 +52,7 @@ describe('Login', () => {
         .post('/api/login')
         .set('Accept', 'application/json')
         .send({
-          email: userObject.email,
+          email: user.email,
           password: ''
         })
 
@@ -91,3 +76,21 @@ describe('Login', () => {
     })
   })
 })
+
+async function createUser(user) {
+  try {
+    const userExists = await database.User.findOne({
+      where: {
+        email: user.email
+      }
+    })
+    
+    if (!userExists) {
+      await tutorService.create(user)
+    }
+
+    return 
+  } catch (err) {
+    throw new Error(err.message)
+  }
+}
