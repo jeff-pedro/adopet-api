@@ -7,10 +7,10 @@ module.exports = {
     'dialect': 'mysql'
   },
   'test': {
-    'username': 'root',
-    'password': null,
-    'database': 'adopet_tst',
-    'host': 'db',
+    'username': process.env.MYSQL_USER || 'root',
+    'password': process.env.MYSQL_PASSWORD || null,
+    'database': process.env.MYSQL_DB || 'adopet_tst',
+    'host': process.env.MYSQL_HOST || 'db',
     'dialect': 'mysql',
     'logging': false
   },
