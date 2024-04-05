@@ -17,7 +17,12 @@ module.exports = {
         allowNull: false,
         unique: true,
         type: Sequelize.INTEGER,
-        references: { model: 'Pets', key: 'id' }
+        references: { 
+          model: 'Pets', 
+          key: 'id' 
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
       },
       tutor: {
         allowNull: false,

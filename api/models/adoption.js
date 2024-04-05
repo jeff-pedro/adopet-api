@@ -10,7 +10,10 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      this.belongsTo(models.Pet, { foreignKey: 'animal' })
+      Adoption.belongsTo(models.Pet, { 
+        as: 'adoptionOnePet', 
+        foreignKey: 'animal'
+      })
     }
   }
   Adoption.init({
@@ -21,7 +24,11 @@ module.exports = (sequelize, DataTypes) => {
         notNull: { msg: 'animal field is required' },
         notEmpty: { msg: 'animal field cannot be empty' },
         async isUnique(value) {
-          const animalAdopted = await Adoption.findOne({ where: { animal: value } })
+          const animalAdopted = await Adoption.findOne({ 
+            where: { 
+              animal: value 
+            } 
+          })
           if (animalAdopted) {
             throw new Error('this pet was already adopted')
           }
