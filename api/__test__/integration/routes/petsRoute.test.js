@@ -23,14 +23,13 @@ describe('Pets', () => {
   let shelter
   let user
   let auth = {}
-  let acl
 
   beforeAll(async () => {
     shelter = await createShelter()
     user = await createUser()
     pet = await createPet(shelter)
     
-    acl = await setProfile(user)
+    await setProfile(user)
     
     await login(auth, request, app)
   })
