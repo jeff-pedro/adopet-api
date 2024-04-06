@@ -8,38 +8,43 @@ services:
       - 9000:9000
     environment:
       NODE_ENV: development
-      MYSQL_HOST: db
-      MYSQL_USER: root
-      MYSQL_PASSWORD: null
-      MYSQL_DB: adopet_dev
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: adopet_dev
+      POSTGRES_HOST: db
     depends_on:
       db:
         condition: service_healthy
     volumes:
       - ./:/usr/src/api/
+    secrets:
+      - db-password
   
   db:
-    image: mysql:8
+    image: postgres
     container_name: adopet-db
     restart: always
-    user: root
+    user: postgres
     secrets:
       - db-root-password
     volumes:
-      - mysql-data:/var/lib/mysql
+      - db-data:/var/lib/postgresql/data
     environment:
-      MYSQL_ROOT_PASSWORD: /run/secrets/db-root-password
+      POSTGRES_DB: adopet_dev
+      POSTGRES_PASSWORD_FILE: /run/secrets/db-root-password
     expose:
-      - 3306
+      - 5432
     healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      test: ["CMD", "pg_isready"]
       interval: 10s
       timeout: 5s
       retries: 5
 
 volumes:
-  mysql-data:
+  db-data:
 
-secrets:
+secrets:  
   db-root-password:
+    file: db/password.txt
+  db-password:
     file: db/password.txt

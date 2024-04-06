@@ -4,7 +4,7 @@ ARG NODE_VERSION=21.7.1
 
 FROM node:${NODE_VERSION}-alpine as base
 WORKDIR /usr/src/api
-EXPOSE 3000
+EXPOSE 9000
 
 
 FROM base as dev
