@@ -98,7 +98,7 @@ describe('Tutors', () => {
 
     it('should return 404 if any data is found', async () => {
       const res = await request(app)
-        .get('/api/tutors/0')
+        .get('/api/tutors/c0b785e4-4939-406e-9248-e85386dcd73c')
         .set('Authorization', `Bearer ${auth.token}`)
 
       expect(res.status).toBe(404)

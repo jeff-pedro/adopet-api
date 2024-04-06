@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     tutor: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false,
       validate: {
         notNull: { msg: 'tutor field is required' },
