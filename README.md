@@ -107,4 +107,10 @@ A escolha do **[Render](https://render.com/)** como plataforma de deploy da API 
 Rotinas são executadas para testar a aplicação, construir um imagem do **Docker** e registrá-la no **Docker Hub** no momento que o repositório receber um **Pull Request** para a branch `main`.
 
 ### 🚀️ **Deploy**
-O Banco de Dados e a API são constrúidos através dos serviços do **Render**, no qual disponibiliza sempre a última versão da aplicação ao realizar deploys automáticos baseados na branch `main` deste repositório.   
+O Banco de Dados e a API são constrúidos através dos serviços do **Render**, no qual disponibiliza sempre a última versão da aplicação ao realizar deploys automáticos baseados na branch `main` deste repositório.
+
+
+## Referências
+- [Docker's Node.js guide](https://docs.docker.com/language/nodejs/)
+- [Custom Domains | Render Docs](https://docs.render.com/custom-domains#configuring-dns-to-point-to-render)
+- [Configuring Namecheap DNS | Render Docs](https://docs.render.com/configure-namecheap-dns)
