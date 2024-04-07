@@ -48,10 +48,14 @@ git clone [repositório]
 
 Seguir para o diretório da API
 ```bash
-cd adopet-api
+cd adopet-api/
 ```
 
-Subir a API e o bando de dados com docker compose
+**Construindo and executando a aplicação**
+When you're ready, start your application by running:
+
+
+Iniciar a API e o bando de dados
 ```bash
 docker compose up --build -d
 ```
@@ -60,6 +64,8 @@ Migrar das tabelas do banco de dados
 ```bash
 docker compose run api npx sequelize-cli db:migrate
 ```
+
+> A API estará disponível em http://localhost:9000.
 
 **Testando a API**
 
@@ -88,10 +94,11 @@ docker compose run api npm run test:integration
 
 **Github Actions** foi escolhido como ferramenta no desenvolvimento de CI pela simplicidade na construção de workflows, por estar integrado ao repositório da aplicação e por questões didáticas para explorar a ferramenta.
 
+A escolha do **[Render](https://render.com/)** como plataforma de deploy da API e do Banco de Dados, foi devido a simplicidade na realização de deploys e ao plano gratuito que abrange banco de dados **Postgres**, deploy de **Web Services** construído em **Node.js**, além de dar suporte Continuos Deployment realizando **deploys automáticos** integrado às branchs do **Github**.
+
+
 ### 🧪 **Build e Testes**
 Rotinas são executadas para testar a aplicação, construir um imagem do **Docker** e registrá-la no **Docker Hub** no momento que o repositório receber um **Pull Request** para a branch `main`.
 
 ### 🚀️ **Deploy**
-> Foi escolhido o [Render](https://render.com/) como plataforma de deploy da API e de Banco de Dados.
-
-A escolha foi devido a simplicidade na realização de deploys e ao plano gratuito que abrange banco de dados **Postgres**, deploy de **Web Services** construído em **Node.js** e **deploys automáticos** integrado às branchs do **Github**.
+O Banco de Dados e a API são constrúidos através dos serviços do **Render**, no qual disponibiliza sempre a última versão da aplicação ao realizar deploys automáticos baseados na branch `main` deste repositório.   
