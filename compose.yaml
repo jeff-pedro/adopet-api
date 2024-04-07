@@ -17,21 +17,17 @@ services:
         condition: service_healthy
     volumes:
       - ./:/usr/src/api/
-    secrets:
-      - db-password
   
   db:
     image: postgres
     container_name: adopet-db
     restart: always
     user: postgres
-    secrets:
-      - db-root-password
     volumes:
       - db-data:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: adopet_dev
-      POSTGRES_PASSWORD_FILE: /run/secrets/db-root-password
+      POSTGRES_PASSWORD: secret
     expose:
       - 5432
     healthcheck:
@@ -42,9 +38,3 @@ services:
 
 volumes:
   db-data:
-
-secrets:  
-  db-root-password:
-    file: db/password.txt
-  db-password:
-    file: db/password.txt
