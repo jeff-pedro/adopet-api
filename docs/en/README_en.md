@@ -19,19 +19,19 @@
 
 ---
 
-## Technologies
+## 🤖 Technologies
 - **Back-End**: Node.js RESTful API
 - **Database**: Postgres
 - **ORM**: Sequelize
 - **Express** as a framework for building web applications
 
-## Requirements
+## 📋 Requirements
 1. Node.js and NPM
 2. Postgres database
 3. Docker and docker compose
 
 
-## API
+## ⚙️ API
 
 🧩 [adopet.api.sapituca.site](http://adopet.api.sapituca.site/)
 
@@ -50,7 +50,7 @@ Go to API directory
 cd adopet-api/
 ```
 
-**Building and running the application**
+🏗️ **Building and running the application**
 
 Start the API and database
 ```bash
@@ -64,7 +64,7 @@ docker compose run api npx sequelize-cli db:migrate
 
 > The API will be available at http://localhost:9000.
 
-**Testing the API**
+💣 **Testing the API**... 🤞🏽
 
 Build test database
 ```bash
@@ -86,14 +86,14 @@ Run integration tests
 docker compose run api npm run test:integration
 ```
 
-**Building Image**
+📦 **Building Image**
 Build image by running: 
 ```shell
 docker build -t adopet-api:latest .
 ```
 
 
-## CI/CD
+## ♾️ CI/CD
 
 **Github Actions** was chosen as a tool for CI development due to its simplicity in building workflows, because it is integrated with the application repository and for didactic reasons to explore the tool.
 
@@ -106,7 +106,7 @@ Workflows are performed to test the application, build a **Docker** image and re
 ### 🚀️ **Deploy**
 The Database and API are built using **Render** services, always providing the most recent version of the application when performing automatic deployments based on the `main` branch of this repository.
 
-## References
+## 📚 References
 - [Docker's Node.js guide](https://docs.docker.com/language/nodejs/)
 - [Custom Domains | Render Docs](https://docs.render.com/custom-domains#configuring-dns-to-point-to-render)
 - [Configuring Namecheap DNS | Render Docs](https://docs.render.com/configure-namecheap-dns)

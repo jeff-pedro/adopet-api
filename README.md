@@ -19,26 +19,26 @@
 
 ---
 
-## Tecnologias
+## 🤖 Tecnologias
 - **Back-End**: API RESTful em NodeJS
 - **Banco de Dados**: Postgres
 - **ORM**: Sequelize
 - **Express** como framework para construção de Aplicações Web
 
-## Requisitos
-1. Node.js e NPM
-2. Banco de dados Postgres
-3. Docker e docker compose
+## 📋 Requisitos
+- Node.js e NPM
+- Banco de dados Postgres
+- Docker e docker compose
 
 
-## API
+## ⚙️ API
 
 🧩 [adopet.api.sapituca.site](http://adopet.api.sapituca.site/)
 
 🗂 [Documentação](https://documenter.getpostman.com/view/22093498/2sA35MxyP2)
 
 
-## Usando
+## 🧑🏽‍💻 Usando
 
 Clonar o repositório
 ```bash
@@ -50,7 +50,7 @@ Seguir para o diretório da API
 cd adopet-api/
 ```
 
-**Construindo and executando a aplicação**
+🏗️ **Construindo and executando a aplicação**
 
 Iniciar a API e o bando de dados
 ```bash
@@ -64,7 +64,7 @@ docker compose run api npx sequelize-cli db:migrate
 
 > A API estará disponível em http://localhost:9000.
 
-**Testando a API**
+💣 **Testando a API**... 🤞🏽
 
 Criar banco de dados de teste
 ```bash
@@ -86,14 +86,15 @@ Executar testes de integração
 docker compose run api npm run test:integration
 ```
 
-**Contruindo uma Imagem**
+📦 **Contruindo uma Imagem**
+
 Construa uma imagem ao executar: 
 ```shell
 docker build -t adopet-api:latest .
 ```
 
 
-## CI/CD
+## ♾️ CI/CD
 
 **Github Actions** foi escolhido como ferramenta no desenvolvimento de CI pela simplicidade na construção de workflows, por estar integrado ao repositório da aplicação e por questões didáticas para explorar a ferramenta.
 
@@ -107,7 +108,7 @@ Rotinas são executadas para testar a aplicação, construir um imagem do **Dock
 O Banco de Dados e a API são constrúidos através dos serviços do **Render**, no qual disponibiliza sempre a última versão da aplicação ao realizar deploys automáticos baseados na branch `main` deste repositório.
 
 
-## Referências
+## 📚 Referências
 - [Docker's Node.js guide](https://docs.docker.com/language/nodejs/)
 - [Custom Domains | Render Docs](https://docs.render.com/custom-domains#configuring-dns-to-point-to-render)
 - [Configuring Namecheap DNS | Render Docs](https://docs.render.com/configure-namecheap-dns)
