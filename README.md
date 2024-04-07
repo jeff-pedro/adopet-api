@@ -89,6 +89,12 @@ Executar testes de integração
 docker compose run api npm run test:integration
 ```
 
+**Contruindo uma Imagem**
+Construa uma imagem ao executar: 
+```shell
+docker build -t adopet-api:latest .
+```
+
 
 ## CI/CD
 
