@@ -33,7 +33,7 @@
 
 ## API
 
-🧩 URL: [adopet.api.sapituca.site](http://adopet.api.sapituca.site/)
+🧩 [adopet.api.sapituca.site](http://adopet.api.sapituca.site/)
 
 🗂 [Documentation](https://documenter.getpostman.com/view/22093498/2sA35MxyP2)
 
