@@ -5,7 +5,7 @@
   > API RESTful para uma empresa fictícia de adoção de animais, desenvolvido para um Challenge Back-End.
 
   <a>Potuguese</a> -
-  <a href="./en/README_en.md">English</a>
+  <a href="./docs/en/README_en.md">English</a>
 
 </div>
 
@@ -13,7 +13,6 @@
 
   ![Release](https://img.shields.io/github/v/release/jeff-pedro/api-adopet?display_name=tag&include_prereleases&style=flat-square)
   [![Node Version](https://img.shields.io/badge/node-v18.14.1-blueviolet)](https://nodejs.org/download/)
-  ![JavaScript Language Usage](https://img.shields.io/github/languages/top/jeff-pedro/api-adopet?style=flat-square)
   [![Code Style](https://img.shields.io/badge/code_style-eslint-ff69b4.svg?style=flat-square)](https://eslint.org/)
 
 </div>
@@ -52,8 +51,6 @@ cd adopet-api/
 ```
 
 **Construindo and executando a aplicação**
-When you're ready, start your application by running:
-
 
 Iniciar a API e o bando de dados
 ```bash
