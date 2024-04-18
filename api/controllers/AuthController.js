@@ -1,15 +1,15 @@
-const { LoginService } = require('../services')
+const { AuthService } = require('../services')
 
-const loginService = new LoginService()
+const authService = new AuthService()
 
 class AuthController {
   static async login(req, res) {
     const { email, password } = req.body
     
     try {
-      const accessToken = await loginService.login({ email, password })
+      const { user, token} = await authService.login({ email, password })
 
-      res.status(200).json({ accessToken })
+      res.status(200).json({ user, accessToken: token })
     } catch (err) {
       res.status(401).send({ error: err.message })
     }

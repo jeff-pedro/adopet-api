@@ -3,19 +3,22 @@ const PetsController = require('../controllers/PetsController.js')
 const AdoptionsController = require('../controllers/AdoptionsController.js')
 const pagination = require('../middlewares/pagination.js')
 const authorization = require('../middlewares/authorization.js')
+const profile = require('../middlewares/profile.js')
 
 const routes = Router()
 
-routes.use(authorization)
-
+// public endpoints
 routes
-  .post('/pets', PetsController.createPet)
-  .post('/pets/:id/adoption', AdoptionsController.createAdoption)
   .get('/pets', PetsController.getAllPets, pagination)
-  .get('/pets/:id', PetsController.getOnePet)
-  .put('/pets/:id', PetsController.updateManyPetProperties)
-  .patch('/pets/:id', PetsController.updateOnePetProperty)
-  .delete('/pets/:id', PetsController.deletePet)
-  .delete('/pets/:id/adoption/cancel', AdoptionsController.deleteAdoption)
+
+// private endpoints
+routes
+  .post('/pets', authorization, PetsController.createPet)
+  .post('/pets/:id/adoption', AdoptionsController.createAdoption)
+  .get('/pets/:id', authorization, PetsController.getOnePet)
+  .put('/pets/:id', authorization, PetsController.updateManyPetProperties)
+  .patch('/pets/:id', authorization, PetsController.updateOnePetProperty)
+  .delete('/pets/:id', authorization, PetsController.deletePet)
+  .delete('/pets/:id/adoption/cancel', authorization, profile(['shelter']), AdoptionsController.deleteAdoption)
 
 module.exports = routes

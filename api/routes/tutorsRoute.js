@@ -5,14 +5,16 @@ const authorization = require('../middlewares/authorization.js')
 
 const routes = Router()
 
-routes.use(authorization)
-
+// public endpoint
 routes
-  .get('/tutors', TurtorsController.getAllTutors, pagination)
-  .get('/tutors/:id', TurtorsController.getOneTutor)
   .post('/tutors', TurtorsController.createTutor)
-  .put('/tutors/:id', TurtorsController.updateManyTutorProperties)
-  .patch('/tutors/:id', TurtorsController.updateOneTutorProperty)
-  .delete('/tutors/:id', TurtorsController.deleteTutor)
+  .get('/tutors/:id', TurtorsController.getOneTutor)
+
+// private endpoints
+routes
+  .get('/tutors', authorization, TurtorsController.getAllTutors, pagination)
+  .put('/tutors/:id', authorization, TurtorsController.updateManyTutorProperties)
+  .patch('/tutors/:id', authorization, TurtorsController.updateOneTutorProperty)
+  .delete('/tutors/:id', authorization, TurtorsController.deleteTutor)
 
 module.exports = routes

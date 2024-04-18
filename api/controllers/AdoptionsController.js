@@ -9,8 +9,8 @@ class AdoptionsController {
 
     // validation
     const adoptionData = {
-      animal: Number(petId),
-      tutor: Number(body.tutor),
+      animal: petId,
+      tutor: body.tutor,
       date: body.date ?? new Date()
     }
 

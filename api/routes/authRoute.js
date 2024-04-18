@@ -3,6 +3,6 @@ const routes = express.Router()
 const AuthController = require('../controllers/AuthController')
 
 routes
-  .get('/login', AuthController.login)
+  .post('/login', AuthController.login)
 
 module.exports = routes

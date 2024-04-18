@@ -1,0 +1,40 @@
+services:
+  api:
+    build:
+      context: .
+      target: dev
+    container_name: adopet-api
+    ports:
+      - 9000:9000
+    environment:
+      NODE_ENV: development
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: adopet_dev
+      POSTGRES_HOST: db
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./:/usr/src/api/
+  
+  db:
+    image: postgres
+    container_name: adopet-db
+    restart: always
+    user: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: adopet_dev
+      POSTGRES_PASSWORD: secret
+    expose:
+      - 5432
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  db-data:
