@@ -19,16 +19,25 @@
 ---
 
 ## 🤖 Technologies
-- **Back-End**: Node.js RESTful API
-- **Database**: Postgres
-- **ORM**: Sequelize
-- **Express** as a framework for building web applications
+</div>
+<div align="center">
+  <a href='https://nodejs.org/' target='_blank'><img src="https://img.shields.io/badge/Node.js-white?style=for-the-badge&logo=node.js&logoColor=green">
+  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">
+  <a href='https://expressjs.com/' target='_blank'><img src="https://img.shields.io/badge/Express-1572B6?style=for-the-badge&logo=express&logoColor=white">
+  <a href='https://jwt.io/' target='_blank'><img src="https://img.shields.io/badge/JWT-61B?style=for-the-badge&logo=jsonwebtokens&logoColor=white"/></a>
+  <a href='https://www.postgresql.org/' target='_blank'><img src="https://img.shields.io/badge/PostgreSQL-F6F5F2?style=for-the-badge&logo=postgresql&logoColor=blue"/></a>
+  <a href='https://sequelize.org/' target='_blank'><img src="https://img.shields.io/badge/Sequelize-52B0E7?style=for-the-badge&logo=sequelize&logoColor=white"/></a>
+  <a href='https://jestjs.io/' target='_blank'><img src="https://img.shields.io/badge/Jest-C21325?style=for-the-badge&logo=jest&logoColor=white"/></a>
+  <a href='https://www.docker.com/' target='_blank'><img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white"/></a>
+  <a href='https://render.com/' target='_blank'><img src="https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=white"/></a>
+  <a href='https://nodemon.io/' target='_blank'><img src="https://img.shields.io/badge/Nodemon-76D04B?style=for-the-badge&logo=nodemon&logoColor=white"/></a>
+  <a href='https://docs.github.com/en/actions' target='_blank'><img src="https://img.shields.io/badge/GitHub Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white"/></a>
+</div>
 
 ## 📋 Requirements
-1. Node.js and NPM
-2. Postgres database
-3. Docker and docker compose
-
+- Node.js and NPM
+- [Postgres](https://www.postgresql.org/) database
+- [Docker](https://www.docker.com/) and [docker compose](https://docs.docker.com/compose/)
 
 ## ⚙️ API
 
