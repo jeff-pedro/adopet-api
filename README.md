@@ -11,10 +11,10 @@
 
 <div align="center" >
 
-  ![Release](https://img.shields.io/github/v/release/jeff-pedro/api-adopet?display_name=tag&include_prereleases&style=flat-square)
-  [![Node Version](https://img.shields.io/badge/node-v18.14.1-blueviolet)](https://nodejs.org/download/)
-  [![Code Style](https://img.shields.io/badge/code_style-eslint-ff69b4.svg?style=flat-square)](https://eslint.org/)
-
+  ![Release](https://img.shields.io/github/v/release/jeff-pedro/api-adopet?display_name=tag&style=flat-square)
+  [![Node Version](https://img.shields.io/badge/node-v20.12.2-blueviolet?style=flat-square&logo=node.js)](https://nodejs.org/download/)
+  [![Code Style](https://img.shields.io/badge/code_style-eslint-ff69b4.svg?style=flat-square&logo=eslint)](https://eslint.org/)
+  [![Code Formatter](https://img.shields.io/badge/code%20formatter-prettier-blue?style=flat-square&logo=prettier)](https://prettier.io/)
 </div>
 
 ---
