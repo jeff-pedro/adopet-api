@@ -10,15 +10,11 @@
 </div>
 
 <div align="center" >
-
-  ![Release](https://img.shields.io/github/v/release/jeff-pedro/api-adopet?display_name=tag&include_prereleases&style=flat-square)
-  [![Node Version](https://img.shields.io/badge/node-v20.12.2-blueviolet?style=flat-square&logo=node.js)](https://nodejs.org/download/)
-  [![Code Style](https://img.shields.io/badge/code_style-eslint-ff69b4.svg?style=flat-square&logo=eslint)](https://eslint.org/)
-  [![Code Formatter](https://img.shields.io/badge/code%20formatter-prettier-blue?style=flat-square&logo=prettier)](https://prettier.io/)
-
-
+  <img src="https://img.shields.io/github/v/release/jeff-pedro/api-adopet?display_name=tag&include_prereleases&style=for-the-badge">
+  <img src="https://img.shields.io/badge/node-v20.12.2-blueviolet?style=for-the-badge&logo=node.js)](https://nodejs.org/download/">
+  <a href='https://eslint.org/' target='_blank'><img src="https://img.shields.io/badge/Code Style-eslint-ff69b4.svg?style=for-the-badge&logo=eslint">
+  <a href='https://prettier.io/' target='_blank'><img src="https://img.shields.io/badge/Code Formatter-prettier-blue?style=for-the-badge&?style=flat-square&logo=prettier">
 </div>
-
 ---
 
 ## 🤖 Technologies
