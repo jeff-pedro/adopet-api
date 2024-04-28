@@ -2,19 +2,25 @@
 
   # Adopet API
 
+
+  <img src="https://img.shields.io/github/v/release/jeff-pedro/api-adopet?display_name=tag&include_prereleases&style=for-the-badge">
+  <img src="https://img.shields.io/badge/node-v20.12.2-blueviolet?style=for-the-badge&logo=node.js)](https://nodejs.org/download/">
+  <a href='https://eslint.org/' target='_blank'><img src="https://img.shields.io/badge/Code Style-eslint-ff69b4.svg?style=for-the-badge&logo=eslint"></a>
+  <a href='https://prettier.io/' target='_blank'><img src="https://img.shields.io/badge/Code Formatter-prettier-blue?style=for-the-badge&?style=flat-square&logo=prettier"></a>
+
+  <br>
+
   > RESTful API for an imaginary pet adoption company named "Adopet".
+
+  <p align="center">
+    <img style='width: 70%' alt="Adopet App" src="../assets/img/adopet-readme-screenshot.png" />
+  </p>
 
   <a>English</a> -
   <a href="../../README.md">Portuguese</a>
 
 </div>
 
-<div align="center" >
-  <img src="https://img.shields.io/github/v/release/jeff-pedro/api-adopet?display_name=tag&include_prereleases&style=for-the-badge">
-  <img src="https://img.shields.io/badge/node-v20.12.2-blueviolet?style=for-the-badge&logo=node.js)](https://nodejs.org/download/">
-  <a href='https://eslint.org/' target='_blank'><img src="https://img.shields.io/badge/Code Style-eslint-ff69b4.svg?style=for-the-badge&logo=eslint">
-  <a href='https://prettier.io/' target='_blank'><img src="https://img.shields.io/badge/Code Formatter-prettier-blue?style=for-the-badge&?style=flat-square&logo=prettier">
-</div>
 ---
 
 ## 🤖 Technologies
