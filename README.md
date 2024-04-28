@@ -1,4 +1,4 @@
-<div align="center">
+<div id="top" align="center">
 
   # Adopet API
 
@@ -16,14 +16,12 @@
   </p>
 
   <a>Potuguese</a> -
-  <a href="./docs/en/README_en.md">English</a>
+  <a href="./docs/en/README.md">English</a>
 
 </div>
-
----
 
 ## 🤖 Tecnologias
-</div>
+
 <div align="center">
   <a href='https://nodejs.org/' target='_blank'><img src="https://img.shields.io/badge/Node.js-white?style=for-the-badge&logo=node.js&logoColor=green">
   <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">
@@ -125,3 +123,7 @@ O Banco de Dados e a API são constrúidos através dos serviços do **Render**,
 - [Docker's Node.js guide](https://docs.docker.com/language/nodejs/)
 - [Custom Domains | Render Docs](https://docs.render.com/custom-domains#configuring-dns-to-point-to-render)
 - [Configuring Namecheap DNS | Render Docs](https://docs.render.com/configure-namecheap-dns)
+
+---
+
+<a href='#top'>🔼 Voltar ao topo</a>
