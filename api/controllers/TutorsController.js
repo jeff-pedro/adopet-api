@@ -1,16 +1,11 @@
 const { TutorService } = require('../services')
+const Controller = require('./Controller.js')
 
 const tutorService = new TutorService()
 
-class TurtorsController {
-  static async getAllTutors(req, res, next) {
-    try {
-      const tutorsResult = tutorService.getAll()
-      req.result = tutorsResult
-      next()
-    } catch (err) {
-      return next(err)
-    }
+class TurtorsController extends Controller {
+  constructor() {
+    super(tutorService)
   }
 
   static async createTutor(req, res) {

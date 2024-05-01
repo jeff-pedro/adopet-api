@@ -2,7 +2,12 @@ const { v4: uuidv4 } = require('uuid')
 const bcrypt = require('bcrypt')
 const database = require('../models')
 
-class TutorService {
+const Services = require('./Services.js')
+
+class TutorService extends Services {
+  constructor() {
+    super('User')
+  }
 
   async create(dto) {
     try {
@@ -20,16 +25,6 @@ class TutorService {
         id: uuidv4(),
         ...dto
       })
-
-      return tutor
-    } catch (err) {
-      throw new Error(err)
-    }
-  }
-
-  getAll() {
-    try {
-      const tutor = database.User
 
       return tutor
     } catch (err) {
