@@ -51,6 +51,27 @@ describe('Tutors', () => {
     })
   })
 
+  describe('GET /api/tutors/{id}', () => {
+    it('should return one tutor', async () => {
+      const res = await request(app)
+        .get(`/api/tutors/${user.id}`)
+        .set('Authorization', `Bearer ${auth.token}`)
+
+      expect(res.status).toBe(200)
+      expect(res.body.email).toEqual('teague@pirates.sea')
+    })
+
+    it('should return status code 404 if any data is found', async () => {
+      const res = await request(app)
+        .get('/api/tutors/c0b785e4-4939-406e-9248-e85386dcd73c')
+        .set('Authorization', `Bearer ${auth.token}`)
+
+      expect(res.status).toBe(404)
+      expect(res.body).toHaveProperty('error')
+      expect(res.body.error).toEqual('Register not found')
+    })
+  })
+
   describe('POST /api/tutors', () => {
     it('should create a new tutor', async () => {
       tutorObject = {
@@ -86,27 +107,6 @@ describe('Tutors', () => {
     })
   })
 
-  describe('GET /api/tutors/{id}', () => {
-    it('should return one tutor', async () => {
-      const res = await request(app)
-        .get(`/api/tutors/${user.id}`)
-        .set('Authorization', `Bearer ${auth.token}`)
-
-      expect(res.status).toBe(200)
-      expect(res.body.email).toEqual('teague@pirates.sea')
-    })
-
-    it('should return 404 if any data is found', async () => {
-      const res = await request(app)
-        .get('/api/tutors/c0b785e4-4939-406e-9248-e85386dcd73c')
-        .set('Authorization', `Bearer ${auth.token}`)
-
-      expect(res.status).toBe(404)
-      expect(res.body).toHaveProperty('error')
-      expect(res.body.error).toEqual('Error: Tutor not found')
-    })
-  })
-
   describe('PUT /api/tutors/{id}', () => {
     it('should update some fields', async () => {
       const res = await request(app)
@@ -118,7 +118,7 @@ describe('Tutors', () => {
 
       expect(res.status).toBe(200)
       expect(res.body).toHaveProperty('message')
-      expect(res.body.message).toEqual('tutor updated')
+      expect(res.body.message).toEqual('updated')
     })
 
     test.each([
@@ -130,7 +130,7 @@ describe('Tutors', () => {
         .put(`/api/tutors/${user.id}`)
         .set('Authorization', `Bearer ${auth.token}`)
         .send(param)
-
+      
       expect(res.status).toBe(204)
     })
   })
@@ -146,7 +146,7 @@ describe('Tutors', () => {
 
       expect(res.status).toBe(200)
       expect(res.body).toHaveProperty('message')
-      expect(res.body.message).toEqual('tutor updated')
+      expect(res.body.message).toEqual('updated')
     })
 
     it('should return an error if try update more than one field', async () => {
