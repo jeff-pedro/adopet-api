@@ -9,13 +9,13 @@ const routes = Router()
 
 // public endpoint
 routes
-  .post('/tutors', TurtorsController.createTutor)
-  .get('/tutors/:id', TurtorsController.getOneTutor)
+  .post('/tutors', (req, res, next) => turtorsController.createNew(req, res, next))
+  .get('/tutors/:id', (req, res, next) => turtorsController.getById(req, res, next))
 
 // private endpoints
 routes
   .get('/tutors', authorization, (req, res, next) => turtorsController.getAll(req, res, next), pagination)
-  .put('/tutors/:id', authorization, TurtorsController.updateManyTutorProperties)
+  .put('/tutors/:id', authorization, (req, res, next) => turtorsController.updateMany(req, res, next))
   .patch('/tutors/:id', authorization, TurtorsController.updateOneTutorProperty)
   .delete('/tutors/:id', authorization, TurtorsController.deleteTutor)
 
