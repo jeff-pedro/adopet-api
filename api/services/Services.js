@@ -21,7 +21,7 @@ class Services {
     })
   }
 
-  async update(dto, id) {
+  async updateRecord(dto, id) {
     const updatedRecordList = await dataSource[this.model].update(dto, { where: { id } })
 
     if (updatedRecordList[0] === 0) {
@@ -29,6 +29,10 @@ class Services {
     }
 
     return dataSource[this.model].findOne({ where: { id } })
+  }
+
+  async deleteRecord(id) {
+    return dataSource[this.model].destroy({ where: { id } })
   }
 }
 

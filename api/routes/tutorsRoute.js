@@ -16,7 +16,7 @@ routes
 routes
   .get('/tutors', authorization, (req, res, next) => turtorsController.getAll(req, res, next), pagination)
   .put('/tutors/:id', authorization, (req, res, next) => turtorsController.updateMany(req, res, next))
-  .patch('/tutors/:id', authorization, TurtorsController.updateOneTutorProperty)
-  .delete('/tutors/:id', authorization, TurtorsController.deleteTutor)
+  .patch('/tutors/:id', authorization, (req, res, next) => turtorsController.updateOne(req, res, next))
+  .delete('/tutors/:id', authorization, (req, res, next) => turtorsController.delete(req, res, next))
 
 module.exports = routes

@@ -1,6 +1,6 @@
-const dataSource = require('../models')
 const { v4: uuidv4 } = require('uuid')
 const bcrypt = require('bcrypt')
+const dataSource = require('../models')
 
 const Services = require('./Services.js')
 
@@ -25,24 +25,6 @@ class TutorService extends Services {
       ...dto
     })
   }
-
-
-
-
-
-
-
-
-  async delete(id) {
-    try {
-      const tutorDeleted = await database.User.destroy({ where: { id } })
-
-      return tutorDeleted
-    } catch (err) {
-      throw new Error(err)
-    }
-  }
-
 }
 
 module.exports = TutorService
