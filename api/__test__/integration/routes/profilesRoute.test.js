@@ -33,7 +33,7 @@ describe('Profiles', () => {
           description: 'user who is thinking about adopting pets'
         })
 
-      expect(res.status).toEqual(201)
+      expect(res.status).toEqual(200)
       expect(res.headers['content-type']).toMatch(/json/)
       expect(res.body).toHaveProperty('name')
       expect(res.body).toHaveProperty('description')
@@ -95,7 +95,7 @@ describe('Profiles', () => {
         
       expect(res.status).toEqual(200)
       expect(res.headers['content-type']).toMatch(/json/)
-      expect(res.body.name).toMatch('shelter')
+      expect(res.body.content.name).toMatch('shelter')
     })
   })
 

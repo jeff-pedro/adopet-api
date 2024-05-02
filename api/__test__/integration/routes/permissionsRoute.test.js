@@ -32,7 +32,7 @@ describe('Permissions', () => {
           description: 'read the content'
         })
 
-      expect(res.status).toEqual(201)
+      expect(res.status).toEqual(200)
       expect(res.headers['content-type']).toMatch(/json/)
       expect(res.body).toHaveProperty('name')
       expect(res.body).toHaveProperty('description')
@@ -86,10 +86,10 @@ describe('Permissions', () => {
         .send({ name: 'shelter' })
         .set('Accept', 'application/json')
         .set('Authorization', `Bearer ${auth.token}`)
-        
+
       expect(res.status).toEqual(200)
       expect(res.headers['content-type']).toMatch(/json/)
-      expect(res.body.name).toMatch('shelter')
+      expect(res.body.content.name).toMatch('shelter')
     })
   })
 

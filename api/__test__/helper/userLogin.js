@@ -12,7 +12,7 @@ async function createUser() {
     })
     
     if (!user) {
-      await tutorService.create({
+      await tutorService.createRecord({
         name: 'Will Turner',
         email: 'tuner@pirates.sea',
         password: 'tuner123',

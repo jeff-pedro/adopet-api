@@ -70,7 +70,7 @@ docker compose up --build -d
 
 Run migrations to the database
 ```bash
-docker compose run api npx sequelize-cli db:migrate
+docker compose exec api npx sequelize-cli db:migrate
 ```
 
 > The API will be available at http://localhost:9000.
@@ -79,22 +79,28 @@ docker compose run api npx sequelize-cli db:migrate
 
 Build test database
 ```bash
-docker compose run api npx sequelize-cli db:create --env test
+docker compose exec api npx sequelize-cli db:create --env test
 ```
 
 Run migrations to the test database
 ```bash
-docker compose run api npx sequelize-cli db:migrate --env test
+docker compose exec api npx sequelize-cli db:migrate --env test
 ```
 
 Run all tests
 ```bash
-docker compose run api npm run test
+docker compose exec api npm run test
 ```
 
 Run integration tests
 ```bash
-docker compose run api npm run test:integration
+docker compose exec api npm run test:integration
+```
+or run tests by filtering them
+```bash
+docker compose exec api \
+npm run test:integration \
+-- api/__test__/integration/routes/authRoute.test.js
 ```
 
 📦 **Building Image**
