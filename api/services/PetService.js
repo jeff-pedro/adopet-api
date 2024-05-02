@@ -1,69 +1,73 @@
 const database = require('../models')
-class PetService {
-  async create(dto) {
-
-    try {
-      const newPet = await database.Pet.create(dto)
-
-      return newPet
-    } catch (err) {
-      throw new Error('pet was not created.')
-    }
+const Services = require('./Services')
+class PetService extends Services {
+  constructor() {
+    super('Pet')
   }
+  // async create(dto) {
 
-  getAll() {
-    try {
-      const petsResult = database.Pet
+  //   try {
+  //     const newPet = await database.Pet.create(dto)
 
-      return petsResult
-    } catch (err) {
-      throw new Error(err)
-    }
-  }
+  //     return newPet
+  //   } catch (err) {
+  //     throw new Error('pet was not created.')
+  //   }
+  // }
 
-  async getOne(id) {
-    try {
-      const pet = await database.Pet.findByPk(Number(id))
+  // getAll() {
+  //   try {
+  //     const petsResult = database.Pet
 
-      if (pet === null) {
-        throw new Error('Pet not found')
-      }
+  //     return petsResult
+  //   } catch (err) {
+  //     throw new Error(err)
+  //   }
+  // }
 
-      return pet
-    } catch (err) {
-      throw new Error(err)
-    }
-  }
+  // async getOne(id) {
+  //   try {
+  //     const pet = await database.Pet.findByPk(Number(id))
 
-  async update(id, dto) {
-    try {
-      const updated = await database.Pet.update(dto, { where: { id: Number(id) } })
+  //     if (pet === null) {
+  //       throw new Error('Pet not found')
+  //     }
 
-      if (updated[0]) {
-        const pet = await database.Pet.findOne({ where: { id: Number(id) } })
+  //     return pet
+  //   } catch (err) {
+  //     throw new Error(err)
+  //   }
+  // }
 
-        return pet
-      }
+  // async update(id, dto) {
+  //   try {
+  //     const updated = await database.Pet.update(dto, { where: { id: Number(id) } })
 
-      return updated[0]
-    } catch (err) {
-      throw new Error(err)
-    }
-  }
+  //     if (updated[0]) {
+  //       const pet = await database.Pet.findOne({ where: { id: Number(id) } })
 
-  async delete(id) {
-    try {
-      const petDeleted = await database.Pet.destroy({ where: { id: Number(id) } })
+  //       return pet
+  //     }
 
-      if (!petDeleted) {
-        throw new Error(`Pet with id:${id} not found`)
-      }
+  //     return updated[0]
+  //   } catch (err) {
+  //     throw new Error(err)
+  //   }
+  // }
 
-      return petDeleted
-    } catch (err) {
-      throw new Error(err)
-    }
-  }
+  // async delete(id) {
+  //   try {
+  //     const petDeleted = await database.Pet.destroy({ where: { id: Number(id) } })
+
+  //     if (!petDeleted) {
+  //       throw new Error(`Pet with id:${id} not found`)
+  //     }
+
+  //     return petDeleted
+  //   } catch (err) {
+  //     throw new Error(err)
+  //   }
+  // }
 }
 
 module.exports = PetService
