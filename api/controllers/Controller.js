@@ -104,7 +104,7 @@ class Controller {
     }
   }
 
-  async delete(req, res) {
+  async delete(req, res, next) {
     const { id } = req.params
     try {
       const isDeleted = await this.entityService.deleteRecord(id)
