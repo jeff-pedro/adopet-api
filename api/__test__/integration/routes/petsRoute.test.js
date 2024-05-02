@@ -210,7 +210,7 @@ describe('Pets', () => {
   })
 
   
-  describe.skip('POST /api/pets/{id}/adoption', () => {
+  describe('POST /api/pets/{id}/adoption', () => {
   
     it('should do an adoption', async () => {
       const res = await request(app)
@@ -225,7 +225,6 @@ describe('Pets', () => {
     })
   })
 
-  /* Implement profile */
   describe('DELETE /api/pets/:id/adoption/cancel', () => {
    
     it('should cancel one adoption', async () => {
