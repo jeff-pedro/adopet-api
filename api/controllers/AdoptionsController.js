@@ -1,9 +1,14 @@
 const { AdoptionService } = require('../services')
+const Controller = require('./Controller')
 
 const adoptionService = new AdoptionService()
 
-class AdoptionsController {
-  static async createAdoption(req, res) {
+class AdoptionsController extends Controller {
+  constructor() {
+    super(adoptionService)
+  }
+
+  async createNew(req, res) {
     const { body } = req
     const petId = req.params.id
 
@@ -15,23 +20,21 @@ class AdoptionsController {
     }
 
     try {
-      const adoption = await adoptionService.create(adoptionData, petId)
+      const adoption = await adoptionService.createRecord(adoptionData, petId)
 
       return res.status(200).json({ adoption })
     } catch (err) {
+      console.log(err)
       return res.status(400).json({ error: err.message })
     }
   }
 
-  static async deleteAdoption(req, res) {
+  async delete(req, res) {
     const petId = req.params.id
-    /*  
-        Only "Shelters" could delete adoptions! 
-        TODO: implement authentication and rules for this 
-    */
+    
     try {
-      await adoptionService.delete(petId)
-      return res.status(200).json({ message: `Adoption with id:${petId} was deleted` })
+      await adoptionService.deleteRecord(petId)
+      return res.status(200).json({ message: `id:${petId} was deleted` })
     } catch (err) {
       return res.status(400).json({ error: err.message })
     }

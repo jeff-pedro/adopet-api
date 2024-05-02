@@ -1,26 +1,25 @@
-const database = require('../models')
+const { v4: uuid } = require('uuid')
+const dataSource = require('../models')
+const Services = require('./Services.js')
 
-class AdoptionService {
-
-  async create(dto, petId) {
-    try {
-      const adoption = await database.Adoption.create(dto)
-
-      await database.Pet.update({ status: 'Adopted' }, { where: { id: petId } })
-
-      return adoption
-    } catch (err) {
-      console.log(err);
-      throw new Error(err)
-    }
+class AdoptionService extends Services {
+  constructor() {
+    super('Adoption')
   }
 
-  async delete(id) {
-    try {
-      await database.Adoption.destroy({ where: { animal: id } })
-    } catch (err) {
-      throw new Error(err)
-    }
+  async createRecord(dto, petId) {
+    const adoption = await dataSource[this.model].create({
+      id: uuid(),
+      ...dto
+    })
+
+    await dataSource.Pet.update({ status: 'Adopted' }, { where: { id: petId } })
+
+    return adoption
+  }
+
+  async deleteRecord(id) {
+    return dataSource[this.model].destroy({ where: { animal: id } })
   }
 
 }
