@@ -1,13 +1,16 @@
 'use strict'
+
+const { UUIDV4 } = require('sequelize')
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Pets', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID,
+        defaultValue: UUIDV4
       },
       name: {
         allowNull: false,
@@ -39,7 +42,7 @@ module.exports = {
       },
       shelter_id: {
         allowNull: false,
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         references: { model: 'Shelters', key: 'id' }
       },
       createdAt: {

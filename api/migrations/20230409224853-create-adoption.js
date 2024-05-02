@@ -5,9 +5,9 @@ module.exports = {
     await queryInterface.createTable('Adoptions', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4
       },
       date: {
         allowNull: false,
@@ -16,7 +16,7 @@ module.exports = {
       animal: {
         allowNull: false,
         unique: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         references: { 
           model: 'Pets', 
           key: 'id' 
