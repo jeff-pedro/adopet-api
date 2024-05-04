@@ -5,7 +5,7 @@ const { UUIDV4 } = require('sequelize')
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Pets', {
+    await queryInterface.createTable('pets', {
       id: {
         allowNull: false,
         primaryKey: true,
@@ -43,7 +43,7 @@ module.exports = {
       shelter_id: {
         allowNull: false,
         type: Sequelize.UUID,
-        references: { model: 'Shelters', key: 'id' }
+        references: { model: 'users', key: 'id' }
       },
       createdAt: {
         allowNull: false,
@@ -56,6 +56,6 @@ module.exports = {
     })
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Pets')
+    await queryInterface.dropTable('pets')
   }
 }

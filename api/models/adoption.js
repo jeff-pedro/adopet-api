@@ -4,15 +4,14 @@ const {
 } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
   class Adoption extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
+      Adoption.belongsTo(models.User, {
+        foreignKey: 'tutor_id'
+      })
+
       Adoption.belongsTo(models.Pet, { 
         as: 'adoptionOnePet', 
-        foreignKey: 'animal'
+        foreignKey: 'pet_id'
       })
     }
   }
@@ -56,6 +55,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Adoption',
+    tableName: 'adoptions'
   })
   return Adoption
 }
