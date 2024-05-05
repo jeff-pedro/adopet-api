@@ -10,8 +10,7 @@ module.exports = (sequelize, DataTypes) => {
       })
 
       Adoption.belongsTo(models.Pet, { 
-        foreignKey: 'pet_id',
-        as: 'adoptionOnePet' // 
+        foreignKey: 'pet_id'
       })
     }
   }
@@ -22,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notNull: { msg: 'pet_id field is required' },
         notEmpty: { msg: 'pet_id field cannot be empty' },
-        async isUnique(value) {
+        /* async isUnique(value) {
           const petAdopted = await Adoption.findOne({ 
             where: { 
               pet_id: value 
@@ -31,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
           if (petAdopted) {
             throw new Error('this pet was already adopted')
           }
-        },
+        }, */
       },
     },
     tutor_id: {

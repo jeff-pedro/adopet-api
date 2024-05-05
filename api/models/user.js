@@ -9,10 +9,6 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'tutor_id'
       })
 
-      User.hasMany(models.Pet, {
-        foreignKey: 'shelter_id'
-      })
-
       User.belongsToMany(models.Profile, {
         through: models.profile_user,
         as: 'userProfile',

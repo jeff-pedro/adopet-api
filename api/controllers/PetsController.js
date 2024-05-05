@@ -9,12 +9,12 @@ class PetsController extends Controller {
   }
 
   async adopt(req, res) {
-    const { id } = req.params
+    const pet_id = req.params.id
     const { tutor_id, date } = req.body
 
     const adoptionData = {
-      pet_id: id,
-      tutor_id: tutor_id,
+      pet_id,
+      tutor_id,
       date: date ?? new Date()
     }
 
@@ -23,7 +23,6 @@ class PetsController extends Controller {
 
       return res.status(200).json(adoption)
     } catch (err) {
-      console.log(err)
       return res.status(400).json({ error: err.message })
     }
   }

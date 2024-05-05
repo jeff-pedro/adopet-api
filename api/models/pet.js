@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
         as: 'adoption' 
       })
       
-      Pet.belongsTo(models.User, { 
+      Pet.belongsTo(models.Shelter, { 
         foreignKey: 'shelter_id' 
       })
     }
