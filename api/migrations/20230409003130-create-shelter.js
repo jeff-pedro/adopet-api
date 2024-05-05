@@ -1,49 +1,33 @@
 'use strict'
-
-const { UUIDV4 } = require('sequelize')
-
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('pets', {
+    await queryInterface.createTable('shelters', {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID,
-        defaultValue: UUIDV4
+        defaultValue: Sequelize.UUIDV4
       },
       name: {
         allowNull: false,
         type: Sequelize.STRING,
       },
-      birthday: {
-        allowNull: false,
-        type: Sequelize.DATEONLY
-      },
-      size: {
+      email: {
         allowNull: false,
         type: Sequelize.STRING,
       },
-      personality: {
-        allowNull: false,
-        type: Sequelize.STRING
-      },
-      species: {
+      phone: {
         allowNull: false,
         type: Sequelize.STRING,
       },
-      status: {
+      city: {
+        allowNull:false,
+        type: Sequelize.STRING, 
+      },
+      state: {
         allowNull: false,
         type: Sequelize.STRING,
-      },
-      profilePictureUrl: {
-        allowNull: false,
-        type: Sequelize.STRING
-      },
-      shelter_id: {
-        allowNull: false,
-        type: Sequelize.UUID,
-        references: { model: 'shelters', key: 'id' }
       },
       createdAt: {
         allowNull: false,
@@ -56,6 +40,6 @@ module.exports = {
     })
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('pets')
+    await queryInterface.dropTable('shelters')
   }
 }
