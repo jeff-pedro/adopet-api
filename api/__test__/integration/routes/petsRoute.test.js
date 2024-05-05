@@ -4,7 +4,8 @@ const app = require('../../../app')
 const request = require('supertest')
 const { v4: uuid } = require('uuid')
 
-const login = require('../../helper/userLogin')
+const login = require('../../helper/userLogin.js')
+const tearDown = require('../../helper/tearDown.js')
 const database = require('../../../models')
 
 const { 
@@ -19,53 +20,63 @@ const securityService = new SecurityService()
 // jest.mock('../../../models')
 
 describe('Pets', () => {
-  let petId
   let pet
-  // let shelter
+  let shelter
   let user
   let auth = {}
 
   beforeAll(async () => {
-    // shelter = await createShelter()
+    shelter = await createShelter()
     user = await createUser()
-    pet = await createPet(user)
-    
+    pet = await createPet(shelter)
+
     await setProfile(user)
     
     await login(auth, request, app)
   })
 
   afterAll(async () => {
-    try {
-      await database.User.destroy({ where: {} })
-      await database.Pet.destroy({ where: {} })
-      await database.Profile.destroy({ where: {} })
-      // await database.Shelter.destroy({ where: {} })
-    } catch (error) {
-      console.log(error)
-    }
+    await tearDown()
+  })
+
+  describe('POST /api/pets/{id}/adoption', () => {
+  
+    it('should do an adoption', async () => {
+      const res = await request(app)
+        .post(`/api/pets/${pet.id}/adoption`)
+        .set('Authorization', `Bearer ${auth.token}`)
+        .send({
+          tutor_id: user.id
+        })
+
+      expect(res.status).toBe(200)
+      expect(res.body).toHaveProperty('id')
+    })
+  })
+
+  
+  describe('GET /api/pets/:id/adoption/cancel', () => {
+   
+    it('should cancel one adoption', async () => {
+      await request(app)
+        .get(`/api/pets/${pet.id}/adoption/cancel`)
+        .set('Authorization', `Bearer ${auth.token}`)
+        .expect(200)
+    })
   })
 
 
   describe('GET /api/pets', () => {
+
     it('should list all pets', async () => {
       const res = await request(app)
-        .get('/api/pets')
+        .get('/api/pets/?page=1')
         .set('Accept', 'application/json')
         .set('Authorization', `Bearer ${auth.token}`)
 
       expect(res.headers['content-type']).toMatch(/json/)
       expect(res.status).toEqual(200)
-      // expect(res.body).toHaveLength(1)
-    })
-
-    it('should show 10 results per page', async () => {
-      const res = await request(app)
-        .get('/api/pets/?page=1')
-        .set('Authorization', `Bearer ${auth.token}`)
-
-      expect(res.status).toEqual(200)
-      // expect(res.body).toHaveLength(10)
+      expect(res.body).toHaveLength(1)
     })
   })
 
@@ -84,21 +95,19 @@ describe('Pets', () => {
           species: 'Dog',
           status: 'New',
           profilePictureUrl: 'http://images.com/cotton',
-          shelter_id: user.id
+          shelter_id: shelter.id
         })
         .expect(200)
-
-      petId = res.body.id
     })
 
-    it.skip('should return an error if the request body is empty', async () => {
+    it('should return an error if the request body is empty', async () => {
       const res = await request(app)
         .post('/api/pets')
         .set('Accept', 'application/json')
         .set('Authorization', `Bearer ${auth.token}`)
         .send({})
 
-      expect(res.status).toBe(422)
+      expect(res.status).toBe(400)
       expect(res.body).toHaveProperty('error')
       expect(res.body.error).toEqual('empty request body')
     })
@@ -109,21 +118,21 @@ describe('Pets', () => {
     
     it('should return one pet', async () => {
       const res = await request(app)
-        .get(`/api/pets/${petId}`)
+        .get(`/api/pets/${pet.id}`)
         .set('Authorization', `Bearer ${auth.token}`)
 
       expect(res.status).toBe(200)
-      expect(res.body.name).toEqual('Cotton')
+      expect(res.body.name).toEqual('Nala')
     })
 
-    it.skip('should return status 404 if any data is found', async () => {
+    it('should return status 404 if any data is found', async () => {
       const res = await request(app)
-        .get('/api/pets/0')
+        .get('/api/pets/00000000-0000-0000-0000-000000000000')
         .set('Authorization', `Bearer ${auth.token}`)
 
       expect(res.status).toBe(404)
       expect(res.body).toHaveProperty('error')
-      expect(res.body.error).toEqual('Error: Pet not found')
+      expect(res.body.error).toMatch('record not found')
     })
   })
 
@@ -132,7 +141,7 @@ describe('Pets', () => {
    
     it('should update some fields', async () => {
       const res = await request(app)
-        .put(`/api/pets/${petId}`)
+        .put(`/api/pets/${pet.id}`)
         .set('Authorization', `Bearer ${auth.token}`)
         .send({
           name: 'Jack',
@@ -149,7 +158,7 @@ describe('Pets', () => {
       ['undefined field', { somefield: 'some value' }]
     ])('should not update if provided an %s', async (_, param) => {
       const res = await request(app)
-        .put(`/api/pets/${petId}`)
+        .put(`/api/pets/${pet.id}`)
         .set('Authorization', `Bearer ${auth.token}`)
         .send(param)
 
@@ -162,7 +171,7 @@ describe('Pets', () => {
    
     it('should update only one field', async () => {
       const res = await request(app)
-        .patch(`/api/pets/${petId}`)
+        .patch(`/api/pets/${pet.id}`)
         .set('Authorization', `Bearer ${auth.token}`)
         .send({
           status: 'Quarentine'
@@ -175,7 +184,7 @@ describe('Pets', () => {
 
     it('should return an error if try update more than one field', async () => {
       const res = await request(app)
-        .patch(`/api/pets/${petId}`)
+        .patch(`/api/pets/${pet.id}`)
         .set('Authorization', `Bearer ${auth.token}`)
         .send({
           species: 'Cat',
@@ -190,7 +199,7 @@ describe('Pets', () => {
       ['undefined field', { somefield: 'some value' }]
     ])('should return an error if provided an %s', async (_, param) => {
       const res = await request(app)
-        .put(`/api/pets/${petId}`)
+        .put(`/api/pets/${pet.id}`)
         .set('Authorization', `Bearer ${auth.token}`)
         .send(param)
 
@@ -203,35 +212,7 @@ describe('Pets', () => {
    
     it('should delete one pet', async () => {
       await request(app)
-        .delete(`/api/pets/${petId}`)
-        .set('Authorization', `Bearer ${auth.token}`)
-        .expect(200)
-    })
-  })
-
-  
-  describe('POST /api/pets/{id}/adoption', () => {
-  
-    it('should do an adoption', async () => {
-      const res = await request(app)
-        .post(`/api/pets/${pet.id}/adoption`)
-        .set('Authorization', `Bearer ${auth.token}`)
-        .send({
-          tutor_id: user.id
-        })
-
-      console.log(res.body)
-
-      expect(res.status).toBe(200)
-      expect(res.body.adoption).toHaveProperty('id')
-    })
-  })
-
-  describe.skip('GET /api/pets/:id/adoption/cancel', () => {
-   
-    it('should cancel one adoption', async () => {
-      await request(app)
-        .get(`/api/pets/${pet.id}/adoption/cancel`)
+        .delete(`/api/pets/${pet.id}`)
         .set('Authorization', `Bearer ${auth.token}`)
         .expect(200)
     })
@@ -257,20 +238,20 @@ async function createPet(shelter) {
   }
 }
 
-// async function createShelter() {
-//   try {
-//     return (await database.Shelter.create({
-//       id: uuid(),
-//       name: 'Caribbean Crazy Animals',
-//       email: 'contact2@crazyanimals.sea',
-//       phone: '+08898985421',
-//       city: 'Port Royal',
-//       state: 'Caribbean'
-//     }))
-//   } catch (error) {
-//     console.log(error)
-//   }
-// }
+async function createShelter() {
+  try {
+    return (await database.Shelter.create({
+      id: uuid(),
+      name: 'Caribbean Crazy Animals',
+      email: 'contact2@crazyanimals.sea',
+      phone: '+08898985421',
+      city: 'Port Royal',
+      state: 'Caribbean'
+    }))
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 async function createUser() {
   const userObject = {
@@ -300,6 +281,7 @@ async function createUser() {
 
     return user
   } catch (err) {
+    console.log('Oi')
     throw new Error(err.message)
   }
 }
