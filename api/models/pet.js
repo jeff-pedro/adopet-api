@@ -6,10 +6,11 @@ module.exports = (sequelize, DataTypes) => {
   class Pet extends Model {
     static associate(models) {
       Pet.hasOne(models.Adoption, { 
-        foreignKey: 'pet_id' 
+        foreignKey: 'pet_id',
+        as: 'adoption' 
       })
       
-      this.belongsTo(models.User, { 
+      Pet.belongsTo(models.User, { 
         foreignKey: 'shelter_id' 
       })
     }
@@ -100,6 +101,13 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Pet',
     tableName: 'pets',
+    scopes: {
+      adopted: {
+        where: {
+          status: 'Adopted'
+        }
+      }
+    },
     defaultScope: {
       where: {
         [Op.not]: {

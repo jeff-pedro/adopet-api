@@ -6,44 +6,44 @@ module.exports = (sequelize, DataTypes) => {
   class Adoption extends Model {
     static associate(models) {
       Adoption.belongsTo(models.User, {
-        foreignKey: 'tutor_id'
+        foreignKey: 'tutor_id',
       })
 
       Adoption.belongsTo(models.Pet, { 
-        as: 'adoptionOnePet', 
-        foreignKey: 'pet_id'
+        foreignKey: 'pet_id',
+        as: 'adoptionOnePet' // 
       })
     }
   }
   Adoption.init({
-    animal: {
-      type: DataTypes.INTEGER,
+    pet_id: {
+      type: DataTypes.UUID,
       allowNull: false,
       validate: {
-        notNull: { msg: 'animal field is required' },
-        notEmpty: { msg: 'animal field cannot be empty' },
+        notNull: { msg: 'pet_id field is required' },
+        notEmpty: { msg: 'pet_id field cannot be empty' },
         async isUnique(value) {
-          const animalAdopted = await Adoption.findOne({ 
+          const petAdopted = await Adoption.findOne({ 
             where: { 
-              animal: value 
+              pet_id: value 
             } 
           })
-          if (animalAdopted) {
+          if (petAdopted) {
             throw new Error('this pet was already adopted')
           }
         },
       },
     },
-    tutor: {
-      type: DataTypes.STRING,
+    tutor_id: {
+      type: DataTypes.UUID,
       allowNull: false,
       validate: {
-        notNull: { msg: 'tutor field is required' },
-        notEmpty: { msg: 'tutor field cannot be empty' }
+        notNull: { msg: 'tutor_id field is required' },
+        notEmpty: { msg: 'tutor_id field cannot be empty' }
       }
     },
     date: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: false,
       validate: {
         notNull: { msg: 'date field is required' },

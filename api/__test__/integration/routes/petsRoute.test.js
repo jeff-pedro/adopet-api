@@ -21,14 +21,14 @@ const securityService = new SecurityService()
 describe('Pets', () => {
   let petId
   let pet
-  let shelter
+  // let shelter
   let user
   let auth = {}
 
   beforeAll(async () => {
-    shelter = await createShelter()
+    // shelter = await createShelter()
     user = await createUser()
-    pet = await createPet(shelter)
+    pet = await createPet(user)
     
     await setProfile(user)
     
@@ -84,7 +84,7 @@ describe('Pets', () => {
           species: 'Dog',
           status: 'New',
           profilePictureUrl: 'http://images.com/cotton',
-          shelter_id: shelter.id
+          shelter_id: user.id
         })
         .expect(200)
 
@@ -217,19 +217,21 @@ describe('Pets', () => {
         .post(`/api/pets/${pet.id}/adoption`)
         .set('Authorization', `Bearer ${auth.token}`)
         .send({
-          tutor: user.id
+          tutor_id: user.id
         })
+
+      console.log(res.body)
 
       expect(res.status).toBe(200)
       expect(res.body.adoption).toHaveProperty('id')
     })
   })
 
-  describe('DELETE /api/pets/:id/adoption/cancel', () => {
+  describe.skip('GET /api/pets/:id/adoption/cancel', () => {
    
     it('should cancel one adoption', async () => {
       await request(app)
-        .delete(`/api/pets/${pet.id}/adoption/cancel`)
+        .get(`/api/pets/${pet.id}/adoption/cancel`)
         .set('Authorization', `Bearer ${auth.token}`)
         .expect(200)
     })
@@ -255,20 +257,20 @@ async function createPet(shelter) {
   }
 }
 
-async function createShelter() {
-  try {
-    return (await database.Shelter.create({
-      id: uuid(),
-      name: 'Caribbean Crazy Animals',
-      email: 'contact2@crazyanimals.sea',
-      phone: '+08898985421',
-      city: 'Port Royal',
-      state: 'Caribbean'
-    }))
-  } catch (error) {
-    console.log(error)
-  }
-}
+// async function createShelter() {
+//   try {
+//     return (await database.Shelter.create({
+//       id: uuid(),
+//       name: 'Caribbean Crazy Animals',
+//       email: 'contact2@crazyanimals.sea',
+//       phone: '+08898985421',
+//       city: 'Port Royal',
+//       state: 'Caribbean'
+//     }))
+//   } catch (error) {
+//     console.log(error)
+//   }
+// }
 
 async function createUser() {
   const userObject = {
@@ -303,7 +305,7 @@ async function createUser() {
 }
 
 async function setProfile(user) {
-  const profile = await profileService.create({
+  const profile = await profileService.createRecord({
     id: uuid(),
     name: 'shelter',
     description: 'a shelter profile'

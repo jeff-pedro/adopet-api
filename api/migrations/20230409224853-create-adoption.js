@@ -17,8 +17,6 @@ module.exports = {
         allowNull: false,
         type: Sequelize.UUID,
         references: { model: 'pets', key: 'id' },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
       },
       tutor_id: {
         allowNull: false,
