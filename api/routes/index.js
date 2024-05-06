@@ -1,4 +1,4 @@
-const tutors = require('./tutorsRoute.js')
+const users = require('./usersRoute.js')
 const shelters = require('./sheltersRoute.js')
 const pets = require('./petsRoute.js')
 const auth = require('./authRoute.js')
@@ -18,7 +18,7 @@ module.exports = (app) => {
   app.use('/api',
     auth,
     pets,
-    tutors,
+    users,
     shelters,
     profiles,
     permissions,

@@ -4,7 +4,7 @@ const dataSource = require('../models')
 
 const Services = require('./Services.js')
 
-class TutorService extends Services {
+class UserService extends Services {
   constructor() {
     super('User')
   }
@@ -27,4 +27,4 @@ class TutorService extends Services {
   }
 }
 
-module.exports = TutorService
+module.exports = UserService

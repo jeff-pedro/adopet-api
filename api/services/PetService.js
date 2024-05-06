@@ -1,9 +1,9 @@
 const Services = require('./Services')
-const TutorService = require('../services/TutorService.js')
+const UserService = require('./UserService.js')
 const dataSource = require('../models')
 const { v4: uuid } = require('uuid')
 
-const tutorService = new TutorService()
+const userService = new UserService()
 
 class PetService extends Services {
   constructor() {
@@ -18,7 +18,7 @@ class PetService extends Services {
     }
 
     // validate if 'user' exists
-    const user = await tutorService.getRecordById(dto.tutor_id)
+    const user = await userService.getRecordById(dto.tutor_id)
     
     if (!user) {
       throw new Error('tutor not found')
