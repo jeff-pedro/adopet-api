@@ -2,17 +2,11 @@
 const {
   Model
 } = require('sequelize')
-const { Sequelize } = require('.')
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
       User.hasMany(models.Adoption, {
-        foreignKey: 'tutor'
+        foreignKey: 'tutor_id'
       })
 
       User.belongsToMany(models.Profile, {
@@ -106,6 +100,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'User',
+    tableName: 'users',
     defaultScope: {
       attributes: {
         exclude: ['password', 'salt']

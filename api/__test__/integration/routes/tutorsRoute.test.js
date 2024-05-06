@@ -1,41 +1,25 @@
 process.env.NODE_ENV = 'test'
 
-const { v4: uuid } = require('uuid')
 const request = require('supertest')
-const app = require('../../../app')
 
-const login = require('../../helper/userLogin')
-const database = require('../../../models')
+const app = require('../../../app')
+const login = require('../../helper/userLogin.js')
+const tearDown = require('../../helper/tearDown.js')
+const { createRandomUsers } = require('../../helper/seeders.js')
 
 // jest.mock('../../../models')
 
 describe('Tutors', () => {
-  let tutorObject
   let user
   const auth = {}
 
   beforeAll(async () => {
-    const userObject = {
-      name: 'Edward Teague',
-      email: 'teague@pirates.sea',
-      password: 'teague123',
-      phone: '+011233334444',
-      city: 'Anywhere',
-      about: 'I am cute and love all animals of world',
-      profilePictureUrl: 'https://images.com/images/image-teague',
-      role: 'standard'
-    }
-
-    user = await database.User.create({
-      id: uuid(),
-      ...userObject
-    })  
-    
+    user = await createRandomUsers()
     await login(auth, request, app)
   })
 
   afterAll(async () => {
-    database.User.destroy({ where: {} })
+    await tearDown()
   })
 
 
@@ -58,7 +42,7 @@ describe('Tutors', () => {
         .set('Authorization', `Bearer ${auth.token}`)
 
       expect(res.status).toBe(200)
-      expect(res.body.email).toEqual('teague@pirates.sea')
+      expect(res.body).toHaveProperty('email')
     })
 
     it('should return status code 404 if any data is found', async () => {
@@ -68,26 +52,24 @@ describe('Tutors', () => {
 
       expect(res.status).toBe(404)
       expect(res.body).toHaveProperty('error')
-      expect(res.body.error).toEqual('Register not found')
+      expect(res.body.error).toEqual('record not found')
     })
   })
 
   describe('POST /api/tutors', () => {
     it('should create a new tutor', async () => {
-      tutorObject = {
-        name: 'Jack Sparrow',
-        email: 'sparrow@pirates.sea',
-        password: 'jack123',
-        phone: '+011233334444',
-        city: 'Tortuga',
-        about: 'I am the best tutor',
-        profilePictureUrl: 'https://images.com/images/image-jack',
-        role: 'standard'
-      }
-
       const res = await request(app)
         .post('/api/tutors')
-        .send(tutorObject)
+        .send({
+          name: 'Jack Sparrow',
+          email: 'sparrow@pirates.sea',
+          password: 'jack123',
+          phone: '+011233334444',
+          city: 'Tortuga',
+          about: 'I am the best tutor',
+          profilePictureUrl: 'https://images.com/images/image-jack',
+          role: 'standard'
+        })
         .set('Accept', 'application/json')
         .set('Authorization', `Bearer ${auth.token}`)
 

@@ -1,10 +1,12 @@
 process.env.NODE_ENV = 'test'
 
 const request = require('supertest')
+
 const app = require('../../../app')
 
-const login = require('../../helper/userLogin')
-const database = require('../../../models')
+const login = require('../../helper/userLogin.js')
+const tearDown = require('../../helper/tearDown.js')
+
 
 describe('Profiles', () => {
   let profileId
@@ -15,9 +17,7 @@ describe('Profiles', () => {
   })
   
   afterAll(async () => {
-    await database.Profile.destroy({
-      where: {},
-    })
+    await tearDown()
   })
   
 

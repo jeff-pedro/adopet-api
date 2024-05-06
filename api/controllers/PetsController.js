@@ -8,6 +8,42 @@ class PetsController extends Controller {
     super(petService)
   }
 
+  async adopt(req, res) {
+    const pet_id = req.params.id
+    const { tutor_id, date } = req.body
+
+    const adoptionData = {
+      pet_id,
+      tutor_id,
+      date: date ?? new Date()
+    }
+
+    try {
+      const adoption = await petService.newAdoption(adoptionData)
+
+      return res.status(200).json(adoption)
+    } catch (err) {
+      return res.status(400).json({ error: err.message })
+    }
+  }
+
+  async cancelAdoption (req, res) {
+    const { id } = req.params
+
+    try {
+      const isCanceled = await petService.removeAdoption(id)
+      
+      if (!isCanceled) {
+        return res.status(422).json({ message: `adoption with id:${id} was not cancel` }) 
+      }
+
+      return res.status(200).json({ message: `adoption with id:${id} was canceled` })
+
+    } catch (err) {
+      return res.status(400).json({ error: err.message })
+    }
+  }
+
   //   /* Body validation */
   //   const newPet = {
   //     name: body.name,

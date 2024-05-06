@@ -4,14 +4,15 @@ const {
 } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
   class Pet extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      this.belongsTo(models.Shelter, { foreignKey: 'shelter_id' })
-      this.hasOne(models.Adoption, { foreignKey: 'animal' })
+      Pet.hasOne(models.Adoption, { 
+        foreignKey: 'pet_id',
+        as: 'adoption' 
+      })
+      
+      Pet.belongsTo(models.Shelter, { 
+        foreignKey: 'shelter_id' 
+      })
     }
   }
   Pet.init({
@@ -99,6 +100,14 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Pet',
+    tableName: 'pets',
+    scopes: {
+      adopted: {
+        where: {
+          status: 'Adopted'
+        }
+      }
+    },
     defaultScope: {
       where: {
         [Op.not]: {

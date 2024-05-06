@@ -4,47 +4,45 @@ const {
 } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
   class Adoption extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
+      Adoption.belongsTo(models.User, {
+        foreignKey: 'tutor_id',
+      })
+
       Adoption.belongsTo(models.Pet, { 
-        as: 'adoptionOnePet', 
-        foreignKey: 'animal'
+        foreignKey: 'pet_id'
       })
     }
   }
   Adoption.init({
-    animal: {
-      type: DataTypes.INTEGER,
+    pet_id: {
+      type: DataTypes.UUID,
       allowNull: false,
       validate: {
-        notNull: { msg: 'animal field is required' },
-        notEmpty: { msg: 'animal field cannot be empty' },
-        async isUnique(value) {
-          const animalAdopted = await Adoption.findOne({ 
+        notNull: { msg: 'pet_id field is required' },
+        notEmpty: { msg: 'pet_id field cannot be empty' },
+        /* async isUnique(value) {
+          const petAdopted = await Adoption.findOne({ 
             where: { 
-              animal: value 
+              pet_id: value 
             } 
           })
-          if (animalAdopted) {
+          if (petAdopted) {
             throw new Error('this pet was already adopted')
           }
-        },
+        }, */
       },
     },
-    tutor: {
-      type: DataTypes.STRING,
+    tutor_id: {
+      type: DataTypes.UUID,
       allowNull: false,
       validate: {
-        notNull: { msg: 'tutor field is required' },
-        notEmpty: { msg: 'tutor field cannot be empty' }
+        notNull: { msg: 'tutor_id field is required' },
+        notEmpty: { msg: 'tutor_id field cannot be empty' }
       }
     },
     date: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: false,
       validate: {
         notNull: { msg: 'date field is required' },
@@ -56,6 +54,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Adoption',
+    tableName: 'adoptions'
   })
   return Adoption
 }

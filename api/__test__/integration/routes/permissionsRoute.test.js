@@ -1,10 +1,12 @@
 process.env.NODE_ENV = 'test'
 
-const app = require('../../../app')
 const request = require('supertest')
 
-const login = require('../../helper/userLogin')
-const database = require('../../../models')
+const app = require('../../../app')
+
+const login = require('../../helper/userLogin.js')
+const tearDown = require('../../helper/tearDown.js')
+
 
 describe('Permissions', () => {
   let permissionId
@@ -15,10 +17,9 @@ describe('Permissions', () => {
   })
 
   afterAll(async () => {
-    await database.Permission.destroy({
-      where: {},
-    })
+    await tearDown()
   })
+
   
   describe('POST /permissions', () => {
     
@@ -38,6 +39,7 @@ describe('Permissions', () => {
       expect(res.body).toHaveProperty('description')
     })
   })
+
 
   describe('GET /permissions', () => {
     
@@ -62,6 +64,7 @@ describe('Permissions', () => {
     })
   }) 
 
+
   describe('GET /permissions/{id}', () => {
     it('should return one permission', async () => {
       const res = await request(app)
@@ -79,6 +82,7 @@ describe('Permissions', () => {
     })
   })
 
+
   describe('PUT /permissions/{id}', () => {
     it('should update one permission', async () => {
       const res = await request(app)
@@ -93,6 +97,7 @@ describe('Permissions', () => {
     })
   })
 
+  
   describe('DELETE /permissions/{id}', () => {
     it('should delete one permission', async () => {
       const res = await request(app)

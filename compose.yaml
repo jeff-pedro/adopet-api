@@ -21,6 +21,8 @@ services:
   db:
     image: postgres
     container_name: adopet-db
+    ports:
+      - 5433:5432
     restart: always
     user: postgres
     volumes:

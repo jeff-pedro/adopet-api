@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Adoptions', {
+    await queryInterface.createTable('adoptions', {
       id: {
         allowNull: false,
         primaryKey: true,
@@ -11,22 +11,17 @@ module.exports = {
       },
       date: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATEONLY
       },
-      animal: {
+      pet_id: {
         allowNull: false,
-        unique: true,
         type: Sequelize.UUID,
-        references: { 
-          model: 'Pets', 
-          key: 'id' 
-        },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
+        references: { model: 'pets', key: 'id' },
       },
-      tutor: {
+      tutor_id: {
         allowNull: false,
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
+        references: { model: 'users', key: 'id' }
       },
       createdAt: {
         allowNull: false,
@@ -39,6 +34,6 @@ module.exports = {
     })
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Adoptions')
+    await queryInterface.dropTable('adoptions')
   }
 }
