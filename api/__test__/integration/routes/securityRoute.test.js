@@ -1,14 +1,16 @@
 process.env.NODE_ENV = 'test'
 
 const request = require('supertest')
-const { v4: uuid } = require('uuid')
 
 const app = require('../../../app')
-const database = require('../../../models')
-const login = require('../../helper/userLogin')
+const login = require('../../helper/userLogin.js')
+const tearDown = require('../../helper/tearDown.js')
+const { 
+  createRandomUsers,
+  createRandomProfiles,
+  createRandomPermissions
+} = require('../../helper/seeders.js')
 
-const { TutorService } = require('../../../services')
-const tutorService = new TutorService()
 
 describe('Security', () => {
   let profile
@@ -16,31 +18,14 @@ describe('Security', () => {
   const auth = {}
 
   beforeAll(async () => {
-    user = await tutorService.create({
-      name: 'Jack Sparrow',
-      email: 'sparrow@pirates.sea',
-      password: 'jack123',
-    })
-
-    profile = await database.Profile.create({
-      id: uuid(),
-      name: 'tutor',
-      description: 'A tutor profile',
-    })
-
-    await database.Permission.create({
-      id: uuid(),
-      name: 'read',
-      description: 'permission to read contents',
-    })
-
+    user = await createRandomUsers()
+    profile = await createRandomProfiles()
+    await createRandomPermissions()
     await login(auth, request, app)
   })
 
   afterAll(async () => {
-    await database.Profile.destroy({ where: {} })
-    await database.Permission.destroy({ where: {} })
-    await database.User.destroy({ where: {} })
+    await tearDown()
   })
 
 
