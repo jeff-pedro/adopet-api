@@ -4,12 +4,14 @@ module.exports = async () => {
   try {
     await database.Adoption.destroy({ truncate: { cascade: true } })
     await database.Pet.destroy({ truncate: { cascade: true } })
-    await database.User.destroy({ truncate: { cascade: true } })
     await database.Shelter.destroy({ truncate: { cascade: true } })
+    await database.User.destroy({ truncate: { cascade: true } })
     await database.Profile.destroy({ truncate: { cascade: true } })
+    await database.Permission.destroy({ truncate: { cascade: true } })
       
     return
   } catch (err) {
+    console.log(err)
     throw new Error(err)
   }
 }
