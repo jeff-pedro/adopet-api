@@ -2,14 +2,14 @@ process.env.NODE_ENV = 'test'
 
 const request = require('supertest')
 
-const app = require('../../../app')
+const app = require('../../../app.js')
 const login = require('../../helper/userLogin.js')
 const tearDown = require('../../helper/tearDown.js')
 const { createRandomUsers } = require('../../helper/seeders.js')
 
 // jest.mock('../../../models')
 
-describe('Tutors', () => {
+describe('Users', () => {
   let user
   const auth = {}
 
@@ -23,10 +23,10 @@ describe('Tutors', () => {
   })
 
 
-  describe('GET /api/tutors', () => {
-    it('should list all tutors', async () => {
+  describe('GET /api/users', () => {
+    it('should list all users', async () => {
       const res = await request(app)
-        .get('/api/tutors/')
+        .get('/api/users/')
         .set('Accept', 'application/json')
         .set('Authorization', `Bearer ${auth.token}`)
 
@@ -35,10 +35,10 @@ describe('Tutors', () => {
     })
   })
 
-  describe('GET /api/tutors/{id}', () => {
-    it('should return one tutor', async () => {
+  describe('GET /api/users/{id}', () => {
+    it('should return one user', async () => {
       const res = await request(app)
-        .get(`/api/tutors/${user.id}`)
+        .get(`/api/users/${user.id}`)
         .set('Authorization', `Bearer ${auth.token}`)
 
       expect(res.status).toBe(200)
@@ -47,7 +47,7 @@ describe('Tutors', () => {
 
     it('should return status code 404 if any data is found', async () => {
       const res = await request(app)
-        .get('/api/tutors/c0b785e4-4939-406e-9248-e85386dcd73c')
+        .get('/api/users/c0b785e4-4939-406e-9248-e85386dcd73c')
         .set('Authorization', `Bearer ${auth.token}`)
 
       expect(res.status).toBe(404)
@@ -56,17 +56,17 @@ describe('Tutors', () => {
     })
   })
 
-  describe('POST /api/tutors', () => {
-    it('should create a new tutor', async () => {
+  describe('POST /api/users', () => {
+    it('should create a new user', async () => {
       const res = await request(app)
-        .post('/api/tutors')
+        .post('/api/users')
         .send({
           name: 'Jack Sparrow',
           email: 'sparrow@pirates.sea',
           password: 'jack123',
           phone: '+011233334444',
           city: 'Tortuga',
-          about: 'I am the best tutor',
+          about: 'I am the best user',
           profilePictureUrl: 'https://images.com/images/image-jack',
           role: 'standard'
         })
@@ -78,7 +78,7 @@ describe('Tutors', () => {
 
     it('should return an error if the request body is empty', async () => {
       const res = await request(app)
-        .post('/api/tutors')
+        .post('/api/users')
         .set('Accept', 'application/json')
         .set('Authorization', `Bearer ${auth.token}`)
         .send({})
@@ -89,10 +89,10 @@ describe('Tutors', () => {
     })
   })
 
-  describe('PUT /api/tutors/{id}', () => {
+  describe('PUT /api/users/{id}', () => {
     it('should update some fields', async () => {
       const res = await request(app)
-        .put(`/api/tutors/${user.id}`)
+        .put(`/api/users/${user.id}`)
         .set('Authorization', `Bearer ${auth.token}`)
         .send({
           name: 'Captain Jack Sparrow',
@@ -109,7 +109,7 @@ describe('Tutors', () => {
     ])('should not update if provided an %s field', async (_, param) => {
 
       const res = await request(app)
-        .put(`/api/tutors/${user.id}`)
+        .put(`/api/users/${user.id}`)
         .set('Authorization', `Bearer ${auth.token}`)
         .send(param)
       
@@ -117,10 +117,10 @@ describe('Tutors', () => {
     })
   })
 
-  describe('PATCH /api/tutors/{id}', () => {
+  describe('PATCH /api/users/{id}', () => {
     it('should update only one field', async () => {
       const res = await request(app)
-        .patch(`/api/tutors/${user.id}`)
+        .patch(`/api/users/${user.id}`)
         .set('Authorization', `Bearer ${auth.token}`)
         .send({
           password: 'pass123'
@@ -133,7 +133,7 @@ describe('Tutors', () => {
 
     it('should return an error if try update more than one field', async () => {
       const res = await request(app)
-        .patch(`/api/tutors/${user.id}`)
+        .patch(`/api/users/${user.id}`)
         .set('Authorization', `Bearer ${auth.token}`)
         .send({
           city: 'Port Royal',
@@ -146,10 +146,10 @@ describe('Tutors', () => {
     })
   })
 
-  describe('DELETE /api/tutors/{id}', () => {
-    it('should delete one tutor', async () => {
+  describe('DELETE /api/users/{id}', () => {
+    it('should delete one user', async () => {
       await request(app)
-        .delete(`/api/tutors/${user.id}`)
+        .delete(`/api/users/${user.id}`)
         .set('Authorization', `Bearer ${auth.token}`)
         .expect(200)
     })

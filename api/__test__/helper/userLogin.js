@@ -1,7 +1,7 @@
 const database = require('../../models')
 
-const { TutorService } = require('../../services')
-const tutorService = new TutorService()
+const { UserService } = require('../../services')
+const userService = new UserService()
 
 async function createUser() {
   try {
@@ -12,7 +12,7 @@ async function createUser() {
     })
     
     if (!user) {
-      await tutorService.createRecord({
+      await userService.createRecord({
         name: 'Will Turner',
         email: 'tuner@pirates.sea',
         password: 'tuner123',

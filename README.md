@@ -61,7 +61,7 @@ Seguir para o diretório da API
 cd adopet-api/
 ```
 
-🏗️ **Construindo and executando a aplicação**
+🏗️ **Construindo e executando a aplicação**
 
 Iniciar a API e o bando de dados
 ```bash
