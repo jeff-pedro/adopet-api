@@ -101,6 +101,7 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Pet',
     tableName: 'pets',
+    paranoid: true,
     scopes: {
       adopted: {
         where: {
