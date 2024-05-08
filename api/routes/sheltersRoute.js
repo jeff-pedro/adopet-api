@@ -12,6 +12,7 @@ routes.use(authorization)
 routes
   .post('/shelters', (req, res, next) => sheltersController.createNew(req, res, next))
   .get('/shelters', (req, res, next) => sheltersController.getAll(req, res, next), pagination)
+  .get('/shelters/:id/restore', (req, res, next) => sheltersController.retore(req, res, next))
   .get('/shelters/:id', (req, res, next) => sheltersController.getById(req, res, next))
   .put('/shelters/:id', (req, res, next) => sheltersController.updateMany(req, res, next))
   .patch('/shelters/:id', (req, res, next) => sheltersController.updateOne(req, res, next))

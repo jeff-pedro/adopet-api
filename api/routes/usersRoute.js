@@ -15,6 +15,7 @@ routes
 // private endpoints
 routes
   .get('/users', authorization, (req, res, next) => usersController.getAll(req, res, next), pagination)
+  .get('/users/:id/restore', authorization, (req, res, next) => usersController.retore(req, res, next))
   .put('/users/:id', authorization, (req, res, next) => usersController.updateMany(req, res, next))
   .patch('/users/:id', authorization, (req, res, next) => usersController.updateOne(req, res, next))
   .delete('/users/:id', authorization, (req, res, next) => usersController.delete(req, res, next))
