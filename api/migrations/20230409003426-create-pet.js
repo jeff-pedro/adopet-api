@@ -43,7 +43,8 @@ module.exports = {
       shelter_id: {
         allowNull: false,
         type: Sequelize.UUID,
-        references: { model: 'shelters', key: 'id' }
+        references: { model: 'shelters', key: 'id' }, 
+        onDelete: 'CASCADE'
       },
       createdAt: {
         allowNull: false,
