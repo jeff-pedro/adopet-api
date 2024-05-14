@@ -25,8 +25,8 @@ describe('Pets', () => {
     shelter = await createRandomShelters()
     user = await createRandomUsers()
     pet = await createRandomPets()
-    await setProfile(user)
     await login(auth, request, app)
+    await setProfile(auth.user, 'shelter')
   })
 
   afterAll(async () => {
@@ -57,6 +57,7 @@ describe('Pets', () => {
         .set('Authorization', `Bearer ${auth.token}`)
         .expect(200)
     })
+
   })
 
 
@@ -214,8 +215,8 @@ describe('Pets', () => {
   })
 })
 
-async function setProfile(user) {
-  const profile = await createRandomProfiles()
+async function setProfile(user, profileName) {
+  const profile = await createRandomProfiles(profileName)
 
   const acl = await securityService.registerAcl({ 
     userId: user.id, 
