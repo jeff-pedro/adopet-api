@@ -19,7 +19,7 @@ describe('Security', () => {
 
   beforeAll(async () => {
     user = await createRandomUsers()
-    profile = await createRandomProfiles()
+    profile = await createRandomProfiles('tutor')
     await createRandomPermissions()
     await login(auth, request, app)
   })
