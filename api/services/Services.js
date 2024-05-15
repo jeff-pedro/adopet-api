@@ -34,6 +34,10 @@ class Services {
   async deleteRecord(id) {
     return dataSource[this.model].destroy({ where: { id } })
   }
+
+  async restoreRecord(id) {
+    return dataSource[this.model].restore({ where: { id }})
+  }
 }
 
 module.exports = Services

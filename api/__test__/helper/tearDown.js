@@ -2,12 +2,12 @@
 const database = require('../../models')
 module.exports = async () => {
   try {
-    await database.Adoption.destroy({ truncate: { cascade: true } })
-    await database.Pet.destroy({ truncate: { cascade: true } })
-    await database.Shelter.destroy({ truncate: { cascade: true } })
-    await database.User.destroy({ truncate: { cascade: true } })
-    await database.Profile.destroy({ truncate: { cascade: true } })
-    await database.Permission.destroy({ truncate: { cascade: true } })
+    await database.Adoption.destroy({ truncate: { cascade: true }, force: true })
+    await database.Pet.destroy({ truncate: { cascade: true }, force: true })
+    await database.Shelter.destroy({ truncate: { cascade: true },force: true })
+    await database.User.destroy({ truncate: { cascade: true }, force: true })
+    await database.Profile.destroy({ truncate: { cascade: true }, force: true })
+    await database.Permission.destroy({ truncate: { cascade: true }, force: true })
       
     return
   } catch (err) {

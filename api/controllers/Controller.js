@@ -110,10 +110,20 @@ class Controller {
       const isDeleted = await this.entityService.deleteRecord(id)
 
       if (!isDeleted) {
-        return res.status(200).json({ message: `id:${id} was NOT deleted` })
+        throw new Error(`id:${id} not found`)
       }
 
       return res.status(200).json({ message: `id:${id} was deleted` })
+    } catch (err) {
+      return res.status(400).json({ error: err.message })
+    }
+  }
+
+  async retore(req, res, next) {
+    const { id } = req.params
+    try {
+      await this.entityService.restoreRecord(id)
+      return res.status(200).json({ message: `id:${id} was restored` }) 
     } catch (err) {
       return res.status(400).json({ error: err.message })
     }

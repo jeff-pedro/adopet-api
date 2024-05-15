@@ -88,12 +88,12 @@ const createRandomPets = async (numberOfPets = 1) => {
 }
 
 
-const createRandomProfiles = async () => {
+const createRandomProfiles = async (profileName) => {
   try {
     return await database.Profile.create({
       id: faker.string.uuid(),
-      name: 'tutor',
-      description: 'A tutor profile',
+      name: profileName,
+      description: `A ${profileName} profile`,
     })
   } catch (error) {
     throw new Error(error)

@@ -101,6 +101,7 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'User',
     tableName: 'users',
+    paranoid: true,
     defaultScope: {
       attributes: {
         exclude: ['password', 'salt']
