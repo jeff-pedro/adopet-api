@@ -73,18 +73,18 @@ describe('Pets', () => {
   })
 
   
-  describe('GET /api/pets/:id/adoption/cancel', () => {
+  describe('PUT /api/pets/:id/adoption/cancel', () => {
    
     it('should cancel one adoption', async () => {
       await request(app)
-        .get(`/api/pets/${pet.id}/adoption/cancel`)
+        .put(`/api/pets/${pet.id}/adoption/cancel`)
         .set('Authorization', `Bearer ${auth.token}`)
         .expect(200)
     })
 
     it('should return an error when providing an invalid pet id', async () => {
       const res = await request(app)
-        .get('/api/pets/00000000-0000-0000-0000-000000000000/adoption/cancel')
+        .put('/api/pets/00000000-0000-0000-0000-000000000000/adoption/cancel')
         .set('Authorization', `Bearer ${auth.token}`)
       
       expect(res.status).toBe(400)
