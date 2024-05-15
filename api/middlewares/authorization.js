@@ -1,5 +1,5 @@
 const { verify, decode } = require('jsonwebtoken')
-const { secret } = require('../config/secret')
+const secret = process.env.JWT_SECRET
 
 module.exports = (req, res, next) => {
   const token = req.headers.authorization

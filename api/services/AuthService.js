@@ -1,8 +1,8 @@
 const { compare } = require('bcrypt')
 const { sign } = require('jsonwebtoken')
 
-const database = require('../models')
-const { secret } = require('../config/secret')
+const database = require('../database/models')
+const secret = process.env.JWT_SECRET
 
 class LoginService {
   async login(dto) {
