@@ -62,7 +62,7 @@ class Controller {
     const updatedData = req.body
 
     try {
-      const isUpdated = await this.entityService.updateRecord(updatedData, id)
+      const isUpdated = await this.entityService.updateRecord(updatedData, { where: { id } })
 
       if (!isUpdated) {
         return res.status(204).json()
@@ -84,7 +84,7 @@ class Controller {
         throw new Error('only one property can be updated at a time')
       }
 
-      const isUpdated = await this.entityService.updateRecord(updatedData, id)
+      const isUpdated = await this.entityService.updateRecord(updatedData, { where: { id } })
 
       if (!isUpdated) {
         return res.status(204).json()
@@ -124,7 +124,7 @@ class Controller {
   async retore(req, res, next) {
     const { id } = req.params
     try {
-      await this.entityService.restoreRecord(id)
+      await this.entityService.restoreRecord({ where: { id } })
       return res.status(200).json({ message: `id:${id} was restored` }) 
     } catch (err) {
       return res.status(400).json({ error: err.message })

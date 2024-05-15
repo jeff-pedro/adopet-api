@@ -17,7 +17,7 @@ class PetService extends Services {
         tutor_id: dto.tutor_id,
         pet_id: dto.pet_id,
         date: dto.date
-      }, t)
+      }, { transaction: t })
 
       await super.updateRecord({ status: 'Adopted' }, dto.pet_id, t)
 
