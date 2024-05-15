@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize')
-const database = require('../models')
+const database = require('../database/models')
 
 class SecurityService {
   async addPermissionsToProfile({ profile: profileName, permissions: permissionsList }) {

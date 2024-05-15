@@ -1,4 +1,4 @@
-const dataSource = require('../models')
+const dataSource = require('../database/models')
 const { v4: uuidv4 } = require('uuid')
 
 class Services {

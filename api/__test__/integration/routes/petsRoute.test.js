@@ -15,7 +15,7 @@ const {
 const { SecurityService } = require('../../../services')
 const securityService = new SecurityService()
 
-// jest.mock('../../../models')
+// jest.mock('../../../database/models')
 
 describe('Pets', () => {
   let pet, shelter, user

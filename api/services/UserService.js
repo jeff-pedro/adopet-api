@@ -1,6 +1,6 @@
 const { v4: uuidv4 } = require('uuid')
 const bcrypt = require('bcrypt')
-const dataSource = require('../models')
+const dataSource = require('../database/models')
 
 const Services = require('./Services.js')
 

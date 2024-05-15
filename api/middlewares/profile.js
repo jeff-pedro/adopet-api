@@ -1,4 +1,4 @@
-const database = require('../models')
+const database = require('../database/models')
 
 const profile = (profileList) => {
   return async (req, res, next) => {

@@ -7,7 +7,7 @@ const login = require('../../helper/userLogin.js')
 const tearDown = require('../../helper/tearDown.js')
 const { createRandomShelters } = require('../../helper/seeders.js')
 
-// jest.mock('../../../models')
+// jest.mock('../../../database/models')
 
 describe('Shelter', () => {
   let shelter
