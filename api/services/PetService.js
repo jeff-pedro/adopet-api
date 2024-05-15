@@ -1,6 +1,6 @@
 const Services = require('./Services')
 const UserService = require('./UserService.js')
-const dataSource = require('../models')
+const dataSource = require('../database/models')
 const { v4: uuid } = require('uuid')
 
 const userService = new UserService()
@@ -8,6 +8,7 @@ const userService = new UserService()
 class PetService extends Services {
   constructor() {
     super('Pet')
+    this.user
   }
   
   async newAdoption(dto) {

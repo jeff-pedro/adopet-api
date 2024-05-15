@@ -1,6 +1,6 @@
 const { faker } = require('@faker-js/faker')
 const { hashSync, genSaltSync } = require('bcrypt')
-const database = require('../../models')
+const database = require('../../database/models')
 
 const createRandomUsers = async (numberOfUsers = 1) => {
   const salt = genSaltSync()

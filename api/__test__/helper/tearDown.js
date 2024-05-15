@@ -1,5 +1,5 @@
 // https://stackoverflow.com/questions/22938375/nodejs-sequelize-how-to-truncate-a-foreign-key-referenced-table
-const database = require('../../models')
+const database = require('../../database/models')
 module.exports = async () => {
   try {
     await database.Adoption.destroy({ truncate: { cascade: true }, force: true })

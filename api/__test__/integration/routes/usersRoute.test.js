@@ -7,7 +7,7 @@ const login = require('../../helper/userLogin.js')
 const tearDown = require('../../helper/tearDown.js')
 const { createRandomUsers } = require('../../helper/seeders.js')
 
-// jest.mock('../../../models')
+// jest.mock('../../../database/models')
 
 describe('Users', () => {
   let user

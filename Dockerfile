@@ -24,7 +24,7 @@ RUN --mount=type=bind,source=package.json,target=package.json \
     npm ci --omit=dev
 USER node
 COPY . .
-CMD ["node", "./api/bin/www"]
+CMD ["node", "server.js"]
 
 
 FROM base as test
