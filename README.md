@@ -2,6 +2,7 @@
 
   # Adopet API
 
+  <img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/jeff-pedro/adopet-api/main.yml?branch=main&style=for-the-badge">
   <img src="https://img.shields.io/github/v/release/jeff-pedro/api-adopet?display_name=tag&include_prereleases&style=for-the-badge">
   <img src="https://img.shields.io/badge/node-v20.12.2-blueviolet?style=for-the-badge&logo=node.js)](https://nodejs.org/download/">
   <a href='https://eslint.org/' target='_blank'><img src="https://img.shields.io/badge/Code Style-eslint-ff69b4.svg?style=for-the-badge&logo=eslint"></a>
