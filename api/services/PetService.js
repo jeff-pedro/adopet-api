@@ -8,6 +8,7 @@ const userService = new UserService()
 class PetService extends Services {
   constructor() {
     super('Pet')
+    this.user
   }
   
   async newAdoption(dto) {

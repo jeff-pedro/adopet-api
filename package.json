@@ -3,12 +3,12 @@
   "version": "v1.4.0",
   "description": "API for the pet adoption website Adopet.",
   "private": true,
+  "main": "server.js",
   "engines": {
     "node": "v20.12.2"
   },
   "scripts": {
-    "start": "node ./api/server.js",
-    "dev": "nodemon --delay 500ms ./api/server.js",
+    "dev": "nodemon --delay 500ms server.js",
     "test": "jest --detectOpenHandles",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
