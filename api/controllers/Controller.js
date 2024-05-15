@@ -107,7 +107,9 @@ class Controller {
   async delete(req, res, next) {
     const { id } = req.params
     try {
-      const isDeleted = await this.entityService.deleteRecord(id)
+      const isDeleted = await this.entityService.deleteRecord({
+        where: { id }
+      })
 
       if (!isDeleted) {
         throw new Error(`id:${id} not found`)
