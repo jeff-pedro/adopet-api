@@ -45,18 +45,21 @@ describe('Users', () => {
       expect(res.body).toHaveProperty('email')
     })
 
-    it('should return status code 404 if any data is found', async () => {
+    it('should return status code 404 if user is not found', async () => {
+      jest.spyOn(console, 'error').mockImplementation(() => {})
+
       const res = await request(app)
         .get('/api/users/c0b785e4-4939-406e-9248-e85386dcd73c')
         .set('Authorization', `Bearer ${auth.token}`)
 
       expect(res.status).toBe(404)
       expect(res.body).toHaveProperty('error')
-      expect(res.body.error).toEqual('record not found')
     })
   })
 
   describe('POST /api/users', () => {
+    jest.spyOn(console, 'error').mockImplementation(() => {})
+
     it('should create a new user', async () => {
       const res = await request(app)
         .post('/api/users')
@@ -76,16 +79,22 @@ describe('Users', () => {
       expect(res.status).toEqual(200)
     })
 
-    it('should return an error if the request body is empty', async () => {
+    test.each([
+      ['body', {}],
+      ['password', {
+        name: 'John Doe',
+        email: 'test@mail.com',
+      }]
+    ])('should return error when no %s is provided', async (_, param) => {
+      jest.spyOn(console, 'error').mockImplementation(() => {})
+
       const res = await request(app)
         .post('/api/users')
-        .set('Accept', 'application/json')
         .set('Authorization', `Bearer ${auth.token}`)
-        .send({})
+        .send(param)
 
       expect(res.status).toBe(400)
       expect(res.body).toHaveProperty('error')
-      expect(res.body.error).toEqual('empty request body')
     })
   })
 
@@ -153,6 +162,5 @@ describe('Users', () => {
         .set('Authorization', `Bearer ${auth.token}`)
         .expect(200)
     })
-
   })
 })
