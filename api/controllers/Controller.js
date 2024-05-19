@@ -1,3 +1,8 @@
+const Api404Error = require('../errors/api404Error.js')
+const ValidationError = require('../errors/validationError.js')
+const UnprocessableEntityError = require('../errors/unprocessableEntityError.js')
+const { Sequelize } = require('sequelize')
+
 class Controller {
   constructor(entityService) {
     this.entityService = entityService
@@ -20,40 +25,24 @@ class Controller {
       const result = await this.entityService.getRecordById(id)
 
       if (!result) {
-        throw new Error('record not found')
+        throw new Api404Error(`Record with id:${id} not found`)
       }
 
       return res.status(200).json(result)
     } catch (err) {
-      if (err.message.includes('record not found')) {
-        return res.status(404).json({ error: err.message })
-      }
-      return res.status(500).json({ error: err.message })
+      return next(err)
     }
   }
 
   async createNew(req, res, next) {
-    const data = req.body
-
     try {
-      if (Object.keys(data).length === 0) {
-        throw new Error('empty request body')
-      }
-
-      const result = await this.entityService.createRecord(data)
-
+      const result = await this.entityService.createRecord(req.body)
       return res.status(200).json(result)
-
     } catch (err) {
-      if (err.message.includes('Validation error')) {
-        return res.status(400).json({ error: err.message })
+      if (err instanceof Sequelize.ValidationError) {
+        throw new ValidationError(err.message)
       }
-
-      if (err.message === 'empty request body') {
-        return res.status(400).json({ error: err.message })
-      }
-
-      return res.status(500).json({ error: err.message })
+      return next(err)
     }
   }
 
@@ -70,7 +59,7 @@ class Controller {
     
       return res.status(200).json({ message: 'updated', content: isUpdated })
     } catch (err) {
-      return res.status(500).json({ error: err.message })
+      return next(err)
     }
   }
 
@@ -81,7 +70,7 @@ class Controller {
     try {
       /* Checks if more than one property was passed in the body */
       if (Object.keys(updatedData).length > 1) {
-        throw new Error('only one property can be updated at a time')
+        throw new UnprocessableEntityError('only one property can be updated at a time')
       }
 
       const isUpdated = await this.entityService.updateRecord(updatedData, { where: { id } })
@@ -92,15 +81,7 @@ class Controller {
 
       return res.status(200).json({ message: 'updated', content: updatedData })
     } catch (err) {
-      if (err.message.includes('Validation error')) {
-        return res.status(400).json({ error: err.errors[0].message })
-      }
-
-      if (err.message === 'only one property can be updated at a time') {
-        return res.status(422).json({ error: err.message })
-      }
-
-      return res.status(500).json({ error: err.message })
+      return next(err)
     }
   }
 
@@ -112,12 +93,12 @@ class Controller {
       })
 
       if (!isDeleted) {
-        throw new Error(`id:${id} not found`)
+        throw new Api404Error(`Record with id:${id} not found`)
       }
 
       return res.status(200).json({ message: `id:${id} was deleted` })
     } catch (err) {
-      return res.status(400).json({ error: err.message })
+      return next(err)
     }
   }
 
@@ -127,7 +108,7 @@ class Controller {
       await this.entityService.restoreRecord({ where: { id } })
       return res.status(200).json({ message: `id:${id} was restored` }) 
     } catch (err) {
-      return res.status(400).json({ error: err.message })
+      return next(err)
     }
   }
 }

@@ -1,6 +1,7 @@
+const { v4: uuid } = require('uuid')
 const Services = require('./Services')
 const dataSource = require('../database/models')
-const { v4: uuid } = require('uuid')
+const Api404Error = require('../errors/api404Error.js')
 
 class PetService extends Services {
   constructor() {
@@ -10,8 +11,14 @@ class PetService extends Services {
   }
   
   async newAdoption(dto) {
-    return dataSource.sequelize.transaction(async (t) => {
+    const pet = await super.getRecordById(dto.pet_id)
+    const tutor = await this.userService.getRecordById(dto.tutor_id)
 
+    if (!pet || !tutor) {
+      throw new Api404Error('tutor or pet id not found.')
+    }
+
+    return dataSource.sequelize.transaction(async (t) => {
       const adoption = await this.adoptionService.createRecord({
         id: uuid(),
         tutor_id: dto.tutor_id,
@@ -26,16 +33,19 @@ class PetService extends Services {
   }
 
   async removeAdoption(id) {
-    return dataSource.sequelize.transaction(async (t) => {
+    const pet = await super.getRecordByScope('adopted', { id })
 
+    if (!pet) {
+      throw new Api404Error('pet id not found.')
+    }
+
+    return dataSource.sequelize.transaction(async (t) => {
       // delete adoption
-      const isDeleted = await this.adoptionService.deleteRecord({
+      await this.adoptionService.deleteRecord({
         where: { pet_id: id },
         transaction: t
       })
-
-      if (!isDeleted) throw new Error('error when tring to delete the adoption')
-
+      
       // update status to available
       await super.updateRecordByScope('adopted', 
         { 
