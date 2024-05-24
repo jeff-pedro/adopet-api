@@ -6,37 +6,43 @@ class Services {
     this.model = modelName
   }
 
-  async getAllRecords(options = {}) {
-    return dataSource[this.model].findAll(options)
+  async getAllRecords(options) {
+    return dataSource[this.model].findAll({ ...options })
   }
 
   async getRecordById(id) {
     return dataSource[this.model].findByPk(id)
   }
 
-  async createRecord(dto) {
+  async createRecord(dto, options) {
     return dataSource[this.model].create({
       id: uuidv4(),
       ...dto
-    })
+    }, { ...options })
   }
 
-  async updateRecord(dto, id) {
-    const updatedRecordList = await dataSource[this.model].update(dto, { where: { id } })
+  async updateRecord(dto, options) {
+    const updatedRecordList = await dataSource[this.model].update(dto, { ...options })
 
     if (updatedRecordList[0] === 0) {
       return false
     }
 
-    return dataSource[this.model].findOne({ where: { id } })
+    return dataSource[this.model].findOne({ ...options })
   }
 
-  async deleteRecord(id) {
-    return dataSource[this.model].destroy({ where: { id } })
+  async updateRecordByScope(scopeName, dto, options) {
+    return dataSource[this.model]
+      .scope(scopeName)
+      .update(dto, { ...options })
   }
 
-  async restoreRecord(id) {
-    return dataSource[this.model].restore({ where: { id }})
+  async deleteRecord(options) {
+    return dataSource[this.model].destroy({ ...options })
+  }
+
+  async restoreRecord(options) {
+    return dataSource[this.model].restore({ ...options })
   }
 }
 

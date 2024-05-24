@@ -31,14 +31,8 @@ class PetsController extends Controller {
     const { id } = req.params
 
     try {
-      const isCanceled = await petService.removeAdoption(id)
-      
-      if (!isCanceled) {
-        return res.status(422).json({ message: `adoption with id:${id} was not cancel` }) 
-      }
-
+      await petService.removeAdoption(id)
       return res.status(200).json({ message: `adoption with id:${id} was canceled` })
-
     } catch (err) {
       return res.status(400).json({ error: err.message })
     }

@@ -46,18 +46,50 @@ describe('Pets', () => {
       expect(res.status).toBe(200)
       expect(res.body).toHaveProperty('id')
     })
+
+    it('should cause error when providing invalid pet id', async () => {
+      const res = await request(app)
+        .post('/api/pets/00000000-0000-0000-0000-000000000000/adoption')
+        .set('Authorization', `Bearer ${auth.token}`)
+        .send({
+          tutor_id: user.id
+        })
+
+      expect(res.status).toBe(400)
+      expect(res.body).toHaveProperty('error')
+    })
+
+    it('should cause error when providing invalid tutor id', async () => {
+      const res = await request(app)
+        .post(`/api/pets/${pet.id}/adoption`)
+        .set('Authorization', `Bearer ${auth.token}`)
+        .send({
+          tutor_id: '00000000-0000-0000-0000-000000000000'
+        })
+
+      expect(res.status).toBe(400)
+      expect(res.body).toHaveProperty('error')
+    })
   })
 
   
-  describe('GET /api/pets/:id/adoption/cancel', () => {
+  describe('PUT /api/pets/:id/adoption/cancel', () => {
    
     it('should cancel one adoption', async () => {
       await request(app)
-        .get(`/api/pets/${pet.id}/adoption/cancel`)
+        .put(`/api/pets/${pet.id}/adoption/cancel`)
         .set('Authorization', `Bearer ${auth.token}`)
         .expect(200)
     })
 
+    it('should return an error when providing an invalid pet id', async () => {
+      const res = await request(app)
+        .put('/api/pets/00000000-0000-0000-0000-000000000000/adoption/cancel')
+        .set('Authorization', `Bearer ${auth.token}`)
+      
+      expect(res.status).toBe(400)
+      expect(res.body).toHaveProperty('error')
+    })
   })
 
 

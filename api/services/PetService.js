@@ -1,69 +1,51 @@
 const Services = require('./Services')
-const UserService = require('./UserService.js')
 const dataSource = require('../database/models')
 const { v4: uuid } = require('uuid')
-
-const userService = new UserService()
 
 class PetService extends Services {
   constructor() {
     super('Pet')
-    this.user
+    this.userService = new Services('User')
+    this.adoptionService = new Services('Adoption')
   }
   
   async newAdoption(dto) {
-    const pet = await super.getRecordById(dto.pet_id)
+    return dataSource.sequelize.transaction(async (t) => {
 
-    if (!pet) {
-      throw new Error('pet not found')
-    }
+      const adoption = await this.adoptionService.createRecord({
+        id: uuid(),
+        tutor_id: dto.tutor_id,
+        pet_id: dto.pet_id,
+        date: dto.date
+      }, { transaction: t })
 
-    // validate if 'user' exists
-    const user = await userService.getRecordById(dto.tutor_id)
-    
-    if (!user) {
-      throw new Error('tutor not found')
-    }
-    
-    const adoption = await pet.createAdoption({
-      id: uuid(),
-      tutor_id: dto.tutor_id,
-      pet_id: dto.pet_id,
-      date: dto.date
+      await super.updateRecord({ status: 'Adopted' }, dto.pet_id, t)
+
+      return adoption
     })
-
-    
-
-    await super.updateRecord({ status: 'Adopted' }, dto.pet_id)
-
-    return adoption
   }
 
   async removeAdoption(id) {
-    const pet = await dataSource[this.model].scope('adopted').findByPk(id)
+    return dataSource.sequelize.transaction(async (t) => {
 
-    if (!pet) {
-      // is already recovered 
-      throw new Error('pet not found')
-    }
-    
-    // update status to available
-    const isUpdated = await dataSource[this.model]
-      .scope('adopted')
-      .update({ status: 'Available' }, { where: { id }})
-    
-    // delete adoption
-    if (isUpdated) {
-      pet.getAdoption().then((adoption) => {
-        dataSource['Adoption'].destroy({
-          where: { 
-            id: adoption.id 
-          }
-        })
+      // delete adoption
+      const isDeleted = await this.adoptionService.deleteRecord({
+        where: { pet_id: id },
+        transaction: t
       })
-    }
-    
-    return true 
+
+      if (!isDeleted) throw new Error('error when tring to delete the adoption')
+
+      // update status to available
+      await super.updateRecordByScope('adopted', 
+        { 
+          status: 'Available' 
+        }, 
+        { 
+          where: { id }, 
+          transaction: t 
+        })
+    })
   }
 }
 
