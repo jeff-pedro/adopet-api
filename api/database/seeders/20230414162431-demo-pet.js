@@ -1,6 +1,5 @@
+/* eslint-disable no-unused-vars */
 'use strict'
-
-const { v4: uuid } = require('uuid')
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
