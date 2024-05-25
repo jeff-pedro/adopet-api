@@ -23,6 +23,6 @@ jobs:
               run: npm test
 
     build:
-      name: Build docker image
+      name: Build
       needs: test
       uses: ./.github/workflows/build.yaml
