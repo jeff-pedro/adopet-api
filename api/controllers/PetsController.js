@@ -8,7 +8,7 @@ class PetsController extends Controller {
     super(petService)
   }
 
-  async adopt(req, res) {
+  async adopt(req, res, next) {
     const pet_id = req.params.id
     const { tutor_id, date } = req.body
 
@@ -23,32 +23,19 @@ class PetsController extends Controller {
 
       return res.status(200).json(adoption)
     } catch (err) {
-      return res.status(400).json({ error: err.message })
+      return next(err)
     }
   }
 
-  async cancelAdoption (req, res) {
+  async cancelAdoption (req, res, next) {
     const { id } = req.params
-
     try {
       await petService.removeAdoption(id)
       return res.status(200).json({ message: `adoption with id:${id} was canceled` })
     } catch (err) {
-      return res.status(400).json({ error: err.message })
+      return next(err)
     }
   }
-
-  //   /* Body validation */
-  //   const newPet = {
-  //     name: body.name,
-  //     birthday: new Date(body.birthday), // RFC2822
-  //     size: body.size,
-  //     personality: body.personality,
-  //     species: body.species,
-  //     status: body.status,
-  //     profilePictureUrl: body.profilePictureUrl || null,
-  //     shelter_id: Number(body.shelter_id) || null
-  //   }
 }
 
 module.exports = PetsController

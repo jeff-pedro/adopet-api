@@ -1,5 +1,6 @@
 const dataSource = require('../database/models')
 const { v4: uuidv4 } = require('uuid')
+const BadRequestError = require('../errors/badRequestError')
 
 class Services {
   constructor(modelName) {
@@ -14,7 +15,18 @@ class Services {
     return dataSource[this.model].findByPk(id)
   }
 
+  async getRecordByScope(scopeName, where) {
+    return dataSource[this.model]
+      .scope(scopeName)
+      .findOne({ where })
+  }
+
   async createRecord(dto, options) {
+
+    if (Object.keys(dto).length === 0) {
+      throw new BadRequestError('empty request body')
+    }
+
     return dataSource[this.model].create({
       id: uuidv4(),
       ...dto

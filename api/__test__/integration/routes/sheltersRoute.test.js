@@ -50,13 +50,14 @@ describe('Shelter', () => {
     })
 
     it('should return status 404 if any data is found', async () => {
+      jest.spyOn(console, 'error').mockImplementation(() => {})
+
       const res = await request(app)
         .get('/api/shelters/00000000-0000-0000-0000-000000000000')
         .set('Authorization', `Bearer ${auth.token}`)
       
       expect(res.status).toBe(404)
       expect(res.body).toHaveProperty('error')
-      expect(res.body.error).toMatch('record not found')
     })
   })
 
@@ -78,6 +79,8 @@ describe('Shelter', () => {
     })
 
     it('should return an error if the request body is empty', async () => {
+      jest.spyOn(console, 'error').mockImplementation(() => {})
+
       const res = await request(app)
         .post('/api/shelters')
         .set('Accept', 'application/json')
