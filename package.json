@@ -9,8 +9,8 @@
   },
   "scripts": {
     "dev": "nodemon --delay 500ms server.js",
+    "lint": "eslint --fix --ignore-path .gitignore .",
     "test": "jest --detectOpenHandles",
-    "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:unit": "jest ./api/__test__/unit --detectOpenHandles",
     "test:integration": "jest ./api/__test__/integration --detectOpenHandles",
