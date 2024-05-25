@@ -1,6 +1,6 @@
+/* eslint-disable no-unused-vars */
 const BaseError = require('../errors/baseError.js')
 const logger = require('../loggers/logger.js')
-
 
 function logError(err) {
   logger.error(err)
