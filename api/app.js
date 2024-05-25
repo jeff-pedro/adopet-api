@@ -1,6 +1,6 @@
+require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
-require('dotenv').config()
 
 const { 
   logError, 
@@ -8,12 +8,14 @@ const {
   returnError, 
   isOperational 
 } = require('./middlewares/errorHandler.js')
+const { httpLogger, httpErrorLogger } = require('./loggers/httpLogger.js')
 
 const router = require('./routes')
-
 const app = express()
 
 app.use(express.json())
+app.use(httpLogger)
+app.use(httpErrorLogger)
 app.use(cors())
 
 router(app)

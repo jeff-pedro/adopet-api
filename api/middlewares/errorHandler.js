@@ -1,7 +1,9 @@
-const BaseError = require('../errors/baseError')
+const BaseError = require('../errors/baseError.js')
+const logger = require('../loggers/logger.js')
+
 
 function logError(err) {
-  console.error(err)
+  logger.error(err)
 }
 
 function logErrorMiddleware(err, req, res, next) {
