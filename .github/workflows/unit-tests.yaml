@@ -26,3 +26,4 @@ jobs:
       name: Build
       needs: test
       uses: ./.github/workflows/build.yaml
+      secrets: inherit
