@@ -2,14 +2,15 @@ const { faker } = require('@faker-js/faker')
 const { hashSync, genSaltSync } = require('bcrypt')
 const database = require('../../database/models')
 
-const createRandomUsers = async (numberOfUsers = 1) => {
+const createRandomUsers = async (numberOfUsers = 1, password = 'secret') => {
   const salt = genSaltSync()
+  
   
   const createFakeUser = () => ({
     id: `'${faker.string.uuid()}'`,
     name: faker.person.fullName(),
     email: faker.internet.email().toLowerCase(),
-    password: hashSync('secret', salt).toString('hex'),
+    password: hashSync(password, salt).toString('hex'),
     salt: salt.toString('hex'),
     phone: faker.helpers.fromRegExp('([1-9]{2})[9?][1-9]{8}'),
     city: faker.location.city(),
@@ -68,7 +69,7 @@ const createRandomPets = async (numberOfPets = 1) => {
     size: faker.helpers.arrayElement(['Mini', 'Small', 'Medium', 'Large', 'Giant']),
     personality: faker.person.bio(),
     species: faker.helpers.arrayElement(['Dog', 'Cat']),
-    status: faker.helpers.arrayElement(['New', 'Available', 'Adopted', 'Quarentine', 'Removed', 'Suspended']),
+    status: faker.helpers.arrayElement(['New', 'Available', 'Quarentine', 'Suspended']),
     profilePictureUrl: faker.image.urlLoremFlickr({ category: 'pet' }),
     shelter_id: shelter.id
   })

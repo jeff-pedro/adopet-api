@@ -12,11 +12,11 @@ module.exports = {
     }
   },
   'test': {
-    'username': process.env.POSTGRES_USER,
-    'password': process.env.POSTGRES_PASSWORD,
-    'database': 'adopet_tst',
-    'host': process.env.POSTGRES_HOST,
-    'dialect': 'postgres',
+    'username': 'root',
+    'password': null,
+    'storage': './api/tests/adopet.sqlite',
+    'host': '127.0.0.1',
+    'dialect': 'sqlite',
     'logging': false
   },
   'production': {

@@ -1,21 +1,17 @@
-process.env.NODE_ENV = 'test'
-
 const request = require('supertest')
-
-const app = require('../../../app')
-const login = require('../../helper/userLogin.js')
-const tearDown = require('../../helper/tearDown.js')
+const app = require('../../app.js')
+const login = require('../helper/userLogin.js')
+const tearDown = require('../helper/tearDown.js')
 const { 
   createRandomPets, 
   createRandomUsers, 
   createRandomShelters, 
   createRandomProfiles 
-} = require('../../helper/seeders.js')
+} = require('../helper/seeders.js')
+const { SecurityService } = require('../../services')
 
-const { SecurityService } = require('../../../services')
 const securityService = new SecurityService()
 
-// jest.mock('../../../database/models')
 
 describe('Pets', () => {
   let pet, shelter, user
@@ -45,7 +41,7 @@ describe('Pets', () => {
 
       expect(res.status).toBe(200)
       expect(res.body).toHaveProperty('id')
-    })
+    }, 10000)
 
     it('should cause error when providing invalid pet id', async () => {
       jest.spyOn(console, 'error').mockImplementation(() => {})

@@ -1,10 +1,8 @@
-process.env.NODE_ENV = 'test'
-
 const request = require('supertest')
+const app = require('../../app.js')
+const tearDown = require('../helper/tearDown.js')
+const { createRandomUsers } = require('../helper/seeders.js')
 
-const app = require('../../../app')
-const tearDown = require('../../helper/tearDown.js')
-const { createRandomUsers } = require('../../helper/seeders.js')
 
 describe('Login', () => {
   let user

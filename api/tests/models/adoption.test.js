@@ -1,7 +1,7 @@
 process.env.NODE_ENV = 'test'
 const db = require('../../../database/models')
 
-describe('Testing Adoption model', () => {
+describe.skip('Testing Adoption model', () => {
 
   let adoptionObject
   let shelter

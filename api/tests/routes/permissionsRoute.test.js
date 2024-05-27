@@ -1,36 +1,32 @@
-process.env.NODE_ENV = 'test'
-
 const request = require('supertest')
-
-const app = require('../../../app')
-
-const login = require('../../helper/userLogin.js')
-const tearDown = require('../../helper/tearDown.js')
+const app = require('../../app.js')
+const login = require('../helper/userLogin.js')
+const tearDown = require('../helper/tearDown.js')
 
 
-describe('Profiles', () => {
-  let profileId
+describe('Permissions', () => {
+  let permissionId
   const auth = {}
 
   beforeAll(async () => {
     await login(auth, request, app)
   })
-  
+
   afterAll(async () => {
     await tearDown()
   })
-  
 
-  describe('POST /profiles', () => {
+  
+  describe('POST /permissions', () => {
     
-    it('should create one profile', async () => {
+    it('should create one permission', async () => {
       const res = await request(app)
-        .post('/api/profiles')
+        .post('/api/permissions')
         .set('Accept', 'application/json')
         .set('Authorization', `Bearer ${auth.token}`)
         .send({
-          name: 'tutor',
-          description: 'user who is thinking about adopting pets'
+          name: 'read',
+          description: 'read the content'
         })
 
       expect(res.status).toEqual(200)
@@ -41,11 +37,11 @@ describe('Profiles', () => {
   })
 
 
-  describe('GET /profiles', () => {
+  describe('GET /permissions', () => {
     
-    it('should return an array of profiles', async () => {
+    it('should return an array of permissions', async () => {
       const res = await request(app)
-        .get('/api/profiles')
+        .get('/api/permissions')
         .set('Authorization', `Bearer ${auth.token}`)
         
       expect(res.status).toEqual(200)
@@ -60,16 +56,15 @@ describe('Profiles', () => {
         ]
       ))
 
-      profileId = res.body[0].id
+      permissionId = res.body[0].id
     })
   }) 
 
 
-  describe('GET /profiles/{id}', () => {
-
-    it('should return one profile', async () => {
+  describe('GET /permissions/{id}', () => {
+    it('should return one permission', async () => {
       const res = await request(app)
-        .get(`/api/profiles/${profileId}`)
+        .get(`/api/permissions/${permissionId}`)
         .set('Authorization', `Bearer ${auth.token}`)
         
       expect(res.status).toEqual(200)
@@ -84,27 +79,25 @@ describe('Profiles', () => {
   })
 
 
-  describe('PUT /profiles/{id}', () => {
-
-    it('should update one profile', async () => {
+  describe('PUT /permissions/{id}', () => {
+    it('should update one permission', async () => {
       const res = await request(app)
-        .put(`/api/profiles/${profileId}`)
+        .put(`/api/permissions/${permissionId}`)
         .send({ name: 'shelter' })
         .set('Accept', 'application/json')
         .set('Authorization', `Bearer ${auth.token}`)
-        
+
       expect(res.status).toEqual(200)
       expect(res.headers['content-type']).toMatch(/json/)
       expect(res.body.content.name).toMatch('shelter')
     })
   })
 
-
-  describe('DELETE /profiles/{id}', () => {
-
-    it('should delete one profile', async () => {
+  
+  describe('DELETE /permissions/{id}', () => {
+    it('should delete one permission', async () => {
       const res = await request(app)
-        .delete(`/api/profiles/${profileId}`)
+        .delete(`/api/permissions/${permissionId}`)
         .set('Authorization', `Bearer ${auth.token}`)
         
       expect(res.status).toEqual(200)

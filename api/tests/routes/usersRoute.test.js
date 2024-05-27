@@ -1,108 +1,107 @@
-process.env.NODE_ENV = 'test'
-
 const request = require('supertest')
-
-const app = require('../../../app')
-const login = require('../../helper/userLogin.js')
-const tearDown = require('../../helper/tearDown.js')
-const { createRandomShelters } = require('../../helper/seeders.js')
-
+const app = require('../../app.js')
+const login = require('../helper/userLogin.js')
+const tearDown = require('../helper/tearDown.js')
+const { createRandomUsers } = require('../helper/seeders.js')
 // jest.mock('../../../database/models')
 
-describe('Shelter', () => {
-  let shelter
+
+describe('Users', () => {
+  let user
   const auth = {}
 
   beforeAll(async () => {
+    user = await createRandomUsers()
     await login(auth, request, app)
-    shelter = await createRandomShelters()
   })
-
 
   afterAll(async () => {
     await tearDown()
   })
 
 
-  describe('GET /api/shelters', () => {
-    
-    it('should list all shelters', async () => {
+  describe('GET /api/users', () => {
+    it('should list all users', async () => {
       const res = await request(app)
-        .get('/api/shelters')
+        .get('/api/users/')
         .set('Accept', 'application/json')
         .set('Authorization', `Bearer ${auth.token}`)
-      
+
       expect(res.headers['content-type']).toMatch(/json/)
       expect(res.status).toEqual(200)
     })
   })
 
-
-  describe('GET /api/shelters/{id}', () => {
-    
-    it('should return one shelter', async () => {
+  describe('GET /api/users/{id}', () => {
+    it('should return one user', async () => {
       const res = await request(app)
-        .get(`/api/shelters/${shelter.id}`)
+        .get(`/api/users/${user.id}`)
         .set('Authorization', `Bearer ${auth.token}`)
 
       expect(res.status).toBe(200)
-      expect(res.body).toHaveProperty('name')
+      expect(res.body).toHaveProperty('email')
     })
 
-    it('should return status 404 if any data is found', async () => {
+    it('should return status code 404 if user is not found', async () => {
       jest.spyOn(console, 'error').mockImplementation(() => {})
 
       const res = await request(app)
-        .get('/api/shelters/00000000-0000-0000-0000-000000000000')
+        .get('/api/users/c0b785e4-4939-406e-9248-e85386dcd73c')
         .set('Authorization', `Bearer ${auth.token}`)
-      
+
       expect(res.status).toBe(404)
       expect(res.body).toHaveProperty('error')
     })
   })
 
+  describe('POST /api/users', () => {
+    jest.spyOn(console, 'error').mockImplementation(() => {})
 
-  describe('POST /api/shelters', () => {
-    
-    it('should create a new pet', async () => {
-      await request(app)
-        .post('/api/shelters')
-        .set('Authorization', `Bearer ${auth.token}`)
+    it('should create a new user', async () => {
+      const res = await request(app)
+        .post('/api/users')
         .send({
-          name: 'Adopet Shelter',
-          email: 'contact@adopet.com',
-          phone: '+08898985421',
-          city: 'São Paulo',
-          state: 'São Paulo'
+          name: 'Jack Sparrow',
+          email: 'sparrow@pirates.sea',
+          password: 'jack123',
+          phone: '+011233334444',
+          city: 'Tortuga',
+          about: 'I am the best user',
+          profilePictureUrl: 'https://images.com/images/image-jack',
+          role: 'standard'
         })
-        .expect(200)
+        .set('Accept', 'application/json')
+        .set('Authorization', `Bearer ${auth.token}`)
+
+      expect(res.status).toEqual(200)
     })
 
-    it('should return an error if the request body is empty', async () => {
+    test.each([
+      ['body', {}],
+      ['password', {
+        name: 'John Doe',
+        email: 'test@mail.com',
+      }]
+    ])('should return error when no %s is provided', async (_, param) => {
       jest.spyOn(console, 'error').mockImplementation(() => {})
 
       const res = await request(app)
-        .post('/api/shelters')
-        .set('Accept', 'application/json')
+        .post('/api/users')
         .set('Authorization', `Bearer ${auth.token}`)
-        .send({})
-      
+        .send(param)
+
       expect(res.status).toBe(400)
       expect(res.body).toHaveProperty('error')
-      expect(res.body.error).toEqual('empty request body')
     })
   })
 
-
-  describe('PUT /api/shelters/{id}', () => {
-    
+  describe('PUT /api/users/{id}', () => {
     it('should update some fields', async () => {
       const res = await request(app)
-        .put(`/api/shelters/${shelter.id}`)
+        .put(`/api/users/${user.id}`)
         .set('Authorization', `Bearer ${auth.token}`)
         .send({
-          email: 'contact@cca.sea',
-          city: 'Isla de Muerta',
+          name: 'Captain Jack Sparrow',
         })
 
       expect(res.status).toBe(200)
@@ -114,24 +113,23 @@ describe('Shelter', () => {
       ['empty', {}],
       ['undefined', { somefield: 'some value' }]
     ])('should not update if provided an %s field', async (_, param) => {
+
       const res = await request(app)
-        .put(`/api/shelters/${shelter.id}`)
+        .put(`/api/users/${user.id}`)
         .set('Authorization', `Bearer ${auth.token}`)
         .send(param)
-
+      
       expect(res.status).toBe(204)
     })
   })
 
-
-  describe('PATCH /api/shelters/{id}', () => {
-
+  describe('PATCH /api/users/{id}', () => {
     it('should update only one field', async () => {
       const res = await request(app)
-        .patch(`/api/shelters/${shelter.id}`)
+        .patch(`/api/users/${user.id}`)
         .set('Authorization', `Bearer ${auth.token}`)
         .send({
-          phone: '+0111222333',
+          password: 'pass123'
         })
 
       expect(res.status).toBe(200)
@@ -141,11 +139,11 @@ describe('Shelter', () => {
 
     it('should return an error if try update more than one field', async () => {
       const res = await request(app)
-        .patch(`/api/shelters/${shelter.id}`)
+        .patch(`/api/users/${user.id}`)
         .set('Authorization', `Bearer ${auth.token}`)
         .send({
-          name: 'Caribbean Pet Shelter',
-          email: 'contact@cps.sea'
+          city: 'Port Royal',
+          role: 'administrator'
         })
 
       expect(res.status).toBe(422)
@@ -154,12 +152,10 @@ describe('Shelter', () => {
     })
   })
 
-
-  describe('DELETE /api/shelters/{id}', () => {
-
-    it('should delete one shelter', async () => {
+  describe('DELETE /api/users/{id}', () => {
+    it('should delete one user', async () => {
       await request(app)
-        .delete(`/api/shelters/${shelter.id}`)
+        .delete(`/api/users/${user.id}`)
         .set('Authorization', `Bearer ${auth.token}`)
         .expect(200)
     })
