@@ -1,13 +1,26 @@
 const { compare } = require('bcrypt')
 const { sign } = require('jsonwebtoken')
+const { v4: uuid } = require('uuid')
+const bcrypt = require('bcrypt')
+require('dotenv').config() 
 
-const database = require('../database/models')
-const secret = process.env.JWT_SECRET
+const Services = require('./Services.js')
+const BadRequestError = require('../errors/badRequestError.js')
+const ValidationError = require('../errors/validationError.js') 
+const Api404Error = require('../errors/api404Error.js') 
+const UnauthorizedError = require('../errors/unauthorizedError.js') 
+const InternalServerError = require('../errors/internalServerError.js') 
 
-class LoginService {
+class LoginService extends Services {
+  constructor() {
+    super('User')
+  }
+
   async login(dto) {
+    const secret = process.env.JWT_SECRET
+    
     try {
-      const user = await database.User.findOne({
+      const user = await super.getOneRecord({
         attributes: ['id', 'email', 'password'],
         where: {
           email: dto.email
@@ -15,13 +28,18 @@ class LoginService {
       })
 
       if (!user) {
-        throw new Error('This user not exist.')
+        throw new Api404Error('This user not exist.')
       }
 
       const passwordsMatch = await compare(dto.password, user.password)
 
       if (!passwordsMatch) {
-        throw new Error('Invalid email or password.')
+        
+        throw new UnauthorizedError('Invalid email or password.')
+      }
+
+      if (!secret) {
+        throw new InternalServerError('Error creating a token: secret must have a value')
       }
 
       const token = sign({
@@ -41,6 +59,27 @@ class LoginService {
     } catch (err) {
       throw new Error(err.message)
     }
+  }
+
+  async registerUser(dto) {
+    if (Object.keys(dto).length === 0) {
+      throw new BadRequestError('empty request body')
+    }
+
+    if (!dto.password) {
+      throw new ValidationError('password field is required')
+    }
+
+    const salt = await bcrypt.genSalt()
+    const hashedPassword = await bcrypt.hash(dto.password, salt)
+
+    dto.password = hashedPassword
+    dto.salt = salt.toString('hex')
+
+    return super.createRecord({
+      id: uuid(),
+      ...dto
+    })
   }
 }
 

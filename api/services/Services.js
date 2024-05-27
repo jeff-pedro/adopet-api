@@ -15,6 +15,10 @@ class Services {
     return dataSource[this.model].findByPk(id)
   }
 
+  async getOneRecord(options) {
+    return dataSource[this.model].findOne({ ...options })
+  }
+
   async getRecordByScope(scopeName, where) {
     return dataSource[this.model]
       .scope(scopeName)

@@ -36,8 +36,7 @@ const logger = createLogger({
   exitOnError: false
 })
 
-
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV === 'dev') {
   logger.add(new transports.Console(options.console))
 }
 
