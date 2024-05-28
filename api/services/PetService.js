@@ -1,5 +1,5 @@
 const { v4: uuid } = require('uuid')
-const Services = require('./Services')
+const Services = require('./Services.js')
 const dataSource = require('../database/models')
 const Api404Error = require('../errors/api404Error.js')
 

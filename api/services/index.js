@@ -1,11 +1,11 @@
-const PetService = require('./PetService')
+const PetService = require('./PetService.js')
 const UserService = require('./UserService.js')
-const ShelterService = require('./ShelterService')
-const AdoptionService = require('./AdoptionService')
-const AuthService = require('./AuthService')
-const ProfileService = require('./ProfileService')
-const PermissionService = require('./PermissionService')
-const SecurityService = require('./SecurityService')
+const ShelterService = require('./ShelterService.js')
+const AdoptionService = require('./AdoptionService.js')
+const AuthService = require('./AuthService.js')
+const ProfileService = require('./ProfileService.js')
+const PermissionService = require('./PermissionService.js')
+const SecurityService = require('./SecurityService.js')
 
 module.exports = {
   PetService,
