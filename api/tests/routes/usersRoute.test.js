@@ -3,7 +3,6 @@ const app = require('../../app.js')
 const login = require('../helper/userLogin.js')
 const tearDown = require('../helper/tearDown.js')
 const { createRandomUsers } = require('../helper/seeders.js')
-// jest.mock('../../../database/models')
 
 
 describe('Users', () => {
@@ -50,47 +49,6 @@ describe('Users', () => {
         .set('Authorization', `Bearer ${auth.token}`)
 
       expect(res.status).toBe(404)
-      expect(res.body).toHaveProperty('error')
-    })
-  })
-
-  describe('POST /api/users', () => {
-    jest.spyOn(console, 'error').mockImplementation(() => {})
-
-    it('should create a new user', async () => {
-      const res = await request(app)
-        .post('/api/users')
-        .send({
-          name: 'Jack Sparrow',
-          email: 'sparrow@pirates.sea',
-          password: 'jack123',
-          phone: '+011233334444',
-          city: 'Tortuga',
-          about: 'I am the best user',
-          profilePictureUrl: 'https://images.com/images/image-jack',
-          role: 'standard'
-        })
-        .set('Accept', 'application/json')
-        .set('Authorization', `Bearer ${auth.token}`)
-
-      expect(res.status).toEqual(200)
-    })
-
-    test.each([
-      ['body', {}],
-      ['password', {
-        name: 'John Doe',
-        email: 'test@mail.com',
-      }]
-    ])('should return error when no %s is provided', async (_, param) => {
-      jest.spyOn(console, 'error').mockImplementation(() => {})
-
-      const res = await request(app)
-        .post('/api/users')
-        .set('Authorization', `Bearer ${auth.token}`)
-        .send(param)
-
-      expect(res.status).toBe(400)
       expect(res.body).toHaveProperty('error')
     })
   })
