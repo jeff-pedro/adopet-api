@@ -11,7 +11,7 @@ const Api404Error = require('../errors/api404Error.js')
 const UnauthorizedError = require('../errors/unauthorizedError.js') 
 const InternalServerError = require('../errors/internalServerError.js') 
 
-class LoginService extends Services {
+class AuthService extends Services {
   constructor() {
     super('User')
   }
@@ -19,49 +19,44 @@ class LoginService extends Services {
   async login(dto) {
     const secret = process.env.JWT_SECRET
     
-    try {
-      const user = await super.getOneRecord({
-        attributes: ['id', 'email', 'password'],
-        where: {
-          email: dto.email
-        }
-      })
-
-      if (!user) {
-        throw new Api404Error('This user not exist.')
+    const user = await super.getOneRecord({
+      attributes: ['id', 'email', 'password'],
+      where: {
+        email: dto.email
       }
+    })
 
-      const passwordsMatch = await compare(dto.password, user.password)
+    if (!user) {
+      throw new Api404Error('This user not exist.')
+    }
 
-      if (!passwordsMatch) {
-        
-        throw new UnauthorizedError('Invalid email or password.')
-      }
+    const passwordsMatch = await compare(dto.password, user.password)
 
-      if (!secret) {
-        throw new InternalServerError('Error creating a token: secret must have a value')
-      }
+    if (!passwordsMatch) {
+      throw new UnauthorizedError('Invalid email or password.')
+    }
 
-      const token = sign({
+    if (!secret) {
+      throw new InternalServerError('Error creating a token: secret must have a value')
+    }
+
+    const token = sign({
+      id: user.id,
+      email: user.email
+    }, secret, {
+      expiresIn: 60 * 60 // 1h
+    })
+
+    return {
+      user: {
         id: user.id,
         email: user.email
-      }, secret, {
-        expiresIn: 60 * 60 // 1h
-      })
-
-      return {
-        user: {
-          id: user.id,
-          email: user.email
-        },
-        token
-      }
-    } catch (err) {
-      throw new Error(err.message)
+      },
+      token
     }
   }
 
-  async registerUser(dto) {
+  async register(dto) {
     if (Object.keys(dto).length === 0) {
       throw new BadRequestError('empty request body')
     }
@@ -80,7 +75,7 @@ class LoginService extends Services {
       id: uuid(),
       ...dto
     })
-  }
+  } 
 }
 
-module.exports = LoginService
+module.exports = AuthService

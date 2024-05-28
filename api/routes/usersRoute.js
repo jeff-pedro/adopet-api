@@ -9,7 +9,6 @@ const routes = Router()
 
 // public endpoint
 routes
-  .post('/users', (req, res, next) => usersController.createNew(req, res, next))
   .get('/users/:id', (req, res, next) => usersController.getById(req, res, next))
 
 // private endpoints

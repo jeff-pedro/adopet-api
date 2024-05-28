@@ -1,9 +1,10 @@
 const { AuthService } = require('../services')
+const Controller = require('./Controller.js')
 
 const authService = new AuthService()
 
-class AuthController {
-  static async login(req, res) {
+class AuthController extends Controller {
+  static async login(req, res, next) {
     const { email, password } = req.body
     
     try {
@@ -11,7 +12,17 @@ class AuthController {
 
       res.status(200).json({ user, accessToken: token })
     } catch (err) {
-      res.status(401).send({ error: err.message })
+      return next(err)
+    }
+  }
+
+  static async registerUser(req, res, next) {
+    const data = req.body
+    try {
+      const result = await authService.register(data)
+      return res.status(201).json(result) 
+    } catch (err) {
+      return next(err)
     }
   }
 }
