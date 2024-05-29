@@ -37,17 +37,6 @@ describe('PetService', () => {
   })
 
   describe('newAdoption', () => {
-    it('should throw error if pet or tutor not found', async () => {
-      const dto = { pet_id: 1, tutor_id: 2, date: '2024-01-01' }
-
-      dataSource.Pet.findByPk.mockResolvedValue(null)
-      dataSource.User.findByPk.mockResolvedValue(null)
-
-      const result = petService.newAdoption(dto)
-
-      await expect(result).rejects.toThrow(Api404Error)
-    })
-
     it('should create a new adoption and update pet status', async () => {
       uuid.mockReturnValue('uuid')
       const dto = { 
@@ -82,6 +71,17 @@ describe('PetService', () => {
         transaction: expect.any(Object)
       })
       expect(result).toEqual(mockAdoption)   
+    })
+
+    it('should throw error if pet or tutor not found', async () => {
+      const dto = { pet_id: 1, tutor_id: 2, date: '2024-01-01' }
+
+      dataSource.Pet.findByPk.mockResolvedValue(null)
+      dataSource.User.findByPk.mockResolvedValue(null)
+
+      const result = petService.newAdoption(dto)
+
+      await expect(result).rejects.toThrow(Api404Error)
     })
     
     it('should cancel an adoption and update pet status', async () => {
