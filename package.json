@@ -1,6 +1,6 @@
 {
   "name": "api-adopet",
-  "version": "v1.7.0",
+  "version": "v1.7.1",
   "description": "API for the pet adoption website Adopet.",
   "private": true,
   "main": "server.js",
