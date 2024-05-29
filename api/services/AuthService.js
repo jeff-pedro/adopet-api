@@ -20,7 +20,7 @@ class AuthService extends Services {
     const secret = process.env.JWT_SECRET
     
     const user = await super.getOneRecord({
-      attributes: ['id', 'email', 'hashedPassword'],
+      attributes: ['id', 'email', 'password'],
       where: {
         email: dto.email
       }

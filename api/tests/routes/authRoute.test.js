@@ -5,7 +5,7 @@ const tearDown = require('../helper/tearDown.js')
 const { createRandomUsers } = require('../helper/seeders.js')
 
 
-describe('Login', () => {
+describe('Auth', () => {
   let user
 
   const mockUser = {
@@ -95,7 +95,7 @@ describe('Login', () => {
         .post('/api/register')
         .send(param)
 
-      expect(res.status).toBe(400)
+      expect(res.status).toBe(422)
       expect(res.body).toHaveProperty('error')
     })
   })
