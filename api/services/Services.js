@@ -1,5 +1,5 @@
 const dataSource = require('../database/models')
-const { v4: uuidv4 } = require('uuid')
+const { v4: uuid } = require('uuid')
 const BadRequestError = require('../errors/badRequestError')
 
 class Services {
@@ -32,7 +32,7 @@ class Services {
     }
 
     return dataSource[this.model].create({
-      id: uuidv4(),
+      id: uuid(),
       ...dto
     }, { ...options })
   }

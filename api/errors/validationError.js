@@ -5,7 +5,7 @@ class ValidationError extends BaseError {
   constructor (
     description,
     name = 'Validation error',
-    statusCode = httpStatusCodes.BAD_REQUEST,
+    statusCode = httpStatusCodes.UNPROCESSABLE_ENTITY,
     isOperational = true
   ) { super(name,  statusCode, isOperational, description)}
 }

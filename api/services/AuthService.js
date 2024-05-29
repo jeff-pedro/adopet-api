@@ -5,11 +5,11 @@ const bcrypt = require('bcrypt')
 require('dotenv').config() 
 
 const Services = require('./Services.js')
-const BadRequestError = require('../errors/badRequestError.js')
 const ValidationError = require('../errors/validationError.js') 
 const Api404Error = require('../errors/api404Error.js') 
 const UnauthorizedError = require('../errors/unauthorizedError.js') 
 const InternalServerError = require('../errors/internalServerError.js') 
+const InvalidArgumentError = require('../errors/invalidArgumentError.js')
 
 class AuthService extends Services {
   constructor() {
@@ -20,7 +20,7 @@ class AuthService extends Services {
     const secret = process.env.JWT_SECRET
     
     const user = await super.getOneRecord({
-      attributes: ['id', 'email', 'password'],
+      attributes: ['id', 'email', 'hashedPassword'],
       where: {
         email: dto.email
       }
@@ -58,19 +58,19 @@ class AuthService extends Services {
 
   async register(dto) {
     if (Object.keys(dto).length === 0) {
-      throw new BadRequestError('empty request body')
+      throw new InvalidArgumentError('empty request body')
     }
 
     if (!dto.password) {
       throw new ValidationError('password field is required')
     }
-
+    
     const salt = await bcrypt.genSalt()
     const hashedPassword = await bcrypt.hash(dto.password, salt)
 
     dto.password = hashedPassword
     dto.salt = salt.toString('hex')
-
+    
     return super.createRecord({
       id: uuid(),
       ...dto
