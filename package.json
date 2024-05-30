@@ -8,12 +8,13 @@
     "dev": "npm install && npm run migrate && npm run seed && nodemon --delay 500ms server.js",
     "lint": "eslint --fix --ignore-path .gitignore .",
     "test": "npm run test:unit",
-    "test:unit": "npm rebuild && npm run drop-test-db && export NODE_ENV=test && npm run migrate && jest --testPathIgnorePatterns=./api/tests/routes --detectOpenHandles",
+    "test:unit": "npm rebuild && npm run drop-test-db && export NODE_ENV=test && npm run migrate && jest --testPathIgnorePatterns=\"/(routes|models)/\" --detectOpenHandles",
     "test:integration": "npm rebuild && npm run drop-test-db && export NODE_ENV=test && npm run migrate && jest ./api/tests/routes --detectOpenHandles",
     "drop-test-db": "rm -f ./api/tests/adopet.sqlite",
     "test:coverage": "jest --coverage",
     "migrate": "npx sequelize-cli db:migrate",
     "unmigrate": "npx sequelize-cli db:migrate:undo",
+    "test:models": "jest ./api/tests/models/user.test.js --detectOpenHandles",
     "seed": "npx sequelize-cli db:seed:all"
   },
   "dependencies": {
