@@ -1,9 +1,13 @@
+version: '3.4'
+
 services:
-  api:
+  dev:
     build:
       context: .
       target: dev
-    container_name: adopet-api
+    container_name: adopet-api-dev
+    command: npm run dev
+    working_dir: /app
     ports:
       - 9000:9000
     environment:
@@ -12,11 +16,23 @@ services:
       POSTGRES_PASSWORD: secret
       POSTGRES_DB: adopet_dev
       POSTGRES_HOST: db
+    volumes:
+      - ./:/app:cached
     depends_on:
       db:
         condition: service_healthy
+
+  test:
+    build:
+      context: .
+      target: dev
+    container_name: adopet-api-tst
+    command: npm run test
+    working_dir: /app
+    ports:
+      - 4000:4000
     volumes:
-      - ./:/usr/src/api/
+      - ./:/app:cached
   
   db:
     image: postgres
@@ -36,6 +52,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 10s
 
 volumes:
   db-data:

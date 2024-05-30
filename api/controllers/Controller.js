@@ -1,6 +1,6 @@
 const Api404Error = require('../errors/api404Error.js')
 const ValidationError = require('../errors/validationError.js')
-const UnprocessableEntityError = require('../errors/unprocessableEntityError.js')
+const InvalidArgumentError = require('../errors/invalidArgumentError.js')
 const { Sequelize } = require('sequelize')
 
 class Controller {
@@ -70,7 +70,7 @@ class Controller {
     try {
       /* Checks if more than one property was passed in the body */
       if (Object.keys(updatedData).length > 1) {
-        throw new UnprocessableEntityError('only one property can be updated at a time')
+        throw new InvalidArgumentError('only one property can be updated at a time')
       }
 
       const isUpdated = await this.entityService.updateRecord(updatedData, { where: { id } })

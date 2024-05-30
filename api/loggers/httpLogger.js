@@ -43,5 +43,4 @@ const httpErrorLogger = morgan('dev', {
 module.exports = {
   httpLogger,
   httpErrorLogger
-
 }

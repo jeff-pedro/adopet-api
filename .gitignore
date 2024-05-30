@@ -8,6 +8,9 @@
 # testing
 coverage
 
+#db
+adopet.sqlite
+
 # logs
 /logs/*.log
 

@@ -1,0 +1,45 @@
+name: tests
+
+on:
+    pull_request: 
+        types: [ opened, synchronize ]
+        branches: 
+            - main
+
+jobs:
+    unit-test:
+        name: Unit Tests
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                node-version: 20
+            
+            - name: Install dependencies
+              run: npm ci --include=dev
+
+            - name: Run unit tests
+              run: npm run test:unit
+   
+    integration-test:
+      name: Integration Tests
+      runs-on: ubuntu-latest
+      steps:
+          - uses: actions/checkout@v4
+          - uses: actions/setup-node@v4
+            with:
+              node-version: 20
+          
+          - name: Install dependencies
+            run: npm ci --include=dev
+
+          - name: Run unit tests
+            run: npm run test:integration
+            
+
+    build:
+      name: Build
+      needs: [unit-test, integration-test]
+      uses: ./.github/workflows/build.yaml
+      secrets: inherit

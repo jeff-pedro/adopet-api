@@ -1,5 +1,5 @@
 const { v4: uuid } = require('uuid')
-const Services = require('./Services')
+const Services = require('./Services.js')
 const dataSource = require('../database/models')
 const Api404Error = require('../errors/api404Error.js')
 
@@ -26,7 +26,10 @@ class PetService extends Services {
         date: dto.date
       }, { transaction: t })
 
-      await super.updateRecord({ status: 'Adopted' }, dto.pet_id, t)
+      await super.updateRecord({ status: 'Adopted' }, { 
+        where: { id: dto.pet_id }, 
+        transaction: t
+      })
 
       return adoption
     })
