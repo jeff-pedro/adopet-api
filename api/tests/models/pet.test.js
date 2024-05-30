@@ -1,8 +1,7 @@
-process.env.NODE_ENV = 'test'
-const db = require('../../../database/models')
+const db = require('../../database/models')
+const { v4: uuid } = require('uuid')
 
-describe.skip('Testing Pet model', () => {
-
+describe('Testing Pet model', () => {
   let petObject
   let shelter
 
@@ -13,6 +12,7 @@ describe.skip('Testing Pet model', () => {
 
     // Create one Shelter to use in Pet (shelter_id) 
     shelter = await db.Shelter.create({
+      id: uuid(),
       name: 'Caribbean Crazy Animals',
       email: 'contact@crazyanimals.sea',
       phone: '+08898985421',
@@ -37,7 +37,7 @@ describe.skip('Testing Pet model', () => {
 
   afterAll(async () => {
     // Drop the Pet table
-    await db.Pet.drop()
+    // await db.Pet.drop()
 
     // Close the db connection
     await db.sequelize.close()
@@ -52,11 +52,11 @@ describe.skip('Testing Pet model', () => {
     })
 
     it('should save pet on the database', async () => {
-      const pet = await db.Pet.create(petObject)
+      const pet = await db.Pet.create({ id: uuid(), ...petObject })
       expect(pet).toEqual(
         expect.objectContaining(
           {
-            id: expect.any(Number),
+            id: expect.any(String),
             ...petObject,
             createdAt: expect.any(Date),
             updatedAt: expect.any(Date)
@@ -80,7 +80,7 @@ describe.skip('Testing Pet model', () => {
     )('should throw an error if property %s is null', async (param) => {
       petObject[param] = null
       try {
-        await db.Pet.create(petObject)
+        await db.Pet.create({ id: uuid(), ...petObject })
       } catch (err) {
         expect(err).toHaveProperty('errors')
         expect(err.errors[0].type).toEqual('notNull Violation')

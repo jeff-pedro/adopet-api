@@ -7,15 +7,14 @@
   "scripts": {
     "dev": "npm install && npm run migrate && npm run seed && nodemon --delay 500ms server.js",
     "lint": "eslint --fix --ignore-path .gitignore .",
-    "test": "npm rebuild && npm run drop-test-db && export NODE_ENV=test && npm run migrate && npm run test:unit",
+    "test": "npm run test:unit",
+    "test:unit": "npm rebuild && npm run drop-test-db && export NODE_ENV=test && npm run migrate && jest --testPathIgnorePatterns=./api/tests/routes --detectOpenHandles",
+    "test:integration": "npm rebuild && npm run drop-test-db && export NODE_ENV=test && npm run migrate && jest ./api/tests/routes --detectOpenHandles",
     "drop-test-db": "rm -f ./api/tests/adopet.sqlite",
-    "test:unit": "export NODE_ENV=test && jest --testPathPattern=./api/tests/services --detectOpenHandles",
-    "test:integration": "export NODE_ENV=test && jest ./api/tests/routes --detectOpenHandles",
     "test:coverage": "jest --coverage",
     "migrate": "npx sequelize-cli db:migrate",
     "unmigrate": "npx sequelize-cli db:migrate:undo",
-    "seed": "npx sequelize-cli db:seed:all",
-    "test:auth:services": "export NODE_ENV=test && jest --testPathPattern=./api/tests/services/authService.test.js"
+    "seed": "npx sequelize-cli db:seed:all"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",

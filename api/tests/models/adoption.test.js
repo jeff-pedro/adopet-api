@@ -1,7 +1,8 @@
-process.env.NODE_ENV = 'test'
-const db = require('../../../database/models')
+const { expect } = require('@jest/globals')
+const db = require('../../database/models')
+const {v4: uuid} = require('uuid')
 
-describe.skip('Testing Adoption model', () => {
+describe('Testing Adoption model', () => {
 
   let adoptionObject
   let shelter
@@ -14,6 +15,7 @@ describe.skip('Testing Adoption model', () => {
 
     // Create entities to be used in Adoption
     user = await db.User.create({
+      id: 'uuid',
       name: 'Jack Sparrow',
       email: 'jack@mail.com',
       password: 'jack123',
@@ -24,6 +26,7 @@ describe.skip('Testing Adoption model', () => {
     })
 
     shelter = await db.Shelter.create({
+      id: 'uuid',
       name: 'Caribbean Crazy Animals',
       email: 'contact@crazyanimals.sea',
       phone: '+08898985421',
@@ -32,6 +35,7 @@ describe.skip('Testing Adoption model', () => {
     })
 
     pet = await db.Pet.create({
+      id: 'uuid',
       name: 'Cotton',
       birthday: '2023-01-01',
       size: 'Mini',
@@ -46,9 +50,9 @@ describe.skip('Testing Adoption model', () => {
   beforeEach(async () => {
     // Object containing Adoption proprieties to be tested
     adoptionObject = {
-      animal: pet.id,
-      tutor: user.id,
-      date: new Date('2023-04-01')
+      pet_id: pet.id,
+      tutor_id: user.id,
+      date: '2023-04-01'
     }
   })
 
@@ -67,29 +71,27 @@ describe.skip('Testing Adoption model', () => {
     it('should create a new instance of adoption', () => {
       const adoption = db.Adoption.build(adoptionObject)
       expect(adoption).toEqual(
-        expect.objectContaining(adoptionObject)
+        expect.objectContaining({ id: null, ...adoptionObject })
       )
     })
 
     it('should save adoption on the database', async () => {
-      const adoption = await db.Adoption.create(adoptionObject)
+      const adoption = await db.Adoption.create({ id: 'uuid', ...adoptionObject })
       expect(adoption).toEqual(
-        expect.objectContaining(
-          {
-            id: expect.any(Number),
-            ...adoptionObject,
-            createdAt: expect.any(Date),
-            updatedAt: expect.any(Date)
-          }
-        )
+        expect.objectContaining( {
+          id: 'uuid',
+          ...adoptionObject,
+          createdAt: expect.any(Date),
+          updatedAt: expect.any(Date)
+        })
       )
     })
   })
 
   describe('Validate Adoption properties', () => {
     test.each([
-      ['animal'],
-      ['tutor'],
+      ['pet_id'],
+      ['tutor_id'],
       ['date'],
     ])('should throw an error if property %s is null', async (param) => {
       adoptionObject[param] = null
@@ -103,8 +105,8 @@ describe.skip('Testing Adoption model', () => {
     })
 
     test.each([
-      ['animal'],
-      ['tutor'],
+      ['pet_id'],
+      ['tutor_id'],
       ['date'],
     ])('should throw an error if property %s is empty', async (param) => {
       adoptionObject[param] = ''

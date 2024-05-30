@@ -1,7 +1,6 @@
-process.env.NODE_ENV = 'test'
-const db = require('../../../database/models')
+const db = require('../../database/models')
 
-describe.skip('Testing User model', () => {
+describe('Testing User model', () => {
 
   let userObject
 

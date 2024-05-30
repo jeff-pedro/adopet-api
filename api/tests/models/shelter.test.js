@@ -1,7 +1,7 @@
 process.env.NODE_ENV = 'test'
 const db = require('../../database/models')
 
-describe.skip('Testing Shelter model', () => {
+describe('Testing Shelter model', () => {
 
   let shelterObject
 
