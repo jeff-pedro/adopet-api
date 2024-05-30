@@ -1,6 +1,5 @@
 const { expect } = require('@jest/globals')
 const db = require('../../database/models')
-const {v4: uuid} = require('uuid')
 
 describe('Testing Adoption model', () => {
 
