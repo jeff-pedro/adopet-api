@@ -40,6 +40,6 @@ jobs:
 
     build:
       name: Build
-      needs: integration-test
+      needs: [unit-test, integration-test]
       uses: ./.github/workflows/build.yaml
       secrets: inherit
